@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="Pristmax 企业存储优化，在自己的环境中减少冗余、验证还原、管理存储。">
+    <title>Pristmax — Less storage. More clarity.</title>
+    <link rel="icon" href="assets/pristmax-symbol.svg">
+    <link rel="stylesheet" href="style.css">
+    <!-- Lenis 平滑滚动 -->
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.33/dist/lenis.min.js"></script>
+</head>
+<body>
+
+    <!-- Banner Gate 进场 -->
+    <div id="banner-gate">
+        <div class="banner-left">
+            <div class="banner-eyebrow">ENTERPRISE STORAGE / YOUR ENVIRONMENT</div>
+            <h1 class="banner-brand">PRISTMAX</h1>
+            <p class="banner-tagline">Less volume. <em>More clarity.</em></p>
+            <p class="banner-desc">让企业数据，更轻盈、更有序。<br>在你的环境运行，为原文件还原与视频降量选择各自的路径。</p>
+        </div>
+        <div class="banner-right">
+            <div class="banner-actions">
+                <a class="banner-btn primary" href="#features">Get Started</a>
+                <a class="banner-btn" href="#architecture">Explore ↗</a>
+            </div>
+            <div class="banner-hint">↓ scroll to explore</div>
+        </div>
+        <div class="banner-overlay"></div>
+    </div>
+
+    <!-- 固定导航 -->
+    <header id="site-header">
+        <a class="brand" href="#">
+            <img src="assets/pristmax-symbol.svg" alt="" width="28" height="28">pristmax
+        </a>
+        <nav>
+            <a href="#features">Features</a>
+            <a href="#architecture">Product</a>
+            <a href="docs.html">Docs</a>
+            <a href="#download">Download</a>
+        </nav>
+        <a class="header-cta" href="#download">Get ↓</a>
+    </header>
+
+    <main>
+
+        <!-- Features -->
+        <section class="section-features" id="features">
+            <div class="section-inner">
+                <div class="section-label">01 / CAPABILITIES</div>
+                <h2>Make room<br>for what <em>matters.</em></h2>
+                <p class="section-desc">信息不断增长，存储不必只是不断扩容。<br>从识别重复开始，让每一份空间有据可循。</p>
+                <span class="section-note">实际节省取决于数据类型、重复率与所选策略。</span>
+            </div>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-num">01</div>
+                    <h3>Reduce repetition.<small>分块与去重</small></h3>
+                    <p>识别重复内容块，减少重复存储。适合先对备份、归档等重复度较高的数据开展试点。</p>
+                    <span class="feature-tag">LESS REDUNDANCY / MORE ROOM</span>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-num">02</div>
+                    <h3>Preserve with intent.<small>按需选择保真策略</small></h3>
+                    <p>原文件归档采用可验证的还原路径；视频降量单独评估画质与分析准确率。有损处理不承诺逐字节还原。</p>
+                    <span class="feature-tag">DISTINCT PATHS / EXPLICIT TRADE-OFFS</span>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-num">03</div>
+                    <h3>Stay in control.<small>在企业自己的环境运行</small></h3>
+                    <p>产品部署与品牌官网分离。文件处理在你部署的软件中进行，本介绍网站不提供企业文件上传入口。</p>
+                    <span class="feature-tag">YOUR DATA / YOUR ENVIRONMENT</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Statement -->
+        <section class="section-statement">
+            <div class="statement-inner">
+                <span class="section-label">THE PRISTMAX PRINCIPLE</span>
+                <h2>Less, but<br>essential.</h2>
+                <p>收拢冗余，释放空间。<br>为真正重要的信息，留下余地。</p>
+            </div>
+            <div class="statement-bg" aria-hidden="true"></div>
+        </section>
+
+        <!-- Product -->
+        <section class="section-product" id="architecture">
+            <div class="section-inner">
+                <div class="section-label">02 / PRODUCT EXPERIENCE</div>
+                <h2>A clear view.<br><em>A lighter footprint.</em></h2>
+                <p class="section-desc">官网了解产品，控制台管理数据。<br>下载后在自己的环境部署，<br>由本地控制台查看存储、任务与策略。</p>
+            </div>
+            <div class="console-frame">
+                <div class="console-bar">
+                    <span class="console-dot"></span>
+                    <span class="console-dot"></span>
+                    <span class="console-dot"></span>
+                    <span class="console-title">pristmax — Local Console</span>
+                </div>
+                <div class="console-body">
+                    <div class="console-sidebar">
+                        <div class="sidebar-item active">Overview</div>
+                        <div class="sidebar-item">Storage</div>
+                        <div class="sidebar-item">Tasks</div>
+                        <div class="sidebar-item">Policies</div>
+                        <div class="sidebar-item">Activity</div>
+                    </div>
+                    <div class="console-main">
+                        <div class="console-head">
+                            <h3>Storage, at a glance.</h3>
+                            <span class="console-pill">准备接入</span>
+                        </div>
+                        <div class="console-metrics">
+                            <div class="metric">
+                                <small>原始数据</small>
+                                <strong>— <i>GB</i></strong>
+                                <span>等待接入存储</span>
+                            </div>
+                            <div class="metric">
+                                <small>存储占用</small>
+                                <strong>— <i>GB</i></strong>
+                                <span>处理后统计</span>
+                            </div>
+                            <div class="metric">
+                                <small>已释放空间</small>
+                                <strong>— <i>GB</i></strong>
+                                <span>以实际结果为准</span>
+                            </div>
+                        </div>
+                        <div class="console-divider">Storage volumes — YOUR INFRASTRUCTURE</div>
+                        <div class="console-row"><span>01 &nbsp; Local storage</span><span class="console-pill">未连接</span></div>
+                        <div class="console-row"><span>02 &nbsp; Network storage</span><span class="console-pill">未连接</span></div>
+                        <p class="console-note">从小规模样本开始，验证节省率与恢复结果。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Workflow -->
+        <section class="section-workflow">
+            <div class="section-inner">
+                <div class="section-label">03 / A MEASURED APPROACH</div>
+                <h2>Observe. Reduce. <em>Verify.</em></h2>
+            </div>
+            <div class="workflow-steps">
+                <div class="workflow-step">
+                    <span class="step-num">01</span>
+                    <h3>Know your data.</h3>
+                    <p>选择代表性样本，建立容量、重复率和访问频率基线。</p>
+                </div>
+                <div class="workflow-step">
+                    <span class="step-num">02</span>
+                    <h3>Choose your path.</h3>
+                    <p>分别配置无损归档与视频降量，先测量，再决定适用范围。</p>
+                </div>
+                <div class="workflow-step">
+                    <span class="step-num">03</span>
+                    <h3>Verify the result.</h3>
+                    <p>无损路径核对文件哈希；视频路径评估质量与业务任务效果。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Download -->
+        <section class="section-download" id="download">
+            <div class="section-inner">
+                <div class="section-label">04 / DOWNLOAD & DEPLOY</div>
+                <h2>Run it.<br><em>On your terms.</em></h2>
+                <p class="section-desc">Pristmax 正在准备首个公开发行版。<br>当前未提供正式安装包，<br>请先阅读部署与试点评估说明。</p>
+            </div>
+            <div class="download-cards">
+                <div class="download-card">
+                    <span class="card-tag">01 / SELF-HOSTED</span>
+                    <h3>部署指南</h3>
+                    <p>了解本地控制台、部署边界及试点准备工作。</p>
+                    <a href="docs.html">Read the guide →</a>
+                </div>
+                <div class="download-card">
+                    <span class="card-tag">02 / RELEASE</span>
+                    <h3>安装包</h3>
+                    <p>发布后在此提供版本、平台要求、校验值和更新说明。</p>
+                    <span class="card-pill">Preparing release · 尚未发布</span>
+                </div>
+                <div class="download-card">
+                    <span class="card-tag">03 / OPEN SOURCE</span>
+                    <h3>开放，共建。</h3>
+                    <p>计划开放源码；公开仓库地址与开源许可证尚待确认。</p>
+                    <span class="card-pill">Repository coming soon</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ -->
+        <section class="section-faq">
+            <div class="section-inner">
+                <div class="section-label">QUESTIONS / ANSWERS</div>
+                <h2>Before you begin.</h2>
+            </div>
+            <div class="faq-list">
+                <details>
+                    <summary>能保证节省多少存储空间？<b>＋</b></summary>
+                    <p>无法为所有数据提供统一比例。重复文件、文本和日志往往更有优化空间；已压缩媒体与加密数据需要单独测试。请使用真实样本测量净节省，包括索引与元数据开销。</p>
+                </details>
+                <details>
+                    <summary>取回的文件和原文件一样吗？<b>＋</b></summary>
+                    <p>无损归档路径应以还原文件的哈希校验确认一致性。视频有损降量是独立策略，不具有同样的保证，请在试点时分别验收。</p>
+                </details>
+                <details>
+                    <summary>这个网站会保存我们的文件吗？<b>＋</b></summary>
+                    <p>本网站仅提供产品介绍与文档，不接收企业文件。自部署产品的数据存储、备份、保留与删除策略由实际部署配置决定。</p>
+                </details>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="footer-top">
+            <a class="brand" href="#">
+                <img src="assets/pristmax-symbol-light.svg" alt="" width="28" height="28">pristmax
+            </a>
+            <span class="footer-slogan">Make room for what matters.</span>
+            <a href="#" class="footer-top-link">Back to top ↑</a>
+        </div>
+        <div class="footer-word">PRISTMAX</div>
+        <div class="footer-bottom">
+            <span>© 2026 PRISTMAX</span>
+            <span>ENTERPRISE STORAGE / BUILT FOR CLARITY</span>
+            <a href="docs.html">Documentation ↗</a>
+        </div>
+    </footer>
+
+    <script src="main.js"></script>
+    <script src="design.js"></script>
+</body>
+</html>
