@@ -7,8 +7,7 @@
     <title>Pristmax — Less storage. More clarity.</title>
     <link rel="icon" href="assets/pristmax-symbol.svg">
     <link rel="stylesheet" href="style.css">
-    <!-- Lenis 平滑滚动 -->
-    <script src="https://unpkg.com/@studio-freight/lenis@1.0.33/dist/lenis.min.js"></script>
+    <link rel="stylesheet" href="home.css">
 </head>
 <body>
 
@@ -17,7 +16,7 @@
         <div class="banner-left">
             <div class="banner-eyebrow">ENTERPRISE STORAGE / YOUR ENVIRONMENT</div>
             <h1 class="banner-brand">PRISTMAX</h1>
-            <p class="banner-tagline">Less volume. <em>More clarity.</em></p>
+            <p class="banner-tagline">Less storage. <em>More clarity.</em></p>
             <p class="banner-desc">让企业数据，更轻盈、更有序。<br>在你的环境运行，为原文件还原与视频降量选择各自的路径。</p>
         </div>
         <div class="banner-right">
@@ -35,13 +34,13 @@
         <a class="brand" href="#">
             <img src="assets/pristmax-symbol.svg" alt="" width="28" height="28">pristmax
         </a>
-        <nav>
+        <button class="menu" aria-expanded="false" aria-controls="navigation">Menu ＋</button><nav id="navigation">
             <a href="#features">Features</a>
             <a href="#architecture">Product</a>
             <a href="docs.html">Docs</a>
             <a href="#download">Download</a>
         </nav>
-        <a class="header-cta" href="#download">Get ↓</a>
+        <a class="button outline github-link" href="https://github.com/chunchengzheng58-ctrl/pristmax" target="_blank" rel="noopener noreferrer" aria-label="在新标签页打开 Pristmax GitHub 仓库">GitHub ↗</a>
     </header>
 
     <main>
@@ -98,7 +97,7 @@
                     <span class="console-dot"></span>
                     <span class="console-dot"></span>
                     <span class="console-dot"></span>
-                    <span class="console-title">pristmax — Local Console</span>
+                    <span class="console-title">pristmax — Local Console · 界面示意</span>
                 </div>
                 <div class="console-body">
                     <div class="console-sidebar">
@@ -185,10 +184,10 @@
                     <span class="card-pill">Preparing release · 尚未发布</span>
                 </div>
                 <div class="download-card">
-                    <span class="card-tag">03 / OPEN SOURCE</span>
+                    <span class="card-tag" id="opensource">03 / SOURCE CODE</span>
                     <h3>开放，共建。</h3>
-                    <p>计划开放源码；公开仓库地址与开源许可证尚待确认。</p>
-                    <span class="card-pill">Repository coming soon</span>
+                    <p>源码仓库已公开。使用与贡献前，请阅读仓库各组件的许可证。</p>
+                    <a href="https://github.com/chunchengzheng58-ctrl/pristmax" target="_blank" rel="noopener noreferrer">Explore on GitHub ↗</a>
                 </div>
             </div>
         </section>
@@ -234,6 +233,6 @@
     </footer>
 
     <script src="main.js"></script>
-    <script src="../design.js"></script>
+
 </body>
 </html>
