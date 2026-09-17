@@ -8,6 +8,7 @@
     <link rel="icon" href="assets/pristmax-symbol.svg">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="motion.css">
 </head>
 <body>
 
@@ -54,27 +55,20 @@
                 <span class="section-note">实际节省取决于数据类型、重复率与所选策略。</span>
             </div>
             <div class="feature-grid">
-                <div class="feature-card">
-                    <div class="feature-num">01</div>
-                    <h3>Reduce repetition.<small>分块与去重</small></h3>
-                    <p>识别重复内容块，减少重复存储。适合先对备份、归档等重复度较高的数据开展试点。</p>
-                    <span class="feature-tag">LESS REDUNDANCY / MORE ROOM</span>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-num">02</div>
-                    <h3>Preserve with intent.<small>按需选择保真策略</small></h3>
-                    <p>原文件归档采用可验证的还原路径；视频降量单独评估画质与分析准确率。有损处理不承诺逐字节还原。</p>
-                    <span class="feature-tag">DISTINCT PATHS / EXPLICIT TRADE-OFFS</span>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-num">03</div>
-                    <h3>Stay in control.<small>在企业自己的环境运行</small></h3>
-                    <p>产品部署与品牌官网分离。文件处理在你部署的软件中进行，本介绍网站不提供企业文件上传入口。</p>
-                    <span class="feature-tag">YOUR DATA / YOUR ENVIRONMENT</span>
-                </div>
+                <details class="feature-card"><summary><span class="feature-num">01</span><div>Reduce repetition.<small>分块与去重</small></div><b aria-hidden="true">＋</b></summary><div class="feature-expansion"><p>识别重复内容块，减少重复存储。适合先对备份、归档等重复度较高的数据开展试点。</p><span class="feature-tag">LESS REDUNDANCY / MORE ROOM</span></div></details>
+                <details class="feature-card"><summary><span class="feature-num">02</span><div>Preserve with intent.<small>按需选择保真策略</small></div><b aria-hidden="true">＋</b></summary><div class="feature-expansion"><p>原文件归档采用可验证的还原路径；视频降量单独评估画质与分析准确率。有损处理不承诺逐字节还原。</p><span class="feature-tag">DISTINCT PATHS / EXPLICIT TRADE-OFFS</span></div></details>
+                <details class="feature-card"><summary><span class="feature-num">03</span><div>Stay in control.<small>在企业自己的环境运行</small></div><b aria-hidden="true">＋</b></summary><div class="feature-expansion"><p>产品部署与品牌官网分离。文件处理在你部署的软件中进行，本介绍网站不提供企业文件上传入口。</p><span class="feature-tag">YOUR DATA / YOUR ENVIRONMENT</span></div></details>
             </div>
         </section>
 
+<section class="flight-section"><details class="winter-detail" id="winter-detail">
+                    <summary><span class="winter-index">01</span><span>Clarity takes flight.<small>轻盈有序，自在舒展 · 点击展开</small></span><span class="winter-toggle" aria-hidden="true">＋</span></summary>
+                    <div class="winter-panel">
+                        <svg class="winter-botanical" viewBox="0 0 680 560" aria-hidden="true" focusable="false"></svg>
+                        <div class="winter-panel-copy"><span class="winter-kicker">PRISTMAX / A STUDY IN FLIGHT</span><h3>Preserve<br>what matters.</h3><p>理解信息，减少冗余。<br>在更轻盈的存储中，<br>留住数据的价值。</p><button class="winter-replay" type="button" aria-label="重播蝴蝶飞舞动画">REPLAY THE FLIGHT <span aria-hidden="true">↗</span></button></div>
+                        <div class="winter-panel-foot"><span>PAPER WINGS / 纸翼</span><span>LESS, BUT ESSENTIAL.</span></div>
+                    </div>
+                </details></section>
         <!-- Statement -->
         <section class="section-statement">
             <div class="statement-inner">
@@ -224,7 +218,7 @@
             <span class="footer-slogan">Make room for what matters.</span>
             <a href="#" class="footer-top-link">Back to top ↑</a>
         </div>
-        <div class="footer-word">PRISTMAX</div>
+        <div class="footer-word">PRISTMAX</div><div class="footer-invitation"><span>LESS STORAGE. MORE CLARITY.</span><a class="button outline" href="https://github.com/chunchengzheng58-ctrl/pristmax" target="_blank" rel="noopener noreferrer">EXPLORE THE REPOSITORY ↗</a></div><svg class="footer-wings" viewBox="0 0 1440 280" aria-hidden="true"></svg>
         <div class="footer-bottom">
             <span>© 2026 PRISTMAX</span>
             <span>ENTERPRISE STORAGE / BUILT FOR CLARITY</span>
@@ -233,6 +227,7 @@
     </footer>
 
     <script src="main.js"></script>
+    <script src="motion.js"></script>
 
 </body>
 </html>

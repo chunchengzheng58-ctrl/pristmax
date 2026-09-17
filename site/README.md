@@ -25,3 +25,10 @@ Pages: https://chunchengzheng58-ctrl.github.io/pristmax/
 The site is static; Pages does not run the Python product/API. Do not upload customer data, backend configs, or credentials to this directory. Pending release badges remain until a real release exists. Current repository license restrictions must be reconciled separately before claiming standard open-source licensing.
 
 UI repair 2026-09-17: removed broken ../design.js and third-party scrolling dependency, added matching home.css, mobile menu and direct GitHub links. Product backend edits were deliberately excluded.
+
+
+## Editorial motion (2026-09-17)
+
+`motion.css` and `motion.js` contain isolated progressive enhancement: entrance, viewport reveal, sticky feature copy, native disclosure panels, scroll-progress installation frame and pen-and-ink butterfly animation. Butterfly paths were recovered from the existing `site/design.js` implementation; the old file must NOT be loaded because it also assumes product-console DOM and APIs. No outside library or scroll hijacking is used. Reduced-motion preference disables animation and shows all content. Homepage remains readable without JavaScript; SVG decoration is optional.
+
+Reference: user-supplied 59-second screen recording. The earlier git history preserved partial animation CSS and butterfly paths, but not a complete working standalone marketing implementation. This version adapts the observed pacing and visual hierarchy to the Pristmax identity.
