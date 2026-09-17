@@ -10,3 +10,14 @@
 body.opening-active #site-header{opacity:0;visibility:hidden;pointer-events:none}
 @media(max-width:800px){.opening-meta,.opening-bottom{font-size:8px;letter-spacing:1.5px;left:5%;right:5%}.opening-bottom span:last-child{display:none}.opening-word{font-size:19vw}}
 @media(prefers-reduced-motion:reduce){.opening{height:100svh}.opening-screen{position:relative}.opening-word{transform:none}}
+
+/* One shared hero: the opening wordmark becomes the product heading. */
+.opening-word{position:absolute;top:calc(50% - var(--intro-progress,0)*20%);left:0;right:0;margin:0;text-align:center;transform:translateY(-50%) scale(var(--opening-scale,1));font-weight:400}
+.opening-content{position:absolute;top:49%;left:5%;right:5%;text-align:center;opacity:clamp(0,calc((var(--intro-progress,0) - .45)*2),1);transform:translateY(calc((1 - var(--intro-progress,0))*22px))}
+.opening-content .banner-tagline{animation:none;color:#173d58;margin:12px 0 22px}.opening-content .banner-desc,.opening-content .banner-actions{animation:none}.opening-meta,.opening-bottom{opacity:calc(1 - var(--intro-progress,0))}
+.opening-bottom{pointer-events:auto}.opening-content .banner-actions{margin:24px 0}
+@media(max-width:800px){.opening-word{top:calc(50% - var(--intro-progress,0)*18%)}.opening-content{top:43%}.opening-content .banner-tagline{font-size:28px}.opening-content .banner-desc{font-size:12px}.opening-content .banner-actions{gap:10px}.opening-content .banner-btn{padding:10px 18px}}
+@media(prefers-reduced-motion:reduce){.opening{height:auto}.opening-screen{height:auto;min-height:100svh;display:block;padding:155px 5% 70px;background:white!important}.opening-word{position:static;transform:none;color:#477f9f}.opening-content{position:static;opacity:1;transform:none;visibility:visible!important}.opening-meta,.opening-bottom{display:none}}
+@media(max-height:600px) and (min-width:801px){.opening-content{top:47%}.opening-content .banner-tagline{font-size:30px;margin:8px}.opening-content .banner-desc{font-size:12px;margin:8px}.opening-content .banner-actions{margin:10px}.opening-word{font-size:16vw;top:calc(50% - var(--intro-progress,0)*20%)}}
+
+body:not(.opening-active) #site-header{z-index:9}
