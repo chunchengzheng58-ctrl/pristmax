@@ -1,0 +1,14 @@
+{
+  "record_id": "op-20260917172243-44ce5831",
+  "operation_type": "encode",
+  "input_path": "./test_video.mp4",
+  "output_path": "test_video_encoded.mp4",
+  "original_sha256": "dc94113f75690d4a7c642e4212e3f1ac8f82020df62e6ea89bc5d0052ed0b4f1",
+  "user_authorized": true,
+  "user_id": "0947e895-3fd7-4e60-a82d-f0f71f82ecce",
+  "authorization_time": "2026-09-17T17:22:43.768578",
+  "status": "authorized",
+  "completed_at": null,
+  "can_rollback": true,
+  "rollback_steps": []
+}

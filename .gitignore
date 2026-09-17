@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.venv/
+venv/
+ENV/
+env/
+*.egg-info/
+dist/
+build/
+*.egg
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Data & Database
+*.db
+*.db-journal
+*.sqlite
+data/
+output/
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# PyInstaller
+*.spec
+
+# Local config
+config.local.yaml
+*.local.yaml
+
+# Temp
+tmp/
+temp/
+*.tmp

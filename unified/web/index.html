@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pristmax · 企业数据控制台</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20120%20120%22%20style%3D%22color%3A%23173D58%22%3E%3Cpath%20fill%3D%22currentColor%22%20d%3D%22M60%2012C84%2012%20104%2029%20108%2051C94%2040%2081%2036%2066%2040L47%2045C38%2047%2031%2042%2032%2034C34%2023%2047%2012%2060%2012Z%22%20transform%3D%22rotate%280%2060%2060%29%22%2F%3E%3Cpath%20fill%3D%22currentColor%22%20d%3D%22M60%2012C84%2012%20104%2029%20108%2051C94%2040%2081%2036%2066%2040L47%2045C38%2047%2031%2042%2032%2034C34%2023%2047%2012%2060%2012Z%22%20transform%3D%22rotate%28120%2060%2060%29%22%2F%3E%3Cpath%20fill%3D%22currentColor%22%20d%3D%22M60%2012C84%2012%20104%2029%20108%2051C94%2040%2081%2036%2066%2040L47%2045C38%2047%2031%2042%2032%2034C34%2023%2047%2012%2060%2012Z%22%20transform%3D%22rotate%28240%2060%2060%29%22%2F%3E%3C%2Fsvg%3E">
+    <link rel="stylesheet" href="../design.css">
+    <link rel="stylesheet" href="../pristmax-editorial.css">
+    <!-- Lenis 平滑滚动 -->
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.33/dist/lenis.min.js"></script>
+</head>
+<body data-aru-step="banner">
+    <!-- Canvas 背景动画 -->
+    <canvas class="fate-canvas" id="fateCanvas" aria-hidden="true"></canvas>
+
+    <!-- 背景网格纹理 -->
+    <div class="grid-overlay" aria-hidden="true"></div>
+
+    <!-- Welcome Banner Gate -->
+    <div id="banner-gate" class="banner-gate">
+        <div class="banner-center">
+            <h1 class="banner-brand">PRISTMAX</h1>
+            <p class="banner-tagline">Less volume. <em>More clarity.</em></p>
+        </div>
+        <button class="banner-enter" id="enterBtn">
+            <span>ENTER</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </button>
+        <p class="banner-hint">Click anywhere to enter</p>
+        <div class="banner-atmosphere" aria-hidden="true"></div>
+    </div>
+
+    <!-- Loading overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-bar"></div>
+    </div>
+
+    <header class="header">
+        <a class="logo" href="#dashboard" aria-label="Pristmax首页">
+            <svg class="logo-icon" width="34" height="34" viewBox="0 0 120 120" aria-hidden="true"><path fill="currentColor" d="M60 12C84 12 104 29 108 51C94 40 81 36 66 40L47 45C38 47 31 42 32 34C34 23 47 12 60 12Z" transform="rotate(0 60 60)"/><path fill="currentColor" d="M60 12C84 12 104 29 108 51C94 40 81 36 66 40L47 45C38 47 31 42 32 34C34 23 47 12 60 12Z" transform="rotate(120 60 60)"/><path fill="currentColor" d="M60 12C84 12 104 29 108 51C94 40 81 36 66 40L47 45C38 47 31 42 32 34C34 23 47 12 60 12Z" transform="rotate(240 60 60)"/></svg>
+            <span>Pristmax<span class="brand-en">ENTERPRISE DATA SYSTEM</span></span>
+        </a>
+        <nav class="nav" aria-label="主要导航">
+            <button class="nav-item active" data-tab="dashboard">Overview</button>
+            <button class="nav-item" data-tab="semantic">Intelligence</button>
+            <button class="nav-item" data-tab="distributed">Storage</button>
+            <button class="nav-item" data-tab="volumes">Volumes</button>
+            <button class="nav-item" data-tab="audit">Audit</button>
+            <button class="nav-item" data-tab="roi">Value</button>
+        </nav>
+        <div class="header-actions"><span class="demo-badge"><i></i> 演示工作空间</span><button class="header-btn" id="refresh-view" aria-label="刷新页面">↻</button></div>
+    </header>
+    <div class="workspace-line"><span>WORKSPACE <b>/</b> Pristmax 企业数据控制台</span><span>PRISTMAX <b>·</b> 本地部署</span></div>
+
+    <main class="main">
+        <!-- Dashboard -->
+        <section id="dashboard" class="section active">
+            <div class="overview-hero" id="heroSection">
+                <div class="hero-copy">
+                    <p class="eyebrow">A CLEARER FUTURE FOR YOUR DATA</p>
+                    <h1 class="pristmax-wordmark">PRISTMAX</h1>
+                    <h2 class="pristmax-statement">Keep the meaning.<br><em>Reduce the weight.</em></h2>
+                    <p class="hero-description">让数据更轻，让价值清晰。<br>Semantic intelligence. Thoughtful storage.</p>
+                    <div class="hero-actions">
+                        <button class="btn btn-light" onclick="switchTab('distributed')">Explore storage <span>↗</span></button>
+                        <button class="text-link" onclick="switchTab('semantic')">Discover the intelligence →</button>
+                    </div>
+                    <div class="hero-caption"><span>01 / UNDERSTAND</span><span>02 / REDUCE</span><span>03 / VERIFY</span></div>
+                </div>
+                <div class="fold-art pristmax-atmosphere" id="foldArt" aria-hidden="true"></div>
+                <span class="pristmax-side-label">DESIGNED TO PRESERVE / BUILT TO SIMPLIFY</span>
+            </div>
+
+            <!-- Stats Section -->
+            <div class="section-heading" data-animate>
+                <div>
+                    <p class="eyebrow">YOUR STORAGE, AT A GLANCE</p>
+                    <h2>Clarity at a glance.</h2>
+                </div>
+                <span class="quiet-note">实时数据 · 本地部署</span>
+            </div>
+
+            <div class="card overview-metrics" data-animate>
+                <div class="card-title" style="margin-bottom: 16px;">核心指标</div>
+                <div class="integration-grid stagger-grid">
+                    <div class="integration-card">
+                        <div class="integration-value" id="stat-storage">--</div>
+                        <div class="integration-label">总存储容量</div>
+                    </div>
+                    <div class="integration-card">
+                        <div class="integration-value" id="stat-used">--</div>
+                        <div class="integration-label">已用存储</div>
+                    </div>
+                    <div class="integration-card">
+                        <div class="integration-value" id="stat-tasks">--</div>
+                        <div class="integration-label">完成任务</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Tasks -->
+            <div class="card" data-animate>
+                <div class="card-header">
+                    <h2 class="card-title">最近任务</h2>
+                    <button class="btn btn-primary" onclick="showCreateTaskModal()">+ 新建任务</button>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>任务ID</th>
+                            <th>类型</th>
+                            <th>输入路径</th>
+                            <th>状态</th>
+                            <th>进度</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tasksTable">
+                        <tr><td colspan="5" style="text-align:center;color:var(--muted)">暂无任务</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Storage Volumes -->
+            <div class="card" data-animate>
+                <div class="card-header">
+                    <h2 class="card-title">存储卷</h2>
+                    <button class="btn">添加存储</button>
+                </div>
+                <div id="volumesList" class="storage-list">
+                    <!-- Dynamic volumes -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Other sections placeholder -->
+        <section id="semantic" class="section">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">SEMANTIC VIDEO REDUCTION</p>
+                    <h2>Intelligence-led storage optimization.</h2>
+                </div>
+            </div>
+            <div class="card">
+                <p style="color:var(--muted)">视频语义降量模块 · ROI检测 · 背景分离</p>
+            </div>
+        </section>
+
+        <section id="distributed" class="section">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">DISTRIBUTED DEDUPLICATION</p>
+                    <h2>Content-defined chunking.</h2>
+                </div>
+            </div>
+            <div class="card">
+                <p style="color:var(--muted)">分布式去重存储 · FastCDC · 一致性哈希</p>
+            </div>
+        </section>
+
+        <section id="volumes" class="section">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">STORAGE VOLUMES</p>
+                    <h2>Multi-backend support.</h2>
+                </div>
+            </div>
+            <div class="card">
+                <p style="color:var(--muted)">本地硬盘 · NAS · USB · 云存储 · RAID</p>
+            </div>
+        </section>
+
+        <section id="audit" class="section">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">ACTIVITY AUDIT</p>
+                    <h2>Operation history.</h2>
+                </div>
+            </div>
+            <div class="card">
+                <p style="color:var(--muted)">操作审计日志 · 可追溯</p>
+            </div>
+        </section>
+
+        <section id="roi" class="section">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">VALUE CALCULATOR</p>
+                    <h2>ROI projection.</h2>
+                </div>
+            </div>
+            <div class="card">
+                <p style="color:var(--muted)">投资回报计算器</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-title">登录 Pristmax</div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label class="form-label">用户名</label>
+                    <input type="text" class="form-input" id="username" autocomplete="username" placeholder="请输入用户名">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">密码</label>
+                    <input type="password" class="form-input" id="password" autocomplete="current-password" placeholder="请输入密码">
+                </div>
+                <div class="form-error" id="loginError">用户名或密码错误</div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 8px;">登录</button>
+            </form>
+            <div style="text-align: center; margin-top: 16px;">
+                <a href="#" onclick="showRegister()">注册新账号</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal" id="registerModal">
+        <div class="modal-content">
+            <div class="modal-title">注册 Pristmax</div>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label class="form-label">用户名</label>
+                    <input type="text" class="form-input" id="regUsername" autocomplete="username" placeholder="请输入用户名">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">邮箱</label>
+                    <input type="email" class="form-input" id="regEmail" autocomplete="email" placeholder="请输入邮箱">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">密码</label>
+                    <input type="password" class="form-input" id="regPassword" autocomplete="new-password" placeholder="请输入密码">
+                </div>
+                <div class="form-error" id="registerError">注册失败</div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 8px;">注册</button>
+            </form>
+            <div style="text-align: center; margin-top: 16px;">
+                <a href="#" onclick="showLogin()">已有账号？登录</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Task Modal -->
+    <div class="modal" id="createTaskModal">
+        <div class="modal-content">
+            <div class="modal-title">创建任务</div>
+            <form id="createTaskForm">
+                <div class="form-group">
+                    <label class="form-label">任务类型</label>
+                    <select class="form-input" id="taskType">
+                        <option value="scan">文件扫描 (Scan)</option>
+                        <option value="dedup">去重分析 (Dedup)</option>
+                        <option value="encode">视频编码 (Encode)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">输入路径</label>
+                    <input type="text" class="form-input" id="taskInputPath" placeholder="例如: C:/Users/你的文件夹">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">输出路径 (可选)</label>
+                    <input type="text" class="form-input" id="taskOutputPath" placeholder="默认与输入同目录">
+                </div>
+                <div class="form-error" id="createTaskError" style="display:none;"></div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 8px;">创建任务</button>
+            </form>
+            <button type="button" onclick="closeCreateTaskModal()" style="position:absolute;top:16px;right:16px;background:none;border:none;color:var(--text-secondary);font-size:24px;cursor:pointer;">&times;</button>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <span>© 2026 PRISTMAX</span>
+        <span>ENTERPRISE STORAGE / BUILT FOR CLARITY</span>
+    </footer>
+
+    <script>
+        // =============================================
+        // Lenis Smooth Scroll
+        // =============================================
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            direction: 'vertical',
+            gestureDirection: 'vertical',
+            smooth: true,
+            smoothTouch: false,
+            touchMultiplier: 2,
+        });
+
+        function raf(time) {
+            lenis.raf(time);
+            lenis.raf = raf;
+        }
+
+        // =============================================
+        // Banner Gate
+        // =============================================
+        const enterBtn = document.getElementById('enterBtn');
+        const bannerGate = document.getElementById('banner-gate');
+
+        function enterWorkspace() {
+            document.body.removeAttribute('data-aru-step');
+            bannerGate.classList.add('hidden');
+            lenis.start();
+        }
+
+        enterBtn.addEventListener('click', enterWorkspace);
+        bannerGate.addEventListener('click', (e) => {
+            if (e.target === bannerGate) enterWorkspace();
+        });
+
+        // =============================================
+        // API Configuration
+        // =============================================
+        const API_BASE = '/api';
+        let authToken = localStorage.getItem('authToken');
+        let currentUser = null;
+
+        // =============================================
+        // Auth Functions
+        // =============================================
+        function showLoginModal() {
+            document.getElementById('loginModal').classList.add('active');
+        }
+
+        function showRegister() {
+            document.getElementById('loginModal').classList.remove('active');
+            document.getElementById('registerModal').classList.add('active');
+        }
+
+        function showLogin() {
+            document.getElementById('registerModal').classList.remove('active');
+            document.getElementById('loginModal').classList.add('active');
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const resp = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                if (resp.ok) {
+                    const data = await resp.json();
+                    authToken = data.token;
+                    currentUser = data.user;
+                    localStorage.setItem('authToken', authToken);
+                    document.getElementById('loginModal').classList.remove('active');
+                    updateUserUI();
+                    loadDashboard();
+                } else {
+                    document.getElementById('loginError').classList.add('visible');
+                }
+            } catch (err) {
+                console.error('Login error:', err);
+            }
+        });
+
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('regUsername').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+
+            try {
+                const resp = await fetch(`${API_BASE}/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, email, password })
+                });
+
+                if (resp.ok) {
+                    alert('注册成功！请登录');
+                    showLogin();
+                } else {
+                    document.getElementById('registerError').classList.add('visible');
+                }
+            } catch (err) {
+                console.error('Register error:', err);
+            }
+        });
+
+        function updateUserUI() {
+            const userArea = document.getElementById('userArea');
+            if (currentUser) {
+                userArea.innerHTML = `
+                    <div class="user-info">
+                        <div class="user-avatar">${currentUser.username[0].toUpperCase()}</div>
+                        <div>
+                            <div class="user-name">${currentUser.username}</div>
+                            <div class="user-role">${currentUser.role}</div>
+                        </div>
+                    </div>
+                    <button class="btn" onclick="logout()">退出</button>
+                `;
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('authToken');
+            authToken = null;
+            currentUser = null;
+            updateUserUI();
+            loadDashboard();
+        }
+
+        // =============================================
+        // Tab Navigation
+        // =============================================
+        function switchTab(tabId) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+            document.getElementById(tabId)?.classList.add('active');
+            document.querySelector(`.nav-item[data-tab="${tabId}"]`)?.classList.add('active');
+
+            lenis.scrollTo(0, { duration: 0.5 });
+        }
+
+        document.querySelectorAll('.nav-item').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tab = btn.dataset.tab;
+                switchTab(tab);
+            });
+        });
+
+        // =============================================
+        // SSE Task Updates
+        // =============================================
+        const sseConnections = {};
+
+        function subscribeTask(taskId) {
+            if (sseConnections[taskId]) return;
+
+            const evtSource = new EventSource(`${API_BASE}/tasks/${taskId}/stream`);
+            sseConnections[taskId] = evtSource;
+
+            evtSource.onmessage = (e) => {
+                const data = JSON.parse(e.data);
+                if (data.type === 'update') {
+                    const row = document.querySelector(`tr[data-task-id="${taskId}"]`);
+                    if (row) {
+                        const progressCell = row.querySelector('.progress-cell');
+                        const statusCell = row.querySelector('.status-cell');
+                        if (progressCell) {
+                            progressCell.innerHTML = `
+                                <div class="progress" style="width:100px">
+                                    <div class="progress-fill" style="width:${data.progress}%"></div>
+                                </div>
+                                ${Math.round(data.progress)}%`;
+                        }
+                        if (statusCell) {
+                            statusCell.innerHTML = `<span class="badge badge-${getStatusBadge(data.status)}">${data.status}</span>`;
+                        }
+                    }
+                    if (data.status === 'completed' || data.status === 'failed') {
+                        setTimeout(() => loadTasks(), 1000);
+                    }
+                }
+            };
+
+            evtSource.onerror = () => {
+                evtSource.close();
+                delete sseConnections[taskId];
+            };
+        }
+
+        // =============================================
+        // Load Dashboard
+        // =============================================
+        async function loadDashboard() {
+            const headers = authToken ? { 'Authorization': `Bearer ${authToken}` } : {};
+
+            try {
+                const resp = await fetch(`${API_BASE}/stats`, { headers });
+                if (resp.ok) {
+                    const data = await resp.json();
+
+                    if (data.storage) {
+                        document.getElementById('stat-storage').textContent = data.storage.total_gb + ' GB';
+                        document.getElementById('stat-used').textContent = data.storage.used_gb + ' GB';
+                    }
+
+                    if (data.tasks) {
+                        document.getElementById('stat-tasks').textContent = data.tasks.completed || 0;
+                    }
+                }
+            } catch (err) {
+                console.error('Load dashboard error:', err);
+            }
+
+            loadTasks();
+            loadStorages();
+        }
+
+        // =============================================
+        // Load Tasks
+        // =============================================
+        async function loadTasks() {
+            const tbody = document.getElementById('tasksTable');
+
+            if (!authToken) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted)">请先登录查看任务</td></tr>';
+                return;
+            }
+
+            try {
+                const resp = await fetch(`${API_BASE}/tasks`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+
+                if (resp.ok) {
+                    const data = await resp.json();
+                    if (!data.tasks || data.tasks.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted)">暂无任务 · 点击"新建任务"开始</td></tr>';
+                        return;
+                    }
+
+                    tbody.innerHTML = data.tasks.map(task => `
+                        <tr data-task-id="${task.task_id}">
+                            <td><code style="font-size:12px">${task.task_id.substring(0, 20)}...</code></td>
+                            <td>${task.task_type}</td>
+                            <td><code style="font-size:11px">${task.input_path || '-'}</code></td>
+                            <td class="status-cell"><span class="badge badge-${getStatusBadge(task.status)}">${task.status}</span></td>
+                            <td class="progress-cell">
+                                <div class="progress" style="width:100px">
+                                    <div class="progress-fill" style="width:${task.progress || 0}%"></div>
+                                </div>
+                                ${Math.round(task.progress || 0)}%
+                            </td>
+                        </tr>
+                    `).join('');
+
+                    // Subscribe to running tasks
+                    data.tasks.forEach(task => {
+                        if (task.status === 'queued' || task.status === 'running') {
+                            subscribeTask(task.task_id);
+                        }
+                    });
+                }
+            } catch (err) {
+                console.error('Load tasks error:', err);
+            }
+        }
+
+        // =============================================
+        // Load Storages
+        // =============================================
+        async function loadStorages() {
+            const listEl = document.getElementById('volumesList');
+            if (!listEl) return;
+
+            try {
+                const resp = await fetch(`${API_BASE}/storages`);
+                if (resp.ok) {
+                    const data = await resp.json();
+                    if (!data.storages || data.storages.length === 0) {
+                        listEl.innerHTML = '<div class="storage-empty">暂未配置存储</div>';
+                        return;
+                    }
+
+                    listEl.innerHTML = data.storages.map(s => `
+                        <div class="storage-item">
+                            <div class="storage-item-icon">💾</div>
+                            <div class="storage-item-info">
+                                <div class="storage-item-name">${s.name}</div>
+                                <div class="storage-item-path">${s.path || '-'}</div>
+                            </div>
+                            <div class="storage-item-usage">
+                                <div class="usage-bar">
+                                    <div class="usage-fill" style="width:${s.usage_percent || 0}%"></div>
+                                </div>
+                                <div class="usage-text">${s.used_gb || 0} GB / ${s.total_gb || 0} GB</div>
+                            </div>
+                            <div class="storage-item-status ${s.status === 'healthy' ? 'status-healthy' : 'status-error'}">${s.status}</div>
+                        </div>
+                    `).join('');
+                }
+            } catch (err) {
+                console.error('Load storages error:', err);
+            }
+        }
+
+        // =============================================
+        // Task Creation
+        // =============================================
+        function showCreateTaskModal() {
+            if (!authToken) {
+                showLoginModal();
+                return;
+            }
+            document.getElementById('createTaskModal').classList.add('active');
+        }
+
+        function closeCreateTaskModal() {
+            document.getElementById('createTaskModal').classList.remove('active');
+            document.getElementById('createTaskError').style.display = 'none';
+        }
+
+        document.getElementById('createTaskForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const taskType = document.getElementById('taskType').value;
+            const inputPath = document.getElementById('taskInputPath').value;
+            const outputPath = document.getElementById('taskOutputPath').value;
+
+            if (!inputPath) {
+                const err = document.getElementById('createTaskError');
+                err.textContent = '请输入路径';
+                err.style.display = 'block';
+                return;
+            }
+
+            try {
+                const resp = await fetch(`${API_BASE}/tasks`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({
+                        task_type: taskType,
+                        input_path: inputPath,
+                        output_path: outputPath
+                    })
+                });
+
+                if (resp.ok) {
+                    alert('任务已创建');
+                    closeCreateTaskModal();
+                    loadTasks();
+                } else {
+                    const err = document.getElementById('createTaskError');
+                    err.textContent = '创建失败，请检查权限或路径';
+                    err.style.display = 'block';
+                }
+            } catch (err) {
+                console.error('Create task error:', err);
+            }
+        });
+
+        // =============================================
+        // Utility
+        // =============================================
+        function getStatusBadge(status) {
+            switch (status) {
+                case 'completed': return 'success';
+                case 'running': return 'info';
+                case 'failed': return 'error';
+                case 'pending': return 'warning';
+                case 'queued': return 'info';
+                default: return 'info';
+            }
+        }
+
+        // =============================================
+        // Initialize
+        // =============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check auth
+            if (authToken) {
+                fetch(`${API_BASE}/auth/me`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                }).then(r => r.ok && r.json()).then(data => {
+                    if (data) {
+                        currentUser = data;
+                        updateUserUI();
+                    }
+                }).catch(() => {
+                    localStorage.removeItem('authToken');
+                    authToken = null;
+                });
+            }
+
+            loadDashboard();
+        });
+
+        // UI Status
+        const statusBox = document.getElementById('ui-status');
+        function inform(message) {
+            if (statusBox) {
+                statusBox.textContent = message;
+                setTimeout(() => { if (statusBox) statusBox.textContent = ''; }, 4500);
+            }
+        }
+    </script>
+</body>
+</html>

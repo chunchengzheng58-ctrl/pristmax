@@ -1,0 +1,137 @@
+# -*- coding: utf-8 -*-
+"""
+Kubernetes Deployment Configuration
+
+Production deployment for Kubernetes clusters.
+"""
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: semantic-api
+  namespace: semantic-system
+  labels:
+    app: semantic-api
+    version: v1
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: semantic-api
+  template:
+    metadata:
+      labels:
+        app: semantic-api
+        version: v1
+    spec:
+      containers:
+      - name: api
+        image: semantic-reduction:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5000
+          name: http
+        env:
+        - name: PYTHONUNBUFFERED
+          value: "1"
+        - name: SR_DEBUG
+          value: "false"
+        - name: SR_BASE_PATH
+          value: "/app/data"
+        - name: SR_AUDIT_PATH
+          value: "/app/data/audit"
+        - name: SR_STORAGE_COST
+          value: "5000"
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+        livenessProbe:
+          httpGet:
+            path: /api/health
+            port: 5000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /api/health
+            port: 5000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        volumeMounts:
+        - name: data
+          mountPath: /app/data
+        - name: logs
+          mountPath: /app/logs
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: semantic-data-pvc
+      - name: logs
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: semantic-api-service
+  namespace: semantic-system
+spec:
+  selector:
+    app: semantic-api
+  ports:
+  - port: 80
+    targetPort: 5000
+    name: http
+  type: ClusterIP
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: semantic-api-hpa
+  namespace: semantic-system
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: semantic-api
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: semantic-data-pvc
+  namespace: semantic-system
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: semantic-system
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: semantic-api-sa
+  namespace: semantic-system

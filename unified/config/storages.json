@@ -1,0 +1,22 @@
+{
+  "storages": [
+    {
+      "id": "local-C",
+      "name": "本地磁盘 (C:)",
+      "mount_points": [
+        "C:\\"
+      ],
+      "enabled": true,
+      "type": "local_disk"
+    },
+    {
+      "id": "local-D",
+      "name": "本地磁盘 (D:)",
+      "mount_points": [
+        "D:\\"
+      ],
+      "enabled": true,
+      "type": "local_disk"
+    }
+  ]
+}

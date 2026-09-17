@@ -1,0 +1,20 @@
+# Pristmax License
+
+Copyright (c) 2026 Pristmax
+
+All rights reserved. This software is provided for evaluation and personal use.
+
+For commercial licensing, contact: [contact information pending]
+
+---
+
+## Third-Party Components
+
+This software includes the following third-party components with their respective licenses:
+
+- **Flask** - BSD License
+- **PyJWT** - MIT License
+- **bcrypt** - Apache 2.0 License
+- **OpenCV** - Apache 2.0 License
+
+Full license texts for third-party components are included with their respective source distributions.

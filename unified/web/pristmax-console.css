@@ -1,0 +1,31 @@
+/* Pristmax identity: ink blue / glacier / white. */
+:root{--bg-dark:#f2f7fb;--bg-card:#fff;--border:#cfdee8;--text-primary:#173d58;--text-secondary:#587185;--accent:#285775;--accent-dim:#1b405b;--success:#287054;--warning:#8a6214;--error:#b13a46}
+body{color:#173d58;background:#f2f7fb}
+.header{background:#ffffff;border-color:#cfdee8;padding:18px 30px;box-shadow:none}
+.logo{color:#173d58;font-weight:650;letter-spacing:-.5px}
+.sidebar{background:#eaf2f8;border-color:#cfdee8;padding-top:32px}
+.sidebar-title{font-size:10px;letter-spacing:2px;color:#627e92}
+.sidebar-item,.nav-item{border-radius:3px}
+.sidebar-item.active,.nav-item.active{background:#dcebf5;color:#173d58}
+.main{padding:36px;min-width:0}
+.page-title{font-weight:500;font-size:28px;letter-spacing:-.5px}
+.stat-card,.card{background:white;border-color:#cfdee8;border-radius:5px;box-shadow:none}
+.stat-card:hover{transform:none}
+.stat-card{border-top:2px solid #8ab1ca}
+.stat-value{font-family:'Segoe UI',Arial,sans-serif;font-size:36px;font-weight:400;line-height:1.3;font-variant-numeric:lining-nums tabular-nums;letter-spacing:0;color:#173d58}
+.table{font-variant-numeric:lining-nums tabular-nums}
+.card-title{font-size:17px;font-weight:600}
+.btn{border-radius:3px;min-height:38px}
+.btn-primary{background:#173d58;color:#fff;border-color:#173d58}
+.btn-primary:hover{background:#2a5875}
+.progress{background:#e4eef5}
+.progress-fill,.chart-bar{background:#689dbc}
+.modal-content{background:#fff;max-width:calc(100vw - 32px);max-height:90vh;overflow:auto;border-radius:6px;box-shadow:0 24px 90px #0e293d35}
+.form-input{background:#f5f9fc;color:#173d58;border-color:#bfd2e0}
+.form-input:focus{outline:2px solid #91b8d0;outline-offset:2px}
+.badge-info{background:#e1eff8;color:#245779}
+.brand-context{display:flex;justify-content:space-between;gap:12px;margin-bottom:28px;padding-bottom:16px;border-bottom:1px solid #ccdde8;font:10px/1.7 Consolas,monospace;letter-spacing:1.3px;color:#56758a}
+.brand-context span:last-child{font-family:'Segoe UI',sans-serif;letter-spacing:0}
+@media(max-width:1000px){.layout{grid-template-columns:190px minmax(0,1fr)}.stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.main{padding:24px}.header{flex-wrap:wrap;gap:16px}.nav{flex-wrap:wrap}.card{overflow-x:auto}}
+@media(max-width:650px){.layout{display:block}.sidebar{display:none}.main{padding:20px 14px}.header{padding:16px}.header .nav{order:3;width:100%;overflow-x:auto;flex-wrap:nowrap}.nav-item{white-space:nowrap;padding:7px 12px}.stats-grid{gap:10px}.stat-card{padding:16px}.stat-value{font-size:29px}.brand-context{flex-direction:column}.card{padding:18px}.table{min-width:550px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}

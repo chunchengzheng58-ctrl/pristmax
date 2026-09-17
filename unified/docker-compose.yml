@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  pristmax:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pristmax-storage
+    ports:
+      - "5001:5001"   # API port
+      - "9090:9090"   # Metrics port
+    volumes:
+      - ./data:/app/data       # Data directory
+      - ./storage:/app/storage # Storage volume
+      - ./logs:/app/logs       # Logs
+      - ./config:/app/config   # Configuration
+    environment:
+      - PRISTMAX_HOST=0.0.0.0
+      - PRISTMAX_PORT=5001
+      - PRISTMAX_DEBUG=false
+      - PRISTMAX_STORAGE_PATH=/app/storage
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5001/api/stats')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # Optional: Redis for distributed caching
+  # redis:
+  #   image: redis:7-alpine
+  #   ports:
+  #     - "6379:6379"
+  #   volumes:
+  #     - redis_data:/data
+  #   restart: unless-stopped
+
+# volumes:
+#   redis_data:

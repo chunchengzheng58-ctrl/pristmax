@@ -1,0 +1,97 @@
+# -*- coding: utf-8 -*-
+"""
+Docker Compose Configuration
+
+Local development and production deployment.
+"""
+
+services:
+  # Semantic Data Reduction API Server
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: semantic-api
+    ports:
+      - "5000:5000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - SR_DEBUG=false
+      - SR_BASE_PATH=/app/data
+      - SR_AUDIT_PATH=/app/data/audit
+      - SR_STORAGE_COST=5000
+    volumes:
+      - semantic-data:/app/data
+      - semantic-logs:/app/logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - semantic-network
+
+  # Optional: MinIO for S3-compatible storage
+  minio:
+    image: minio/minio:latest
+    container_name: semantic-minio
+    ports:
+      - "9000:9000"  # API
+      - "9001:9001"  # Console
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin123
+    volumes:
+      - minio-data:/data
+    command: server /data --console-address ":9001"
+    restart: unless-stopped
+    networks:
+      - semantic-network
+
+  # Optional: PostgreSQL for metadata storage
+  postgres:
+    image: postgres:15-alpine
+    container_name: semantic-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=semantic
+      - POSTGRES_USER=semantic
+      - POSTGRES_PASSWORD=semantic123
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - semantic-network
+
+  # Nginx reverse proxy (optional)
+  nginx:
+    image: nginx:alpine
+    container_name: semantic-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deploy/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./deploy/nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - api
+    restart: unless-stopped
+    networks:
+      - semantic-network
+
+volumes:
+  semantic-data:
+    driver: local
+  semantic-logs:
+    driver: local
+  minio-data:
+    driver: local
+  postgres-data:
+    driver: local
+
+networks:
+  semantic-network:
+    driver: bridge

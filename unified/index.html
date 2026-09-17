@@ -1,0 +1,1454 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pristmax · 企业数据控制台</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20120%20120%22%20style%3D%22color%3A%23173D58%22%3E%3Cpath%20fill%3D%22currentColor%22%20d%3D%22M60%2012C84%2012%20104%2029%20108%2051C94%2040%2081%2036%2066%2040L47%2045C38%2047%2031%2042%2032%2034C34%2023%2047%2012%2060%2012Z%22%20transform%3D%22rotate%280%2060%2060%29%22%2F%3E%3Cpath%20fill%3D%22currentColor%22%20d%3D%22M60%2012C84%2012%20104%2029%20108%2051C94%2040%2081%2036%2066%2040L47%2045C38%2047%2031%2042%2032%2034C34%2023%2047%2012%2060%2012Z%22%20transform%3D%22rotate%28120%2060%2060%29%22%2F%3E%3Cpath%20fill%3D%22currentColor%22%20d%3D%22M60%2012C84%2012%20104%2029%20108%2051C94%2040%2081%2036%2066%2040L47%2045C38%2047%2031%2042%2032%2034C34%2023%2047%2012%2060%2012Z%22%20transform%3D%22rotate%28240%2060%2060%29%22%2F%3E%3C%2Fsvg%3E">
+    <link rel="stylesheet" href="design.css">
+    <link rel="stylesheet" href="pristmax-editorial.css">
+    <!-- Lenis 平滑滚动 -->
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.33/dist/lenis.min.js"></script>
+</head>
+<body data-aru-step="banner">
+    <!-- Canvas 背景动画 -->
+    <canvas class="fate-canvas" id="fateCanvas" aria-hidden="true"></canvas>
+
+    <!-- 背景网格纹理 -->
+    <div class="grid-overlay" aria-hidden="true"></div>
+
+    <!-- Welcome Banner Gate -->
+    <div id="banner-gate" class="banner-gate">
+        <div class="banner-center">
+            <h1 class="banner-brand">PRISTMAX</h1>
+            <p class="banner-tagline">Less volume. <em>More clarity.</em></p>
+        </div>
+        <button class="banner-enter" id="enterBtn">
+            <span>ENTER</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </button>
+        <p class="banner-hint">Click anywhere to enter</p>
+        <div class="banner-atmosphere" aria-hidden="true"></div>
+    </div>
+
+    <!-- Loading overlay (备用) -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-bar"></div>
+    </div>
+    <header class="header">
+        <a class="logo" href="#dashboard" aria-label="Pristmax首页">
+            <svg class="logo-icon" width="34" height="34" viewBox="0 0 120 120" aria-hidden="true"><path fill="currentColor" d="M60 12C84 12 104 29 108 51C94 40 81 36 66 40L47 45C38 47 31 42 32 34C34 23 47 12 60 12Z" transform="rotate(0 60 60)"/><path fill="currentColor" d="M60 12C84 12 104 29 108 51C94 40 81 36 66 40L47 45C38 47 31 42 32 34C34 23 47 12 60 12Z" transform="rotate(120 60 60)"/><path fill="currentColor" d="M60 12C84 12 104 29 108 51C94 40 81 36 66 40L47 45C38 47 31 42 32 34C34 23 47 12 60 12Z" transform="rotate(240 60 60)"/></svg>
+            <span>Pristmax<span class="brand-en">ENTERPRISE DATA SYSTEM</span></span>
+        </a>
+        <nav class="nav" aria-label="主要导航">
+            <button class="nav-item active" data-tab="dashboard">Overview</button>
+            <button class="nav-item" data-tab="semantic">Intelligence</button>
+            <button class="nav-item" data-tab="distributed">Storage</button>
+            <button class="nav-item" data-tab="volumes">Volumes</button>
+            <button class="nav-item" data-tab="audit">Audit</button>
+            <button class="nav-item" data-tab="roi">Value</button>
+        </nav>
+        <div class="header-actions"><span class="demo-badge"><i></i> 演示工作空间</span><button class="header-btn" id="refresh-view" aria-label="刷新页面">↻</button></div>
+    </header>
+    <div class="workspace-line"><span>WORKSPACE <b>/</b> Pristmax 企业数据控制台</span><span>PRISTMAX <b>·</b> 本地部署</span></div>
+    <!-- Main -->
+    <main class="main">
+        <!-- Dashboard -->
+        <section id="dashboard" class="section active">
+            <div class="overview-hero" id="heroSection">
+                <div class="hero-copy">
+                    <p class="eyebrow">A CLEARER FUTURE FOR YOUR DATA</p>
+                    <h1 class="pristmax-wordmark">PRISTMAX</h1>
+                    <h2 class="pristmax-statement">Keep the meaning.<br><em>Reduce the weight.</em></h2>
+                    <p class="hero-description">让数据更轻，让价值清晰。<br>Semantic intelligence. Thoughtful storage.</p>
+                    <div class="hero-actions"><button class="btn btn-light" onclick="switchTab('distributed')">Explore storage <span>↗</span></button><button class="text-link" onclick="switchTab('semantic')">Discover the intelligence →</button></div>
+                    <div class="hero-caption"><span>01 / UNDERSTAND</span><span>02 / REDUCE</span><span>03 / VERIFY</span></div>
+                </div>
+                <div class="fold-art pristmax-atmosphere" id="foldArt" aria-hidden="true"></div>
+                <span class="pristmax-side-label">DESIGNED TO PRESERVE / BUILT TO SIMPLIFY</span>
+            </div>
+            <section class="winter-story" aria-labelledby="winter-title">
+                <div class="winter-intro"><p class="eyebrow">THE ART OF LESS / 01</p><h2 id="winter-title">Less noise.<br><em>Room to bloom.</em></h2><p>让繁杂归于有序，<br>为真正重要的信息留出空间。</p><span class="winter-note">A STUDY IN CLARITY — PRISTMAX</span></div>
+                <details class="winter-detail" id="winter-detail">
+                    <summary><span class="winter-index">01</span><span>Clarity takes flight.<small>轻盈有序，自在舒展 · 点击展开</small></span><span class="winter-toggle" aria-hidden="true">＋</span></summary>
+                    <div class="winter-panel">
+                        <svg class="winter-botanical" viewBox="0 0 680 560" aria-hidden="true" focusable="false"></svg>
+                        <div class="winter-panel-copy"><span class="winter-kicker">PRISTMAX / A STUDY IN FLIGHT</span><h3>Preserve<br>what matters.</h3><p>理解信息，减少冗余。<br>在更轻盈的存储中，<br>留住数据的价值。</p><button class="winter-replay" type="button" aria-label="重播蝴蝶飞舞动画">REPLAY THE FLIGHT <span aria-hidden="true">↗</span></button></div>
+                        <div class="winter-panel-foot"><span>PAPER WINGS / 纸翼</span><span>LESS, BUT ESSENTIAL.</span></div>
+                    </div>
+                </details>
+            </section>
+            <div class="section-heading" data-animate><div><p class="eyebrow">YOUR STORAGE, AT A GLANCE</p><h2>Clarity at a glance.</h2></div><span class="quiet-note">以下为演示数据 · 不代表实际节省</span></div>
+
+            <div class="card overview-metrics" data-animate>
+                <div class="card-title" style="margin-bottom: 16px;">核心指标</div>
+                <div class="integration-grid stagger-grid">
+                    <div class="integration-card">
+                        <div class="integration-value">1.5 PB</div>
+                        <div class="integration-label">累计节省 · 示例</div>
+                    </div>
+                    <div class="integration-card">
+                        <div class="integration-value">73%</div>
+                        <div class="integration-label">去重比例 · 示例</div>
+                    </div>
+                    <div class="integration-card">
+                        <div class="integration-value">本地</div>
+                        <div class="integration-label">部署方式</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="comparison-grid">
+                <div class="comparison-card semantic" data-animate="scale">
+                    <div class="module-number">01 / SEMANTIC ENGINE <span>↗</span></div><div class="comparison-title">Meaning, distilled.</div>
+                    <div class="comparison-subtitle">语义降量 · 面向视频与日志的内容理解</div>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+                        <div class="stat-box semantic">
+                            <div class="stat-box-value">68%</div>
+                            <div class="stat-box-label">视频降量比例</div>
+                        </div>
+                        <div class="stat-box semantic">
+                            <div class="stat-box-value">156</div>
+                            <div class="stat-box-label">接入摄像头</div>
+                        </div>
+                        <div class="stat-box semantic">
+                            <div class="stat-box-value">892 TB</div>
+                            <div class="stat-box-label">节省空间</div>
+                        </div>
+                        <div class="stat-box semantic">
+                            <div class="stat-box-value">3</div>
+                            <div class="stat-box-label">运行策略</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-semantic" style="width: 100%; margin-top: 14px;" onclick="switchTab('semantic')">
+                        Explore the engine →
+                    </button>
+                </div>
+
+                <div class="comparison-card distributed" data-animate="scale">
+                    <div class="module-number">02 / STORAGE ENGINE <span>↗</span></div><div class="comparison-title">Space, reimagined.</div>
+                    <div class="comparison-subtitle">分布式存储 · 内容分块与指纹去重</div>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+                        <div class="stat-box distributed">
+                            <div class="stat-box-value">73%</div>
+                            <div class="stat-box-label">去重比例</div>
+                        </div>
+                        <div class="stat-box distributed">
+                            <div class="stat-box-value">5</div>
+                            <div class="stat-box-label">节点管理</div>
+                        </div>
+                        <div class="stat-box distributed">
+                            <div class="stat-box-value">648 TB</div>
+                            <div class="stat-box-label">存储占用</div>
+                        </div>
+                        <div class="stat-box distributed">
+                            <div class="stat-box-value">2.4 PB</div>
+                            <div class="stat-box-label">原始数据</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-distributed" style="width: 100%; margin-top: 14px;" onclick="switchTab('distributed')">
+                        Explore the engine →
+                    </button>
+                </div>
+            </div>
+
+            <div class="card" data-animate="fade-left">
+                <div class="card-header">
+                    <div class="card-title">最近处理活动</div>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>时间</th>
+                            <th>处理模块</th>
+                            <th>数据来源</th>
+                            <th>原始体积</th>
+                            <th>处理后</th>
+                            <th>缩减比例</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>10:30:45</td>
+                            <td><span class="badge badge-semantic">语义</span></td>
+                            <td>CAM-001 大堂</td>
+                            <td>100 MB</td>
+                            <td>12 MB</td>
+                            <td><span class="badge badge-success">88%</span></td>
+                        </tr>
+                        <tr>
+                            <td>10:28:12</td>
+                            <td><span class="badge badge-distributed">分布式</span></td>
+                            <td>backup-2024</td>
+                            <td>200 GB</td>
+                            <td>54 GB</td>
+                            <td><span class="badge badge-success">73%</span></td>
+                        </tr>
+                        <tr>
+                            <td>10:25:33</td>
+                            <td><span class="badge badge-distributed">分布式</span></td>
+                            <td>/data/logs</td>
+                            <td>50 GB</td>
+                            <td>8 GB</td>
+                            <td><span class="badge badge-success">84%</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Semantic Reduction -->
+        <section id="semantic" class="section">
+            <div class="module-banner semantic" data-animate="fade-left">
+                <div class="module-icon"></div>
+                <div>
+                    <div class="module-title">语义降量引擎</div>
+                    <div class="module-desc">理解视频与日志内容，按业务策略保留信息。</div>
+                </div>
+            </div>
+
+            <div class="hero-stats" data-animate>
+                <div class="hero-card" data-animate data-delay="1">
+                    <div class="hero-value">156</div>
+                    <div class="hero-label">接入摄像头</div>
+                </div>
+                <div class="hero-card" data-animate data-delay="2">
+                    <div class="hero-value">892 TB</div>
+                    <div class="hero-label">节省空间</div>
+                </div>
+                <div class="hero-card" data-animate data-delay="3">
+                    <div class="hero-value">68%</div>
+                    <div class="hero-label">视频降量比例</div>
+                </div>
+                <div class="hero-card" data-animate data-delay="4">
+                    <div class="hero-value">3</div>
+                    <div class="hero-label">运行策略</div>
+                </div>
+            </div>
+
+            <div class="card semantic-border" data-animate="fade-left">
+                <div class="card-header">
+                    <div class="card-title">内容保留策略</div>
+                    <button class="btn btn-semantic btn-sm">+ 新建策略</button>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>名称</th>
+                            <th>类型</th>
+                            <th>状态</th>
+                            <th>保留规则</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>办公楼3层</td>
+                            <td><span class="badge badge-semantic">视频</span></td>
+                            <td><span class="badge badge-success">运行中</span></td>
+                            <td>人脸保留 | 人员保留 | 低价值10%</td>
+                            <td><button class="btn btn-secondary btn-sm">查看配置</button></td>
+                        </tr>
+                        <tr>
+                            <td>停车场</td>
+                            <td><span class="badge badge-semantic">视频</span></td>
+                            <td><span class="badge badge-success">运行中</span></td>
+                            <td>车辆保留 | 人员保留 | 低价值5%</td>
+                            <td><button class="btn btn-secondary btn-sm">查看配置</button></td>
+                        </tr>
+                        <tr>
+                            <td>日志策略</td>
+                            <td><span class="badge badge-distributed">日志</span></td>
+                            <td><span class="badge badge-warning">草稿</span></td>
+                            <td>ERROR保留 | WARN保留 | 采样10%</td>
+                            <td><button class="btn btn-secondary btn-sm">查看配置</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="grid-2">
+                <div class="card semantic-border" data-animate="fade-left">
+                    <div class="card-header">
+                        <div class="card-title">接入摄像头</div>
+                        <button class="btn btn-secondary btn-sm">+ 接入设备</button>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>位置</th>
+                                <th>存储</th>
+                                <th>缩减比例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>CAM-001</td>
+                                <td>大堂</td>
+                                <td><div class="progress-bar" style="width: 50px;"><div class="progress-fill semantic" style="width: 65%;"></div></div></td>
+                                <td><span class="badge badge-success">42%</span></td>
+                            </tr>
+                            <tr>
+                                <td>CAM-002</td>
+                                <td>停车场A</td>
+                                <td><div class="progress-bar" style="width: 50px;"><div class="progress-fill semantic" style="width: 45%;"></div></div></td>
+                                <td><span class="badge badge-success">58%</span></td>
+                            </tr>
+                            <tr>
+                                <td>CAM-003</td>
+                                <td>3层办公区</td>
+                                <td><div class="progress-bar" style="width: 50px;"><div class="progress-fill semantic" style="width: 72%;"></div></div></td>
+                                <td><span class="badge badge-success">38%</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card semantic-border" data-animate="fade-right">
+                    <div class="card-header">
+                        <div class="card-title">最近处理</div>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>时间</th>
+                                <th>摄像头</th>
+                                <th>操作</th>
+                                <th>缩减比例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>10:30:45</td>
+                                <td>CAM-001</td>
+                                <td><span class="badge badge-semantic">降采样</span></td>
+                                <td><span class="badge badge-success">90%</span></td>
+                            </tr>
+                            <tr>
+                                <td>10:28:12</td>
+                                <td>CAM-003</td>
+                                <td><span class="badge badge-success">保留</span></td>
+                                <td><span class="badge badge-warning">0%</span></td>
+                            </tr>
+                            <tr>
+                                <td>10:25:33</td>
+                                <td>CAM-002</td>
+                                <td><span class="badge badge-semantic">降采样</span></td>
+                                <td><span class="badge badge-success">85%</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Distributed Storage -->
+        <section id="distributed" class="section">
+            <div class="module-banner distributed" data-animate="fade-right">
+                <div class="module-icon"></div>
+                <div>
+                    <div class="module-title">分布式存储引擎</div>
+                    <div class="module-desc">内容分块、指纹去重与节点调度，统一管理数据。</div>
+                </div>
+            </div>
+
+            <div class="hero-stats" data-animate>
+                <div class="hero-card" data-animate data-delay="1">
+                    <div class="hero-value">5</div>
+                    <div class="hero-label">集群节点</div>
+                </div>
+                <div class="hero-card" data-animate data-delay="2">
+                    <div class="hero-value">73%</div>
+                    <div class="hero-label">去重比例</div>
+                </div>
+                <div class="hero-card" data-animate data-delay="3">
+                    <div class="hero-value">2.4 PB</div>
+                    <div class="hero-label">原始数据</div>
+                </div>
+                <div class="hero-card" data-animate data-delay="4">
+                    <div class="hero-value">648 TB</div>
+                    <div class="hero-label">存储占用</div>
+                </div>
+            </div>
+
+            <div class="card distributed-border" data-animate="scale">
+                <div class="card-header">
+                    <div class="card-title">节点分布拓扑</div>
+                </div>
+                <div class="ring-container" id="hashRing">
+                    <div class="ring-label">哈希环拓扑</div>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;">
+                    <div class="stat-box distributed">
+                        <div class="stat-box-value">150</div>
+                        <div class="stat-box-label">虚拟节点/物理</div>
+                    </div>
+                    <div class="stat-box distributed">
+                        <div class="stat-box-value">3</div>
+                        <div class="stat-box-label">副本因子</div>
+                    </div>
+                    <div class="stat-box distributed">
+                        <div class="stat-box-value">256</div>
+                        <div class="stat-box-label">哈希槽</div>
+                    </div>
+                    <div class="stat-box distributed">
+                        <div class="stat-box-value">48B</div>
+                        <div class="stat-box-label">CDC窗口</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="card distributed-border" data-animate="fade-left">
+                    <div class="card-header">
+                        <div class="card-title">节点管理</div>
+                        <button class="btn btn-distributed btn-sm">+ 添加节点</button>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>执行节点</th>
+                                <th>角色</th>
+                                <th>状态</th>
+                                <th>负载</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>node-1</td>
+                                <td><span class="badge badge-distributed">扫描节点</span></td>
+                                <td><span class="badge badge-success">在线</span></td>
+                                <td><div class="progress-bar" style="width: 50px;"><div class="progress-fill distributed" style="width: 32%;"></div></div></td>
+                            </tr>
+                            <tr>
+                                <td>node-2</td>
+                                <td><span class="badge badge-distributed">扫描节点</span></td>
+                                <td><span class="badge badge-success">在线</span></td>
+                                <td><div class="progress-bar" style="width: 50px;"><div class="progress-fill distributed" style="width: 45%;"></div></div></td>
+                            </tr>
+                            <tr>
+                                <td>node-coord</td>
+                                <td><span class="badge badge-semantic">协调节点</span></td>
+                                <td><span class="badge badge-success">在线</span></td>
+                                <td><div class="progress-bar" style="width: 50px;"><div class="progress-fill distributed" style="width: 15%;"></div></div></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card distributed-border" data-animate="fade-right">
+                    <div class="card-header">
+                        <div class="card-title">分块统计</div>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>指标</th>
+                                <th>数值</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>文件总数</td><td>45,678</td></tr>
+                            <tr><td>块总数</td><td>892,345</td></tr>
+                            <tr><td>唯一块</td><td>240,932</td></tr>
+                            <tr><td>重复块</td><td>651,413</td></tr>
+                            <tr><td>平均块大小</td><td>4 KB</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card distributed-border" data-animate="fade-left">
+                <div class="card-header">
+                    <div class="card-title">扫描任务</div>
+                    <button class="btn btn-distributed btn-sm">+ 新建任务</button>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>任务</th>
+                            <th>目录</th>
+                            <th>执行节点</th>
+                            <th>进度</th>
+                            <th>状态</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>task-001</td>
+                            <td>/data/backup</td>
+                            <td>node-1</td>
+                            <td><div class="progress-bar" style="width: 70px;"><div class="progress-fill distributed" style="width: 65%;"></div></div> 65%</td>
+                            <td><span class="badge badge-semantic">运行中</span></td>
+                        </tr>
+                        <tr>
+                            <td>task-002</td>
+                            <td>/data/logs</td>
+                            <td>node-2</td>
+                            <td><div class="progress-bar" style="width: 70px;"><div class="progress-fill distributed" style="width: 100%;"></div></div> 100%</td>
+                            <td><span class="badge badge-success">已完成</span></td>
+                        </tr>
+                        <tr>
+                            <td>task-003</td>
+                            <td>/data/archive</td>
+                            <td>-</td>
+                            <td><div class="progress-bar" style="width: 70px;"><div class="progress-fill distributed" style="width: 0%;"></div></div> 0%</td>
+                            <td><span class="badge badge-warning">等待中</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Storage Volumes -->
+        <section id="volumes" class="section">
+            <div class="module-banner" data-animate="fade-left" style="border-left-color: var(--glow-accent);">
+                <div class="module-icon" style="border-color: rgba(126,200,227,0.3); background: repeating-linear-gradient(135deg,transparent,transparent 8px,rgba(126,200,227,0.08) 9px,rgba(126,200,227,0.12) 10px);"></div>
+                <div>
+                    <div class="module-title">存储卷管理</div>
+                    <div class="module-desc">多类型存储统一视图 · Local / NAS / USB / Cloud / RAID</div>
+                </div>
+            </div>
+
+            <div class="card" data-animate>
+                <div class="card-header">
+                    <div class="card-title">已配置存储</div>
+                    <button class="btn btn-light btn-sm" onclick="openStorageWizard()">+ 添加存储</button>
+                </div>
+                <div id="storage-list" class="storage-list">
+                    <div class="storage-loading">
+                        <div class="loading-spinner"></div>
+                        <span>正在加载存储信息...</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="comparison-grid" style="margin-top: 22px;">
+                <div class="comparison-card" data-animate="scale">
+                    <div class="module-number">01 / STORAGE TYPES</div>
+                    <div class="comparison-title">支持的存储类型</div>
+                    <div class="comparison-subtitle">点击了解各类型配置方式</div>
+                    <div class="storage-type-grid" style="margin-top: 18px;">
+                        <div class="storage-type-item" data-type="local_disk">
+                            <span class="storage-type-icon">💾</span>
+                            <span class="storage-type-name">本地硬盘</span>
+                            <span class="storage-type-desc">SSD / HDD</span>
+                        </div>
+                        <div class="storage-type-item" data-type="nas">
+                            <span class="storage-type-icon">📡</span>
+                            <span class="storage-type-name">NAS 存储</span>
+                            <span class="storage-type-desc">SMB / NFS</span>
+                        </div>
+                        <div class="storage-type-item" data-type="usb">
+                            <span class="storage-type-icon">🔌</span>
+                            <span class="storage-type-name">外置硬盘</span>
+                            <span class="storage-type-desc">USB 设备</span>
+                        </div>
+                        <div class="storage-type-item" data-type="cloud">
+                            <span class="storage-type-icon">☁️</span>
+                            <span class="storage-type-name">云存储</span>
+                            <span class="storage-type-desc">S3 兼容</span>
+                        </div>
+                        <div class="storage-type-item" data-type="raid">
+                            <span class="storage-type-icon">🗄️</span>
+                            <span class="storage-type-name">RAID 阵列</span>
+                            <span class="storage-type-desc">硬件阵列</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comparison-card" data-animate="scale">
+                    <div class="module-number">02 / QUICK ACTIONS</div>
+                    <div class="comparison-title">快速操作</div>
+                    <div class="comparison-subtitle">常用存储管理功能</div>
+                    <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 18px;">
+                        <button class="btn" style="background: rgba(126,200,227,0.1); color: var(--fg); border: 1px solid rgba(126,200,227,0.2); justify-content: flex-start;" onclick="scanAllStorages()">
+                            <span>🔍</span> 扫描所有存储
+                        </button>
+                        <button class="btn" style="background: rgba(126,200,227,0.1); color: var(--fg); border: 1px solid rgba(126,200,227,0.2); justify-content: flex-start;" onclick="findDuplicates()">
+                            <span>📦</span> 查找重复文件
+                        </button>
+                        <button class="btn" style="background: rgba(126,200,227,0.1); color: var(--fg); border: 1px solid rgba(126,200,227,0.2); justify-content: flex-start;" onclick="refreshStorages()">
+                            <span>↻</span> 刷新存储状态
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Storage Wizard Modal -->
+            <div id="storage-wizard" class="storage-wizard" hidden>
+                <div class="wizard-overlay" onclick="closeStorageWizard()"></div>
+                <div class="wizard-dialog">
+                    <div class="wizard-header">
+                        <h3 id="wizard-title">添加存储</h3>
+                        <button class="wizard-close" onclick="closeStorageWizard()">×</button>
+                    </div>
+                    <div class="wizard-body">
+                        <div class="wizard-step" id="wizard-step-type">
+                            <h4>选择存储类型</h4>
+                            <div class="storage-type-grid">
+                                <button class="storage-type-btn" data-type="local_disk">
+                                    <span class="icon">💾</span>
+                                    <span class="label">本地硬盘</span>
+                                    <span class="desc">SSD / HDD 磁盘</span>
+                                </button>
+                                <button class="storage-type-btn" data-type="nas">
+                                    <span class="icon">📡</span>
+                                    <span class="label">NAS 存储</span>
+                                    <span class="desc">SMB / NFS 网络共享</span>
+                                </button>
+                                <button class="storage-type-btn" data-type="usb">
+                                    <span class="icon">🔌</span>
+                                    <span class="label">外置硬盘</span>
+                                    <span class="desc">USB 存储设备</span>
+                                </button>
+                                <button class="storage-type-btn" data-type="cloud">
+                                    <span class="icon">☁️</span>
+                                    <span class="label">云存储</span>
+                                    <span class="desc">S3 兼容存储</span>
+                                </button>
+                                <button class="storage-type-btn" data-type="raid">
+                                    <span class="icon">🗄️</span>
+                                    <span class="label">RAID 阵列</span>
+                                    <span class="desc">硬件 RAID 阵列</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="wizard-step hidden" id="wizard-step-config">
+                            <h4>配置存储</h4>
+                            <div id="storage-config-form" class="storage-config-form">
+                                <!-- Dynamic form based on storage type -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="wizard-footer">
+                        <button class="btn btn-sm" onclick="wizardPrev()">上一步</button>
+                        <button class="btn btn-light btn-sm" onclick="wizardNext()">下一步</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ROI Calculator -->
+        <section id="roi" class="section">
+            <div class="module-banner semantic" data-animate="fade-left">
+                <div class="module-icon"></div>
+                <div>
+                    <div class="module-title">ROI 效益估算</div>
+                    <div class="module-desc">基于您的数据规模，预测两大引擎的存储节省与回本周期。</div>
+                </div>
+            </div>
+
+            <div class="comparison-grid">
+                <div class="comparison-card semantic" data-animate="scale">
+                    <div class="module-number">01 / SEMANTIC ROI <span>↗</span></div>
+                    <div class="comparison-title">语义降量引擎</div>
+                    <div class="comparison-subtitle">视频监控 · 日志保留 · 智能降采样</div>
+
+                    <div class="roi-inputs">
+                        <div class="roi-input-group">
+                            <label>摄像头数量</label>
+                            <input type="number" id="roi-cameras" value="100" min="1" max="10000">
+                        </div>
+                        <div class="roi-input-group">
+                            <label>单路码率 (Mbps)</label>
+                            <input type="number" id="roi-bitrate" value="4" min="1" max="20">
+                        </div>
+                        <div class="roi-input-group">
+                            <label>存储单价 (元/TB/月)</label>
+                            <input type="number" id="roi-storage-cost" value="50" min="1" max="500">
+                        </div>
+                        <div class="roi-input-group">
+                            <label>保留天数</label>
+                            <input type="number" id="roi-retention" value="30" min="1" max="365">
+                        </div>
+                    </div>
+
+                    <div class="roi-results">
+                        <div class="roi-result-row">
+                            <span>原始存储需求</span>
+                            <span class="roi-value" id="roi-sem-original">-</span>
+                        </div>
+                        <div class="roi-result-row">
+                            <span>降量后存储</span>
+                            <span class="roi-value" id="roi-sem-reduced">-</span>
+                        </div>
+                        <div class="roi-result-row highlight">
+                            <span>月度节省</span>
+                            <span class="roi-value" id="roi-sem-savings">-</span>
+                        </div>
+                        <div class="roi-result-row highlight">
+                            <span>年度节省</span>
+                            <span class="roi-value" id="roi-sem-annual">-</span>
+                        </div>
+                    </div>
+
+                    <div class="roi-assumption">按平均降量率 68% 计算 · 含 15% 策略余量</div>
+                </div>
+
+                <div class="comparison-card distributed" data-animate="scale">
+                    <div class="module-number">02 / DEDUP ROI <span>↗</span></div>
+                    <div class="comparison-title">分布式存储引擎</div>
+                    <div class="comparison-subtitle">内容分块 · 指纹去重 · 一致性哈希</div>
+
+                    <div class="roi-inputs">
+                        <div class="roi-input-group">
+                            <label>原始数据量 (TB)</label>
+                            <input type="number" id="roi-volume" value="500" min="1" max="100000">
+                        </div>
+                        <div class="roi-input-group">
+                            <label>预估去重率</label>
+                            <input type="number" id="roi-dedup-rate" value="70" min="10" max="95">
+                        </div>
+                        <div class="roi-input-group">
+                            <label>存储单价 (元/TB/月)</label>
+                            <input type="number" id="roi-dist-cost" value="50" min="1" max="500">
+                        </div>
+                        <div class="roi-input-group">
+                            <label>年数据增长率</label>
+                            <input type="number" id="roi-growth" value="30" min="0" max="200">
+                        </div>
+                    </div>
+
+                    <div class="roi-results">
+                        <div class="roi-result-row">
+                            <span>去重后存储</span>
+                            <span class="roi-value" id="roi-dist-stored">-</span>
+                        </div>
+                        <div class="roi-result-row">
+                            <span>月度节省</span>
+                            <span class="roi-value" id="roi-dist-savings">-</span>
+                        </div>
+                        <div class="roi-result-row highlight">
+                            <span>年度节省</span>
+                            <span class="roi-value" id="roi-dist-annual">-</span>
+                        </div>
+                        <div class="roi-result-row highlight">
+                            <span>5年累计节省</span>
+                            <span class="roi-value" id="roi-dist-5year">-</span>
+                        </div>
+                    </div>
+
+                    <div class="roi-assumption">去重率按内容特征浮动 · 实际结果取决于数据类型</div>
+                </div>
+            </div>
+
+            <div class="card" data-animate="fade-left">
+                <div class="card-header">
+                    <div class="card-title">综合效益汇总</div>
+                </div>
+                <div class="roi-summary-grid">
+                    <div class="roi-summary-item">
+                        <div class="roi-summary-value" id="roi-total-monthly">-</div>
+                        <div class="roi-summary-label">月度节省</div>
+                    </div>
+                    <div class="roi-summary-item">
+                        <div class="roi-summary-value" id="roi-total-annual">-</div>
+                        <div class="roi-summary-label">年度节省</div>
+                    </div>
+                    <div class="roi-summary-item">
+                        <div class="roi-summary-value" id="roi-total-combined">-</div>
+                        <div class="roi-summary-label">综合降量率</div>
+                    </div>
+                    <div class="roi-summary-item">
+                        <div class="roi-summary-value" id="roi-total-space">-</div>
+                        <div class="roi-summary-label">总节省空间</div>
+                    </div>
+                </div>
+                <div class="roi-disclaimer">
+                    * 本估算基于行业典型参数，实际效果因数据类型、场景特征而异。联系我们的解决方案架构师获取精确评估。
+                </div>
+            </div>
+        </section>
+
+        <!-- Audit -->
+        <section id="audit" class="section"><div class="verification-art-band"><div><p class="eyebrow">TRACEABLE BY DESIGN</p><h2>Trust, in every detail.</h2><p>每一次处理，都留下清晰可查的记录。</p></div></div>
+            <div class="card" data-animate="scale">
+                <div class="card-header">
+                    <div class="card-title">操作审计</div>
+                    <div style="display: flex; gap: 10px;">
+                        <select aria-label="筛选审计模块" style="padding: 6px 12px; border: 1px solid var(--gray-300); border-radius: 6px; font-size: 13px;">
+                            <option value="all">全部模块</option>
+                            <option value="semantic">语义降量</option>
+                            <option value="distributed">分布式存储</option>
+                        </select>
+                        <button class="btn btn-secondary btn-sm">导出记录</button>
+                    </div>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>时间</th>
+                            <th>事件</th>
+                            <th>处理模块</th>
+                            <th>数据来源</th>
+                            <th>原始体积</th>
+                            <th>处理后</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>10:30:45</td>
+                            <td>SEMANTIC_REDUCED</td>
+                            <td><span class="badge badge-semantic">语义</span></td>
+                            <td>CAM-001</td>
+                            <td>100 MB</td>
+                            <td>10 MB</td>
+                        </tr>
+                        <tr>
+                            <td>10:28:12</td>
+                            <td>DEDUP_STORED</td>
+                            <td><span class="badge badge-distributed">分布式</span></td>
+                            <td>backup-2024</td>
+                            <td>200 GB</td>
+                            <td>54 GB</td>
+                        </tr>
+                        <tr>
+                            <td>10:25:33</td>
+                            <td>CDC_CHUNKED</td>
+                            <td><span class="badge badge-distributed">分布式</span></td>
+                            <td>/data/logs</td>
+                            <td>50 GB</td>
+                            <td>8 GB</td>
+                        </tr>
+                        <tr>
+                            <td>10:20:00</td>
+                            <td>NODE_REGISTERED</td>
+                            <td><span class="badge badge-distributed">分布式</span></td>
+                            <td>node-4</td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="integrity-box">
+                    <div class="integrity-title">演示审计链 · 尚未执行实际校验</div>
+                    <div class="integrity-desc">本页为合并系统的功能演示，记录与完整性状态均为样例。</div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer class="site-footer"><a href="#dashboard" class="footer-brand">Pristmax <span>Less, but essential.</span></a><span>数据纯净，存储明智。</span><span>PRODUCT PREVIEW / 2026</span></footer>
+    <dialog id="preview-dialog"><form method="dialog"><button class="dialog-close" aria-label="关闭">×</button></form><p class="eyebrow">WORKSPACE PREVIEW</p><h2 id="dialog-title"></h2><p id="dialog-message"></p><button class="btn btn-semantic" onclick="document.getElementById('preview-dialog').close()">我知道了</button></dialog>
+    <div id="ui-status" role="status" aria-live="polite"></div>
+
+    <script>
+        // ============================================
+        // CANVAS BACKGROUND ANIMATION - ICE CRYSTAL
+        // ============================================
+        class IceCanvas {
+            constructor() {
+                this.canvas = document.getElementById('fateCanvas');
+                if (!this.canvas) return;
+                this.ctx = this.canvas.getContext('2d');
+                this.flakes = [];
+                this.crystals = [];
+                this.heroFade = 0;
+                this.time = 0;
+                this.init();
+            }
+
+            init() {
+                this.resize();
+                window.addEventListener('resize', () => this.resize());
+                this.createFlakes();
+                this.createCrystals();
+                this.animate();
+            }
+
+            resize() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+            }
+
+            createFlakes() {
+                const count = Math.floor((this.canvas.width * this.canvas.height) / 18000);
+                this.flakes = [];
+
+                for (let i = 0; i < count; i++) {
+                    this.flakes.push({
+                        x: Math.random() * this.canvas.width,
+                        y: Math.random() * this.canvas.height,
+                        size: Math.random() * 2.5 + 0.5,
+                        speed: Math.random() * 0.4 + 0.1,
+                        drift: (Math.random() - 0.5) * 0.3,
+                        opacity: Math.random() * 0.5 + 0.15,
+                        twinkle: Math.random() * Math.PI * 2
+                    });
+                }
+            }
+
+            createCrystals() {
+                const count = 8;
+                this.crystals = [];
+
+                for (let i = 0; i < count; i++) {
+                    this.crystals.push({
+                        x: Math.random() * this.canvas.width,
+                        y: Math.random() * this.canvas.height,
+                        size: Math.random() * 60 + 30,
+                        rotation: Math.random() * Math.PI * 2,
+                        rotationSpeed: (Math.random() - 0.5) * 0.002,
+                        opacity: Math.random() * 0.06 + 0.02
+                    });
+                }
+            }
+
+            drawSnowflake(x, y, size, rotation, opacity) {
+                const ctx = this.ctx;
+                const arms = 6;
+
+                ctx.save();
+                ctx.translate(x, y);
+                ctx.rotate(rotation);
+                ctx.globalAlpha = opacity;
+                ctx.strokeStyle = `rgba(184, 226, 248, 1)`;
+                ctx.lineWidth = 0.5;
+
+                for (let i = 0; i < arms; i++) {
+                    const angle = (i / arms) * Math.PI * 2;
+                    const endX = Math.cos(angle) * size;
+                    const endY = Math.sin(angle) * size;
+
+                    ctx.beginPath();
+                    ctx.moveTo(0, 0);
+                    ctx.lineTo(endX, endY);
+                    ctx.stroke();
+
+                    const branchLength = size * 0.35;
+                    const branchAngle = angle + Math.PI / 6;
+
+                    ctx.beginPath();
+                    ctx.moveTo(endX * 0.6, endY * 0.6);
+                    ctx.lineTo(endX * 0.6 + Math.cos(branchAngle) * branchLength, endY * 0.6 + Math.sin(branchAngle) * branchLength);
+                    ctx.stroke();
+
+                    ctx.beginPath();
+                    ctx.moveTo(endX * 0.6, endY * 0.6);
+                    ctx.lineTo(endX * 0.6 + Math.cos(angle - Math.PI / 6) * branchLength, endY * 0.6 + Math.sin(angle - Math.PI / 6) * branchLength);
+                    ctx.stroke();
+                }
+
+                ctx.beginPath();
+                ctx.arc(0, 0, size * 0.08, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(200, 240, 255, 0.8)`;
+                ctx.fill();
+
+                ctx.restore();
+            }
+
+            drawHexagon(x, y, size, rotation, opacity) {
+                const ctx = this.ctx;
+                ctx.save();
+                ctx.translate(x, y);
+                ctx.rotate(rotation);
+                ctx.globalAlpha = opacity;
+
+                ctx.beginPath();
+                for (let i = 0; i < 6; i++) {
+                    const angle = (i / 6) * Math.PI * 2 - Math.PI / 2;
+                    const px = Math.cos(angle) * size;
+                    const py = Math.sin(angle) * size;
+                    if (i === 0) ctx.moveTo(px, py);
+                    else ctx.lineTo(px, py);
+                }
+                ctx.closePath();
+                ctx.strokeStyle = `rgba(168, 216, 234, 0.4)`;
+                ctx.lineWidth = 0.5;
+                ctx.stroke();
+
+                ctx.restore();
+            }
+
+            animate() {
+                const ctx = this.ctx;
+                ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+                this.time += 0.008;
+                const fadeFactor = 1 - this.heroFade;
+
+                this.crystals.forEach(crystal => {
+                    crystal.rotation += crystal.rotationSpeed;
+                    this.drawHexagon(crystal.x, crystal.y, crystal.size * fadeFactor, crystal.rotation, crystal.opacity * fadeFactor);
+                });
+
+                this.flakes.forEach(flake => {
+                    flake.y += flake.speed * fadeFactor;
+                    flake.x += flake.drift + Math.sin(this.time + flake.twinkle) * 0.2;
+
+                    if (flake.y > this.canvas.height + 10) {
+                        flake.y = -10;
+                        flake.x = Math.random() * this.canvas.width;
+                    }
+                    if (flake.x < -10) flake.x = this.canvas.width + 10;
+                    if (flake.x > this.canvas.width + 10) flake.x = -10;
+
+                    const twinkle = Math.sin(this.time * 2 + flake.twinkle) * 0.3 + 0.7;
+                    const currentOpacity = flake.opacity * fadeFactor * twinkle;
+
+                    this.drawSnowflake(flake.x, flake.y, flake.size * fadeFactor, this.time + flake.twinkle, currentOpacity);
+                });
+
+                const gradient = ctx.createRadialGradient(
+                    this.canvas.width * 0.5, this.canvas.height * 0.35, 0,
+                    this.canvas.width * 0.5, this.canvas.height * 0.35, this.canvas.width * 0.5
+                );
+
+                gradient.addColorStop(0, `rgba(168, 216, 234, ${0.06 * fadeFactor})`);
+                gradient.addColorStop(0.4, `rgba(184, 226, 248, ${0.03 * fadeFactor})`);
+                gradient.addColorStop(1, 'transparent');
+
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+                this.animationId = requestAnimationFrame(() => this.animate());
+            }
+
+            setHeroFade(fade) {
+                this.heroFade = fade;
+            }
+        }
+
+        // ============================================
+        // SCROLL-DRIVEN THEME SWITCHING
+        // ============================================
+        let ticking = false;
+        let lastScrollY = 0;
+
+        function updateThemeOnScroll() {
+            const scrollY = window.scrollY;
+            const heroHeight = window.innerHeight * 1.2;
+            const heroFade = Math.min(1, scrollY / heroHeight);
+
+            // Update CSS variables
+            document.documentElement.style.setProperty('--hero-fade', heroFade);
+            document.body.classList.toggle('past-hero', heroFade > 0.5);
+
+            // Update canvas
+            if (window.iceCanvas) {
+                window.iceCanvas.setHeroFade(heroFade);
+            }
+
+            ticking = false;
+            lastScrollY = scrollY;
+        }
+
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                requestAnimationFrame(updateThemeOnScroll);
+                ticking = true;
+            }
+        }, { passive: true });
+
+        // ============================================
+        // STATE MANAGEMENT - Inspired by Aruacle
+        // ============================================
+        const ARU_HISTORY = 'pristmax-storage';
+        // Preserve existing browser preferences after the brand migration.
+        try { if (!localStorage.getItem(ARU_HISTORY) && localStorage.getItem('pristine-storage')) localStorage.setItem(ARU_HISTORY, localStorage.getItem('pristine-storage')); } catch (_) {}
+
+        function rawHistoryStep() {
+            const st = history.state && history.state[ARU_HISTORY];
+            if (st === 'banner' || st === 'main') return st;
+            return null;
+        }
+
+        function resolveVisualStep() {
+            const st = rawHistoryStep();
+            if (st !== null) return st;
+            return 'banner';
+        }
+
+        function applyShellState() {
+            const step = resolveVisualStep();
+            document.documentElement.setAttribute('data-aru-step', step);
+
+            const gate = document.getElementById('banner-gate');
+            if (gate) {
+                if (step === 'banner') {
+                    gate.classList.remove('hidden');
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    gate.classList.add('hidden');
+                    document.body.style.overflow = '';
+                }
+            }
+        }
+
+        function enterMain() {
+            try {
+                sessionStorage.setItem('cunxu-banner-completed', '1');
+            } catch (e) {}
+            history.replaceState({ [ARU_HISTORY]: 'main' }, '', location.pathname + location.search);
+            applyShellState();
+        }
+
+        window.addEventListener('pageshow', (event) => {
+            if (event.persisted) {
+                applyShellState();
+            }
+        });
+
+        window.addEventListener('popstate', () => {
+            applyShellState();
+        });
+
+        function checkFirstVisit() {
+            const step = resolveVisualStep();
+            const bannerCompleted = sessionStorage.getItem('cunxu-banner-completed') === '1';
+
+            if (bannerCompleted && step === 'banner') {
+                history.replaceState({ [ARU_HISTORY]: 'main' }, '', location.pathname + location.search);
+            }
+            applyShellState();
+        }
+
+        // ============================================
+        // SCROLL ANIMATIONS
+        // ============================================
+
+        const lenis = new Lenis({
+            lerp: 0.1,
+            wheelMultiplier: 1,
+            touchMultiplier: 1.5
+        });
+
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px 0px -80px 0px',
+            threshold: 0.1
+        };
+
+        const animateOnScroll = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animated');
+
+                    const statValues = entry.target.querySelectorAll('.integration-value, .hero-value, .stat-box-value');
+                    statValues.forEach(el => animateCounter(el));
+
+                    if (entry.target.classList.contains('fold-stack')) {
+                        entry.target.querySelectorAll('i').forEach((i, idx) => {
+                            setTimeout(() => i.classList.add('reveal'), idx * 120);
+                        });
+                    }
+                }
+            });
+        }, observerOptions);
+
+        function animateCounter(element) {
+            const text = element.textContent;
+            const match = text.match(/^([\d.]+)(.*)$/);
+            if (!match) return;
+
+            const target = parseFloat(match[1]);
+            const suffix = match[2];
+            const isFloat = match[1].includes('.');
+            const duration = 1200;
+            const start = performance.now();
+
+            function update(now) {
+                const elapsed = now - start;
+                const progress = Math.min(elapsed / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 4);
+                const current = target * eased;
+
+                element.textContent = (isFloat ? current.toFixed(1) : Math.floor(current)) + suffix;
+
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                } else {
+                    element.textContent = text;
+                }
+            }
+
+            requestAnimationFrame(update);
+        }
+
+        document.querySelectorAll('[data-animate], .fold-stack, .comparison-card, .integration-card, .table, .module-banner, .hero-stats, .hero-card, .stagger-grid').forEach(el => {
+            animateOnScroll.observe(el);
+        });
+
+        const heroSection = document.getElementById('heroSection');
+        const foldArt = document.getElementById('foldArt');
+
+        function updateParallax() {
+            if (!heroSection || !foldArt) return;
+
+            const rect = heroSection.getBoundingClientRect();
+            const scrollPercent = Math.max(0, Math.min(1, -rect.top / rect.height));
+
+            const translateY = scrollPercent * 80;
+            const opacity = 1 - scrollPercent * 1.5;
+            foldArt.style.transform = `translateY(${translateY}px)`;
+            foldArt.style.opacity = Math.max(0, opacity);
+        }
+
+        window.addEventListener('scroll', () => {
+            requestAnimationFrame(updateParallax);
+        }, { passive: true });
+
+        window.addEventListener('load', () => {
+            document.querySelectorAll('.fold-stack i').forEach((i, idx) => {
+                setTimeout(() => i.classList.add('reveal'), 300 + idx * 120);
+            });
+
+            document.querySelectorAll('.hero-copy .integration-value').forEach(el => {
+                setTimeout(() => animateCounter(el), 800);
+            });
+
+            setTimeout(() => {
+                document.getElementById('loadingOverlay')?.classList.add('hidden');
+            }, 600);
+        });
+
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                switchTab(item.dataset.tab);
+            });
+        });
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.nav-item').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+            const section = document.getElementById(tabId);
+            section.classList.add('active');
+
+            const elements = section.querySelectorAll('[data-animate], .fold-stack, .comparison-card, .integration-card, .table, .module-banner, .hero-stats, .hero-card');
+            elements.forEach((el, idx) => {
+                el.classList.remove('animated');
+                setTimeout(() => {
+                    animateOnScroll.observe(el);
+                    const rect = el.getBoundingClientRect();
+                    if (rect.top < window.innerHeight) {
+                        el.classList.add('animated');
+                    }
+                }, 50 + idx * 80);
+            });
+
+            document.querySelectorAll('.nav-item').forEach(t => t.setAttribute('aria-current', t.dataset.tab === tabId ? 'page' : 'false'));
+
+            try {
+                sessionStorage.setItem('cunxu-active-tab', tabId);
+            } catch (e) {}
+
+            history.replaceState(null, '', '#' + tabId);
+            lenis.scrollTo(0, { duration: 0.5 });
+            if (tabId === 'distributed') requestAnimationFrame(renderHashRing);
+        }
+
+        function restoreTabState() {
+            const hash = location.hash.slice(1);
+            const validTabs = ['dashboard', 'semantic', 'distributed', 'audit', 'roi'];
+            let targetTab = 'dashboard';
+
+            if (hash && validTabs.includes(hash)) {
+                targetTab = hash;
+            } else {
+                try {
+                    const savedTab = sessionStorage.getItem('cunxu-active-tab');
+                    if (savedTab && validTabs.includes(savedTab)) {
+                        targetTab = savedTab;
+                    }
+                } catch (e) {}
+            }
+
+            switchTab(targetTab);
+        }
+
+        function renderHashRing() {
+            const container = document.getElementById('hashRing');
+            if (!container) return;
+
+            const nodes = [
+                { id: 'node-1', angle: 0 },
+                { id: 'node-2', angle: 120 },
+                { id: 'node-3', angle: 240 },
+            ];
+
+            const centerX = container.offsetWidth / 2;
+            const centerY = container.offsetHeight / 2;
+            const radius = 50;
+
+            container.innerHTML = '';
+
+            const circle = document.createElement('div');
+            circle.style.cssText = `
+                position: absolute;
+                width: ${radius * 2}px;
+                height: ${radius * 2}px;
+                border: 1px dashed #829783;
+                border-radius: 50%;
+                left: ${centerX - radius}px;
+                top: ${centerY - radius}px;
+            `;
+            container.appendChild(circle);
+
+            nodes.forEach(node => {
+                const angle = (node.angle - 90) * Math.PI / 180;
+                const x = centerX + radius * Math.cos(angle);
+                const y = centerY + radius * Math.sin(angle);
+
+                const nodeEl = document.createElement('div');
+                nodeEl.style.cssText = `
+                    position: absolute;
+                    width: 30px;
+                    height: 30px;
+                    background: var(--dist-primary);
+                    border-radius: 50%;
+                    color: white;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 10px;
+                    font-weight: 600;
+                    left: ${x - 15}px;
+                    top: ${y - 15}px;
+                    transition: transform 0.3s ease, box-shadow 0.3s ease;
+                `;
+                nodeEl.textContent = node.id.split('-')[1];
+
+                nodeEl.addEventListener('mouseenter', () => {
+                    nodeEl.style.transform = `scale(1.2)`;
+                    nodeEl.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
+                });
+                nodeEl.addEventListener('mouseleave', () => {
+                    nodeEl.style.transform = `scale(1)`;
+                    nodeEl.style.boxShadow = 'none';
+                });
+
+                container.appendChild(nodeEl);
+            });
+        }
+
+        window.addEventListener('load', renderHashRing);
+        window.addEventListener('resize', renderHashRing);
+
+        // ============================================
+        // ROI CALCULATOR
+        // ============================================
+        const roiInputs = document.querySelectorAll('#roi input');
+
+        function formatBytes(tb) {
+            if (tb >= 1000) return (tb / 1000).toFixed(1) + ' PB';
+            if (tb >= 1) return tb.toFixed(1) + ' TB';
+            return (tb * 1024).toFixed(0) + ' GB';
+        }
+
+        function formatCurrency(num) {
+            if (num >= 100000000) return (num / 100000000).toFixed(2) + ' 亿';
+            if (num >= 10000) return (num / 10000).toFixed(1) + ' 万';
+            return num.toFixed(0) + ' 元';
+        }
+
+        function calculateSemanticROI() {
+            const cameras = parseFloat(document.getElementById('roi-cameras').value) || 100;
+            const bitrate = parseFloat(document.getElementById('roi-bitrate').value) || 4;
+            const storageCost = parseFloat(document.getElementById('roi-storage-cost').value) || 50;
+            const retention = parseFloat(document.getElementById('roi-retention').value) || 30;
+
+            // 原始存储 (TB) = 摄像头数 × 码率(Mbps) × 3600秒 × 24小时 × 天数 / 8 / 1000
+            const originalTB = cameras * bitrate * 3600 * 24 * retention / 8 / 1000;
+            // 降量后 = 原始 × (1 - 68%) × 1.15(余量)
+            const reductionRate = 0.68;
+            const safetyMargin = 1.15;
+            const reducedTB = originalTB * (1 - reductionRate) * safetyMargin;
+            const monthlySavings = (originalTB - reducedTB) * storageCost;
+            const annualSavings = monthlySavings * 12;
+
+            document.getElementById('roi-sem-original').textContent = formatBytes(originalTB);
+            document.getElementById('roi-sem-reduced').textContent = formatBytes(reducedTB);
+            document.getElementById('roi-sem-savings').textContent = formatCurrency(monthlySavings);
+            document.getElementById('roi-sem-annual').textContent = formatCurrency(annualSavings);
+
+            return { originalTB, reducedTB, monthlySavings, annualSavings };
+        }
+
+        function calculateDedupROI() {
+            const volume = parseFloat(document.getElementById('roi-volume').value) || 500;
+            const dedupRate = parseFloat(document.getElementById('roi-dedup-rate').value) || 70;
+            const storageCost = parseFloat(document.getElementById('roi-dist-cost').value) || 50;
+            const growthRate = parseFloat(document.getElementById('roi-growth').value) || 30;
+
+            const storedTB = volume * (1 - dedupRate / 100);
+            const monthlySavings = (volume - storedTB) * storageCost;
+            const annualSavings = monthlySavings * 12;
+
+            // 5年累计（含增长率复合）
+            let cumulative5yr = 0;
+            let currentVolume = volume;
+            for (let year = 0; year < 5; year++) {
+                const yearStored = currentVolume * (1 - dedupRate / 100);
+                cumulative5yr += (currentVolume - yearStored) * storageCost * 12;
+                currentVolume *= (1 + growthRate / 100);
+            }
+
+            document.getElementById('roi-dist-stored').textContent = formatBytes(storedTB);
+            document.getElementById('roi-dist-savings').textContent = formatCurrency(monthlySavings);
+            document.getElementById('roi-dist-annual').textContent = formatCurrency(annualSavings);
+            document.getElementById('roi-dist-5year').textContent = formatCurrency(cumulative5yr);
+
+            return { volume, storedTB, monthlySavings, annualSavings, cumulative5yr };
+        }
+
+        function updateROISummary() {
+            const sem = calculateSemanticROI();
+            const dedup = calculateDedupROI();
+
+            const totalMonthly = sem.monthlySavings + dedup.monthlySavings;
+            const totalAnnual = sem.annualSavings + dedup.annualSavings;
+            const totalOriginal = sem.originalTB + dedup.volume;
+            const totalStored = sem.reducedTB + dedup.storedTB;
+            const combinedRate = ((1 - totalStored / totalOriginal) * 100).toFixed(0);
+
+            document.getElementById('roi-total-monthly').textContent = formatCurrency(totalMonthly);
+            document.getElementById('roi-total-annual').textContent = formatCurrency(totalAnnual);
+            document.getElementById('roi-total-combined').textContent = combinedRate + '%';
+            document.getElementById('roi-total-space').textContent = formatBytes(totalOriginal - totalStored);
+        }
+
+        roiInputs.forEach(input => {
+            input.addEventListener('input', updateROISummary);
+        });
+
+        // Initial calculation when ROI tab is shown
+        const originalSwitchTab = switchTab;
+        switchTab = function(tabId) {
+            originalSwitchTab(tabId);
+            if (tabId === 'roi') {
+                updateROISummary();
+            }
+        };
+
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize ice canvas
+            window.iceCanvas = new IceCanvas();
+
+            // Banner enter button
+            const enterBtn = document.getElementById('enterBtn');
+            if (enterBtn) {
+                enterBtn.addEventListener('click', enterMain);
+            }
+
+            checkFirstVisit();
+            restoreTabState();
+
+            // Initial theme state
+            updateThemeOnScroll();
+        });
+    </script>
+    <script src="design.js"></script>
+</body>
+</html>
