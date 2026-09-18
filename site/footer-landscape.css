@@ -8,6 +8,8 @@
   overflow: hidden;
   pointer-events: none;
   isolation: isolate;
+  mask-image: none;
+  -webkit-mask-image: none;
 }
 
 .footer-landscape .landscape-svg-wrapper {
@@ -15,6 +17,12 @@
   width: 100%;
   height: auto;
   overflow: visible;
+}
+
+.footer-landscape .landscape-svg-wrapper svg.landscape-svg {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 .footer-landscape .landscape-svg-wrapper object {
