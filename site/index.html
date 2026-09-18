@@ -172,38 +172,42 @@
 
         <!-- Storage Agent -->
         <section class="section-storage-agent" id="storage-agent">
-            <div class="section-inner">
-                <div class="section-label">02B / AGENT</div>
-                <h2>Storage Agent</h2>
+            <div class="agent-top-cards">
+                <!-- GitHub 仓库卡片 -->
+                <div class="agent-card agent-github-card">
+                    <div class="agent-card-header">
+                        <span class="agent-card-icon">📦</span>
+                        <span class="agent-card-label">GitHub 仓库</span>
+                    </div>
+                    <h3>Storage Agent</h3>
+                    <p class="agent-card-desc">开源 · MIT · 源码与文档</p>
+                    <a href="https://github.com/chunchengzheng58-ctrl/pristmax" target="_blank" rel="noopener noreferrer" class="agent-card-link">GitHub ↗</a>
+                </div>
+                <!-- CLI 命令卡片 -->
+                <div class="agent-card agent-cli-card">
+                    <div class="agent-card-header">
+                        <span class="agent-card-icon">⌨️</span>
+                        <span class="agent-card-label">CLI</span>
+                    </div>
+                    <h3>Storage Agent CLI</h3>
+                    <p class="agent-card-desc">智能存储管家 · 本地扫描分析</p>
+                    <div class="agent-cli-box">
+                        <code>$ pip install pristmax</code>
+                        <button class="agent-copy-btn" data-copy="pip install pristmax" aria-label="复制命令">复制</button>
+                    </div>
+                </div>
             </div>
 
-            <div class="agent-demo" id="storage-terminal">
-                <div class="terminal-header">
-                    <span class="console-dot dot-red"></span>
-                    <span class="console-dot dot-yellow"></span>
-                    <span class="console-dot dot-green"></span>
-                    <span class="terminal-title">pristmax --agent</span>
-                    <button class="terminal-replay" aria-label="重新播放">↻</button>
-                </div>
-                <div class="terminal-body" id="terminal-output"></div>
-                <div class="agent-commands">
-                    <span class="agent-cmd-chip">--analyze</span>
-                    <span class="agent-cmd-chip">--large-files</span>
-                    <span class="agent-cmd-chip">--duplicates</span>
-                    <span class="agent-cmd-chip">--stats</span>
-                </div>
-            </div>
-
-            <div class="storage-install">
-                <div class="install-tabs">
-                    <button class="install-tab active" data-tab="pip">pip install pristmax</button>
-                    <button class="install-tab" data-tab="source">源码</button>
-                    <button class="install-tab" data-tab="package">下载</button>
-                </div>
-                <div class="install-content">
-                    <div class="install-panel active" id="install-pip"><code>pip install pristmax</code></div>
-                    <div class="install-panel" id="install-source"><code>git clone https://github.com/chunchengzheng58-ctrl/pristmax.git</code></div>
-                    <div class="install-panel" id="install-package"><code>curl -O https://jiangchenghehe.top/downloads/pristmax-api-release.tar</code></div>
+            <!-- 终端演示 -->
+            <div class="agent-terminal-demo">
+                <div class="terminal-frame">
+                    <div class="terminal-bar">
+                        <span class="terminal-dot"></span>
+                        <span class="terminal-dot"></span>
+                        <span class="terminal-dot"></span>
+                        <span class="terminal-path">~/pristmax — analyze &amp; optimize</span>
+                    </div>
+                    <div class="terminal-content" id="terminal-output"></div>
                 </div>
             </div>
         </section>
