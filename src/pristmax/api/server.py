@@ -27,7 +27,8 @@ from src.pristmax.storage import StorageManager
 from src.pristmax.api.task_processor import register_all_handlers, TASK_HANDLERS
 
 # 初始化任务调度器
-task_scheduler = TaskScheduler(db_path="./tasks.db", max_workers=4)
+db_path = os.environ.get('PRISTMAX_DB', os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'tasks.db'))
+task_scheduler = TaskScheduler(db_path=db_path, max_workers=4)
 register_all_handlers(task_scheduler)
 task_scheduler.start()  # 启动调度器
 
