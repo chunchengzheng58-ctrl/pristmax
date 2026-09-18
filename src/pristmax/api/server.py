@@ -25,6 +25,7 @@ from src.pristmax.monitor import get_monitor
 from src.pristmax.scheduler import TaskScheduler, TaskPriority
 from src.pristmax.storage import StorageManager
 from src.pristmax.api.task_processor import register_all_handlers, TASK_HANDLERS
+from src.pristmax.agent.storage_agent import FileInfo
 
 # 初始化任务调度器
 db_path = os.environ.get('PRISTMAX_DB', os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'tasks.db'))
@@ -713,6 +714,112 @@ def get_notification_history():
     nm = get_notification_manager()
     history = nm.get_notification_history(limit=50)
     return jsonify({'history': history})
+
+
+# ============== Storage Agent API ==============
+
+@app.route('/api/agent/stats', methods=['GET'])
+@require_auth
+def get_agent_stats():
+    """获取存储统计"""
+    from src.pristmax.agent.storage_agent import StorageAgent
+
+    scan_path = request.args.get('path', '/')
+    if not os.path.exists(scan_path):
+        return jsonify({'error': f'Path not found: {scan_path}'}), 400
+
+    agent = StorageAgent()
+    stats = agent.get_storage_stats(scan_path)
+    agent.close()
+    return jsonify(stats)
+
+
+@app.route('/api/agent/large-files', methods=['GET'])
+@require_auth
+def get_agent_large_files():
+    """获取大文件列表"""
+    from src.pristmax.agent.storage_agent import StorageAgent
+
+    scan_path = request.args.get('path', '/')
+    min_size_mb = int(request.args.get('min_size_mb', 100))
+    limit = int(request.args.get('limit', 20))
+
+    if not os.path.exists(scan_path):
+        return jsonify({'error': f'Path not found: {scan_path}'}), 400
+
+    agent = StorageAgent()
+    files = agent.analyze_large_files(scan_path, min_size_mb=min_size_mb, limit=limit)
+    agent.close()
+    return jsonify({'files': [f.__dict__ for f in files], 'count': len(files)})
+
+
+@app.route('/api/agent/duplicates', methods=['GET'])
+@require_auth
+def get_agent_duplicates():
+    """查找重复文件"""
+    from src.pristmax.agent.storage_agent import StorageAgent
+
+    scan_path = request.args.get('path', '/')
+    min_size_kb = int(request.args.get('min_size_kb', 1))
+
+    if not os.path.exists(scan_path):
+        return jsonify({'error': f'Path not found: {scan_path}'}), 400
+
+    agent = StorageAgent()
+    duplicates = agent.find_duplicates(scan_path, min_size_kb=min_size_kb)
+    agent.close()
+
+    total_wasted = sum(d.wasted_space for d in duplicates)
+    return jsonify({
+        'groups': [
+            {
+                'hash': d.hash,
+                'size': d.size,
+                'size_display': d.size_display,
+                'count': d.count,
+                'files': d.files,
+                'wasted_space': d.wasted_space,
+                'wasted_display': FileInfo.format_size(d.wasted_space) if hasattr(d, 'size_display') else str(d.wasted_space)
+            }
+            for d in duplicates
+        ],
+        'total_groups': len(duplicates),
+        'total_wasted_space': total_wasted
+    })
+
+
+@app.route('/api/agent/analyze', methods=['POST'])
+@require_auth
+def analyze_storage():
+    """综合分析存储"""
+    from src.pristmax.agent.storage_agent import StorageAgent
+
+    data = request.get_json() or {}
+    scan_path = data.get('path', '/')
+
+    if not os.path.exists(scan_path):
+        return jsonify({'error': f'Path not found: {scan_path}'}), 400
+
+    agent = StorageAgent()
+    result = {}
+
+    # 存储统计
+    result['stats'] = agent.get_storage_stats(scan_path)
+
+    # 大文件
+    result['large_files'] = [
+        f.__dict__ for f in agent.analyze_large_files(scan_path, min_size_mb=10, limit=10)
+    ]
+
+    # 重复文件
+    duplicates = agent.find_duplicates(scan_path, min_size_kb=1024)
+    result['duplicates'] = {
+        'groups': len(duplicates),
+        'total_wasted': sum(d.wasted_space for d in duplicates)
+    }
+
+    agent.close()
+    return jsonify(result)
 
 
 # ============== Web UI ==============
