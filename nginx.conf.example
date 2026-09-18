@@ -1,0 +1,47 @@
+# Nginx 配置文件示例
+# 保存为 /etc/nginx/sites-available/pristmax
+# 然后: ln -s /etc/nginx/sites-available/pristmax /etc/nginx/sites-enabled/
+
+server {
+    listen 80;
+    server_name your-domain.com;  # 修改为你的域名
+
+    # 日志
+    access_log /var/log/nginx/pristmax_access.log;
+    error_log /var/log/nginx/pristmax_error.log;
+
+    # Gzip 压缩
+    gzip on;
+    gzip_vary on;
+    gzip_min_length 1024;
+    gzip_types text/plain text/css application/json application/javascript;
+
+    location / {
+        proxy_pass http://127.0.0.1:5001;
+        proxy_http_version 1.1;
+
+        # 设置代理头
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        # SSE 支持
+        proxy_buffering off;
+        proxy_cache off;
+        proxy_read_timeout 86400;
+        proxy_send_timeout 86400;
+
+        # 升级 WebSocket（如需要）
+        proxy_set_header Connection '';
+    }
+
+    # 静态文件（如有）
+    # location /static/ {
+    #     alias /opt/pristmax/static/;
+    #     expires 30d;
+    # }
+}
+
+# HTTPS 配置（Let's Encrypt 自动配置后生成）
+# 合并到上面的 server 块即可

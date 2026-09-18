@@ -1,0 +1,45 @@
+[Unit]
+Description=Pristmax B端 API Server
+Documentation=https://github.com/your-repo/pristmax
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/opt/pristmax
+
+# 环境变量
+Environment="PRISTMAX_DB=/opt/pristmax/data/tasks.db"
+Environment="AUTH_DB=/opt/pristmax/data/auth.db"
+Environment="PORT=5001"
+Environment="FLASK_ENV=production"
+
+# 启动命令
+ExecStart=/opt/pristmax/venv/bin/python -m src.pristmax.api.server
+
+# 重启策略
+Restart=on-failure
+RestartSec=10
+StartLimitBurst=3
+StartLimitIntervalSec=60
+
+# 安全设置
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/pristmax/data
+
+# 日志
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=pristmax
+
+# 资源限制
+MemoryMax=2G
+CPUQuota=200%
+
+[Install]
+WantedBy=multi-user.target
