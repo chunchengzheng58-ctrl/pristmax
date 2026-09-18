@@ -47,6 +47,24 @@ if(prevBtn&&nextBtn){prevBtn.addEventListener('click',()=>{if(currentCli>0)showC
 // Chart animation
 const chartObserver=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting){document.querySelectorAll('.bar-fill').forEach((bar,index)=>{setTimeout(()=>{bar.style.width=bar.style.getPropertyValue('--fill')},index*100)});chartObserver.disconnect()}})},{threshold:0.3});const chartEl=document.querySelector('.storage-chart');if(chartEl)chartObserver.observe(chartEl);
 
-// Interactive terminal suggestions
+// Interactive terminal with keyboard navigation
 const terminalInput=document.getElementById('terminal-input');
-if(terminalInput){terminalInput.addEventListener('focus',()=>{document.getElementById('terminal-suggestions').style.display='flex'});terminalInput.addEventListener('blur',()=>{setTimeout(()=>{document.getElementById('terminal-suggestions').style.display='none'},200)});terminalInput.addEventListener('input',function(){const val=this.value.toLowerCase();document.querySelectorAll('.suggestion').forEach(s=>{const cmd=s.dataset.cmd.toLowerCase();s.style.opacity=val&&!cmd.includes(val.replace('--',''))?'0.3':'1'})});document.querySelectorAll('.suggestion').forEach(s=>{s.addEventListener('click',function(){terminalInput.value=this.dataset.cmd;terminalInput.focus()})})}
+const suggestions=document.getElementById('terminal-suggestions');
+if(terminalInput&&suggestions){
+let activeIndex=-1;
+const suggestionItems=suggestions.querySelectorAll('.suggestion');
+terminalInput.addEventListener('focus',()=>{suggestions.style.display='flex';activeIndex=-1});
+terminalInput.addEventListener('blur',()=>{setTimeout(()=>{suggestions.style.display='none';activeIndex=-1},200)});
+terminalInput.addEventListener('keydown',e=>{if(e.key==='ArrowDown'){e.preventDefault();activeIndex=Math.min(activeIndex+1,suggestionItems.length-1);updateActiveSuggestion()}
+else if(e.key==='ArrowUp'){e.preventDefault();activeIndex=Math.max(activeIndex-1,0);updateActiveSuggestion()}
+else if(e.key==='Tab'&&activeIndex>=0){e.preventDefault();terminalInput.value=suggestionItems[activeIndex].dataset.cmd}
+else if(e.key==='Enter'){if(activeIndex>=0)terminalInput.value=suggestionItems[activeIndex].dataset.cmd}});
+function updateActiveSuggestion(){suggestionItems.forEach((s,i)=>s.classList.toggle('active',i===activeIndex))}
+terminalInput.addEventListener('input',function(){const val=this.value.replace('--','').toLowerCase();activeIndex=-1;suggestionItems.forEach(s=>{const cmd=s.dataset.cmd.toLowerCase();s.style.opacity=val&&!cmd.includes(val)?'0.3':'1'})});
+suggestionItems.forEach(s=>{s.addEventListener('click',function(){terminalInput.value=this.dataset.cmd;terminalInput.focus()})})}
+
+// Expandable feature cards
+document.querySelectorAll('.storage-feature-card.expandable').forEach(card=>{card.addEventListener('click',function(){const wasExpanded=this.classList.contains('expanded');document.querySelectorAll('.storage-feature-card.expanded').forEach(c=>c.classList.remove('expanded'));if(!wasExpanded)this.classList.add('expanded')});card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();card.click()}})});
+
+// Keyboard navigation for CLI commands
+document.querySelectorAll('.cli-command').forEach((cmd,index)=>{cmd.setAttribute('tabindex','0');cmd.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();showCli(index)}})})

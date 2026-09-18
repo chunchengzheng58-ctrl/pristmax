@@ -185,12 +185,13 @@
             </div>
 
             <!-- Interactive Terminal -->
-            <div class="terminal interactive" id="storage-terminal">
+            <div class="terminal interactive" id="storage-terminal" tabindex="0">
                 <div class="terminal-header">
                     <span class="console-dot dot-red"></span>
                     <span class="console-dot dot-yellow"></span>
                     <span class="console-dot dot-green"></span>
                     <span class="terminal-title">~/storage-agent</span>
+                    <span class="terminal-hint">按 Tab 补全 · Enter 执行</span>
                     <button class="terminal-replay" aria-label="重新播放">↻</button>
                 </div>
                 <div class="terminal-body" id="terminal-output">
@@ -198,13 +199,14 @@
                 </div>
                 <div class="terminal-input-line">
                     <span class="prompt">$</span>
-                    <input type="text" class="terminal-input" id="terminal-input" placeholder="输入命令尝试..." autocomplete="off">
+                    <input type="text" class="terminal-input" id="terminal-input" placeholder="输入命令..." autocomplete="off" spellcheck="false">
+                    <span class="input-cursor"></span>
                 </div>
                 <div class="terminal-suggestions" id="terminal-suggestions">
-                    <span class="suggestion" data-cmd="storage-agent --path /data --analyze">--analyze</span>
-                    <span class="suggestion" data-cmd="storage-agent --large-files --min 100">--large-files</span>
-                    <span class="suggestion" data-cmd="storage-agent --duplicates">--duplicates</span>
-                    <span class="suggestion" data-cmd="storage-agent --stats">--stats</span>
+                    <span class="suggestion" data-cmd="storage-agent --path /data --analyze"><span class="sug-key">--analyze</span> 综合分析</span>
+                    <span class="suggestion" data-cmd="storage-agent --large-files --min 100"><span class="sug-key">--large-files</span> 大文件</span>
+                    <span class="suggestion" data-cmd="storage-agent --duplicates"><span class="sug-key">--duplicates</span> 重复文件</span>
+                    <span class="suggestion" data-cmd="storage-agent --stats"><span class="sug-key">--stats</span> 统计信息</span>
                 </div>
             </div>
 
@@ -261,41 +263,92 @@
             </div>
 
             <div class="storage-features">
-                <div class="storage-feature-card">
-                    <div class="feature-icon">📊</div>
-                    <h3>存储统计</h3>
+                <div class="storage-feature-card expandable" data-cmd="storage-agent --path /data --analyze">
+                    <div class="feature-header">
+                        <div class="feature-icon">📊</div>
+                        <h3>存储统计</h3>
+                        <span class="expand-icon">+</span>
+                    </div>
                     <p>按文件类型、扩展名、目录分类统计，直观展示存储占用分布。</p>
                     <div class="feature-detail">
                         <span class="detail-tag">类型统计</span>
                         <span class="detail-tag">目录排名</span>
                         <span class="detail-tag">趋势分析</span>
                     </div>
+                    <div class="feature-expanded">
+                        <div class="feature-cmd">$ storage-agent --path /data --analyze</div>
+                        <div class="feature-output">
+                            <div>📊 正在分析: /data</div>
+                            <div>────────────────────────────────</div>
+                            <div style="color:#4ade80">✅ 扫描完成!</div>
+                            <div>   总文件: 12,847</div>
+                            <div>   总大小: 128.5 GB</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="storage-feature-card">
-                    <div class="feature-icon">📦</div>
-                    <h3>大文件检测</h3>
+                <div class="storage-feature-card expandable" data-cmd="storage-agent --large-files --min 100">
+                    <div class="feature-header">
+                        <div class="feature-icon">📦</div>
+                        <h3>大文件检测</h3>
+                        <span class="expand-icon">+</span>
+                    </div>
                     <p>快速扫描，找出占用空间最多的文件，支持自定义大小阈值。</p>
                     <div class="feature-detail">
                         <span class="detail-tag">自定义阈值</span>
                         <span class="detail-tag">Top N 排名</span>
                     </div>
+                    <div class="feature-expanded">
+                        <div class="feature-cmd">$ storage-agent --large-files --min 100</div>
+                        <div class="feature-output">
+                            <div>📦 查找大于 100MB 的文件...</div>
+                            <div>────────────────────────────────</div>
+                            <div style="color:#4ade80">✅ 找到 23 个大文件:</div>
+                            <div>   #1  2.8 GB   /data/video.mp4</div>
+                            <div>   #2  1.5 GB   /data/backup.sql</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="storage-feature-card">
-                    <div class="feature-icon">🔄</div>
-                    <h3>重复文件检测</h3>
+                <div class="storage-feature-card expandable" data-cmd="storage-agent --duplicates">
+                    <div class="feature-header">
+                        <div class="feature-icon">🔄</div>
+                        <h3>重复文件检测</h3>
+                        <span class="expand-icon">+</span>
+                    </div>
                     <p>通过 SHA256 哈希检测重复文件，计算可节省的空间。</p>
                     <div class="feature-detail">
                         <span class="detail-tag">SHA256</span>
                         <span class="detail-tag">空间计算</span>
                     </div>
+                    <div class="feature-expanded">
+                        <div class="feature-cmd">$ storage-agent --duplicates</div>
+                        <div class="feature-output">
+                            <div>🔄 搜索重复文件...</div>
+                            <div>────────────────────────────────</div>
+                            <div style="color:#4ade80">✅ 找到 5 组重复文件:</div>
+                            <div>💰 可节省空间: 4.2 GB</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="storage-feature-card">
-                    <div class="feature-icon">📁</div>
-                    <h3>大目录分析</h3>
+                <div class="storage-feature-card expandable" data-cmd="storage-agent --stats">
+                    <div class="feature-header">
+                        <div class="feature-icon">📁</div>
+                        <h3>大目录分析</h3>
+                        <span class="expand-icon">+</span>
+                    </div>
                     <p>找出占用空间最大的目录，按大小排序，快速定位问题。</p>
                     <div class="feature-detail">
                         <span class="detail-tag">目录树</span>
                         <span class="detail-tag">大小排序</span>
+                    </div>
+                    <div class="feature-expanded">
+                        <div class="feature-cmd">$ storage-agent --stats</div>
+                        <div class="feature-output">
+                            <div>📈 存储统计</div>
+                            <div>════════════════════════════</div>
+                            <div>【最大目录】</div>
+                            <div>   45.2 GB  /data/video</div>
+                            <div>   23.1 GB  /data/photos</div>
+                        </div>
                     </div>
                 </div>
                 <div class="storage-feature-card">
