@@ -15,6 +15,7 @@ Environment="PRISTMAX_DB=/opt/pristmax/data/tasks.db"
 Environment="AUTH_DB=/opt/pristmax/data/auth.db"
 Environment="PORT=5001"
 Environment="FLASK_ENV=production"
+Environment="PYTHONPATH=/opt/pristmax"
 
 # 启动命令
 ExecStart=/opt/pristmax/venv/bin/python -m src.pristmax.api.server
