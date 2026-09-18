@@ -21,3 +21,15 @@ body.opening-active #site-header{opacity:0;visibility:hidden;pointer-events:none
 @media(max-height:600px) and (min-width:801px){.opening-content{top:47%}.opening-content .banner-tagline{font-size:30px;margin:8px}.opening-content .banner-desc{font-size:12px;margin:8px}.opening-content .banner-actions{margin:10px}.opening-word{font-size:16vw;top:calc(50% - var(--intro-progress,0)*20%)}}
 
 body:not(.opening-active) #site-header{z-index:9}
+
+/* Original engraved landscape; mist moves independently of the detailed painting. */
+.footer-invitation{position:relative;z-index:2}
+.footer-landscape{position:relative;margin:24px -5.56% 0;isolation:isolate;overflow:hidden;pointer-events:none;mask-image:linear-gradient(to bottom,transparent,#000 18%,#000 94%,transparent)}
+.footer-landscape img{display:block;width:100%;height:auto;min-height:300px;object-fit:cover;object-position:center;filter:contrast(1.08)}
+.landscape-mist{position:absolute;inset:36% -12% 5%;opacity:.2;mix-blend-mode:screen;background:radial-gradient(ellipse at 25% 60%,#c9e8f7 0,transparent 44%),radial-gradient(ellipse at 80% 48%,#accbdf 0,transparent 35%);filter:blur(22px);animation:landscape-drift 24s ease-in-out infinite alternate;animation-play-state:paused}
+.landscape-mist-near{inset:64% -15% -4%;opacity:.15;animation-duration:31s;animation-direction:alternate-reverse}
+footer.in-view .landscape-mist{animation-play-state:running}
+footer .footer-bottom{margin-top:12px}
+@keyframes landscape-drift{from{transform:translate3d(-4%,5%,0)}to{transform:translate3d(5%,-6%,0)}}
+@media(max-width:600px){.footer-landscape{margin-top:28px}.footer-landscape img{height:320px;min-height:0;width:100%;object-position:61% center}.landscape-mist{filter:blur(14px)}}
+@media(prefers-reduced-motion:reduce){.landscape-mist{animation:none!important}}

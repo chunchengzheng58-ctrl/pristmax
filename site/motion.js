@@ -27,7 +27,6 @@
  wing+='<path class="wing-vein" d="M24 -15 C35 -43 55 -57 65 -53 C78 -46 61 -25 49 -29 C40 -34 48 -44 54 -41 M24 17 C38 12 57 12 59 23 C60 34 44 35 43 28 C42 21 51 21 52 26"/>';
  const insect=`<g class="paper-wing paper-wing-left">${wing}</g><g transform="scale(-1 1)"><g class="paper-wing paper-wing-right">${wing}</g></g><g class="butterfly-body"><path d="M-3 -16 Q-9 -5 -4 14 Q-3 37 0 48 Q4 31 4 13 Q9 -6 3 -16Z"/><ellipse cy="-20" rx="4" ry="5"/><path d="M-2 -23 C-6 -42 -22 -56 -27 -49 M2 -23 C8 -46 23 -58 28 -49 M-4 1 L-16 12 M4 1 L16 12"/>${Array.from({length:9},(_,i)=>`<path d="M-3 ${i*4} Q0 ${i*4+2} 3 ${i*4}"/>`).join('')}</g>`;
  svg.innerHTML=[[435,285,1.12,-24],[558,100,.48,19],[297,437,.36,-37]].map(([x,y,s,r],i)=>`<g transform="translate(${x} ${y}) scale(${s}) rotate(${r})"><g class="paper-flight" style="--flight-delay:${i*.45}s;--wing-speed:${1.7+i*.3}s">${insect}</g></g>`).join('');
- const footer=document.querySelector('.footer-wings');if(footer)footer.innerHTML=[[100,170,.6,-18],[400,210,.35,22],[780,155,.65,-8],[1130,210,.4,32],[1340,145,.55,-28]].map(([x,y,s,r])=>`<g transform="translate(${x} ${y}) scale(${s}) rotate(${r})">${insect}</g>`).join('');
  const bloom=()=>{detail.classList.remove('is-blooming');void svg.getBoundingClientRect();detail.classList.add('is-blooming');};
  detail.addEventListener('toggle',()=>{if(detail.open)bloom();else detail.classList.remove('is-blooming');});
  detail.querySelector('.winter-replay').addEventListener('click',bloom);
