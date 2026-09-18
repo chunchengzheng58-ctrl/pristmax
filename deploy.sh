@@ -7,93 +7,260 @@
 set -e
 
 echo "======================================"
-echo "  Pristmax 部署脚本"
+echo "  Pristmax B端 API 一键部署"
 echo "======================================"
 
 # 配置变量
 APP_DIR="/opt/pristmax"
 APP_USER="www-data"
-APP_PORT="5001"
+APP_PORT="${PORT:-5001}"
+PYTHON_VERSION="3.11"
 
 # 颜色输出
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+BLUE='\033[0;34m'
+NC='\033[0m'
 
 log_info() { echo -e "${GREEN}[INFO]${NC} $1"; }
 log_warn() { echo -e "${YELLOW}[WARN]${NC} $1"; }
 log_error() { echo -e "${RED}[ERROR]${NC} $1"; }
+log_step() { echo -e "${BLUE}[STEP]${NC} $1"; }
 
 # 检查是否为 root
 if [[ $EUID -ne 0 ]]; then
-   log_warn "建议使用 root 权限运行，或在命令前加 sudo"
+   log_warn "建议使用 root 权限运行: sudo ./deploy.sh"
 fi
+
+# 检查操作系统
+detect_os() {
+    if [ -f /etc/debian_version ]; then
+        OS="debian"
+    elif [ -f /etc/redhat-release ]; then
+        OS="rhel"
+    elif [ -f /etc/alpine-release ]; then
+        OS="alpine"
+    else
+        OS="unknown"
+    fi
+    log_info "检测到操作系统: $OS"
+}
 
 # 1. 安装系统依赖
-log_info "安装系统依赖..."
-if command -v apt-get &> /dev/null; then
-    apt-get update
-    apt-get install -y \
-        python3.11 python3.11-venv python3.11-dev \
-        nginx certbot \
-        libgl1-mesa-glx libglib2.0-0 \
-        libsm6 libxext6 libxrender-dev \
-        git
-elif command -v yum &> /dev/null; then
-    yum install -y \
-        python311 python311-devel \
-        nginx certbot \
-        git
-fi
+install_dependencies() {
+    log_step "安装系统依赖..."
 
-# 2. 创建应用目录
-log_info "创建应用目录..."
-mkdir -p $APP_DIR
-cd $APP_DIR
+    if [ "$OS" = "debian" ]; then
+        apt-get update
+        apt-get install -y \
+            python${PYTHON_VERSION} python${PYTHON_VERSION}-venv python${PYTHON_VERSION}-dev \
+            libgl1-mesa-glx libglib2.0-0 \
+            libsm6 libxext6 libxrender-dev \
+            sqlite3 curl
+    elif [ "$OS" = "rhel" ]; then
+        yum install -y \
+            python${PYTHON_VERSION} \
+            sqlite curl
+        if ! command -v python${PYTHON_VERSION} &> /dev/null; then
+            yum install -y python3.11
+        fi
+    else
+        log_warn "未知操作系统，尝试安装通用依赖..."
+        command -v python3 || apt-get install -y python3 python3-venv python3-dev
+    fi
 
-# 3. 创建用户（如不存在）
-if ! id -u $APP_USER &>/dev/null; then
-    log_info "创建用户 $APP_USER..."
-    useradd -r -s /bin/false $APP_USER
-fi
+    log_info "系统依赖安装完成"
+}
 
-# 4. 上传项目文件（提示用户）
-log_warn "请将项目文件上传到 $APP_DIR"
-log_warn "可以使用: scp -r ./pristmax/* user@server:$APP_DIR/"
-read -p "按 Enter 继续..."
+# 2. 创建用户
+create_user() {
+    log_step "创建应用用户..."
 
-# 5. 创建虚拟环境
-log_info "创建 Python 虚拟环境..."
-python3.11 -m venv venv
-source venv/bin/activate
+    if ! id -u $APP_USER &>/dev/null; then
+        useradd -r -s /bin/false $APP_USER
+        log_info "用户 $APP_USER 已创建"
+    else
+        log_info "用户 $APP_USER 已存在"
+    fi
+}
 
-# 6. 安装 Python 依赖
-log_info "安装 Python 依赖..."
-pip install --upgrade pip
-pip install -r requirements-prod.txt
+# 3. 创建目录
+setup_directories() {
+    log_step "创建应用目录..."
 
-# 7. 配置环境变量
-if [ ! -f .env ]; then
-    log_info "创建 .env 配置文件..."
-    cp .env.example .env
-    log_warn "请编辑 $APP_DIR/.env 设置 SECRET_KEY"
-fi
+    mkdir -p $APP_DIR/data
+    mkdir -p $APP_DIR/logs
 
-# 8. 创建数据库目录
-mkdir -p $APP_DIR/data
-chown $APP_USER:$APP_USER $APP_DIR/data
+    # 如果目录已存在且有旧文件，备份
+    if [ -d "$APP_DIR/src" ] && [ "$(ls -A $APP_DIR/src 2>/dev/null)" ]; then
+        BACKUP_DIR="$APP_DIR.backup.$(date +%Y%m%d%H%M%S)"
+        log_warn "发现旧版本，备份到 $BACKUP_DIR"
+        mv $APP_DIR $BACKUP_DIR
+        mkdir -p $APP_DIR/data $APP_DIR/logs
+    fi
 
-# 9. 测试运行
-log_info "测试运行..."
-chown $APP_USER:$APP_USER $APP_DIR
-sudo -u $APP_USER bash -c "source venv/bin/activate && PRISTMAX_DB=$APP_DIR/data/tasks.db python -c 'from src.pristmax.api.server import app; print(\"OK\")'"
+    chown -R $APP_USER:$APP_USER $APP_DIR
+    log_info "目录已创建: $APP_DIR"
+}
+
+# 4. 解压部署包
+extract_package() {
+    log_step "解压部署包..."
+
+    # 查找部署包
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+    if [ -f "$SCRIPT_DIR/pristmax-api-release.tar" ]; then
+        log_info "找到部署包: $SCRIPT_DIR/pristmax-api-release.tar"
+        tar -xf "$SCRIPT_DIR/pristmax-api-release.tar" -C $APP_DIR/
+    elif [ -f "/tmp/pristmax-api-release.tar" ]; then
+        log_info "找到部署包: /tmp/pristmax-api-release.tar"
+        tar -xf "/tmp/pristmax-api-release.tar" -C $APP_DIR/
+    else
+        log_warn "未找到部署包，尝试从 GitHub 下载..."
+        download_from_github
+    fi
+
+    chown -R $APP_USER:$APP_USER $APP_DIR
+    log_info "解压完成"
+}
+
+# 5. 从 GitHub 下载最新版本
+download_from_github() {
+    log_info "从 GitHub 下载最新版本..."
+
+    # 使用 GitHub API 获取最新 release
+    API_URL="https://api.github.com/repos/chunchengzheng58-ctrl/pristmax/releases/latest"
+
+    if command -v curl &> /dev/null; then
+        DOWNLOAD_URL=$(curl -s $API_URL | grep -o '"tarball_url": "[^"]*' | cut -d'"' -f4)
+        if [ -n "$DOWNLOAD_URL" ]; then
+            log_info "下载: $DOWNLOAD_URL"
+            curl -L -o /tmp/pristmax-latest.tar.gz $DOWNLOAD_URL
+            tar -xzf /tmp/pristmax-latest.tar.gz -C $APP_DIR/ --strip-components=1
+            log_info "下载完成"
+            return
+        fi
+    fi
+
+    log_error "无法下载，请手动上传部署包"
+    exit 1
+}
+
+# 6. 创建虚拟环境
+setup_venv() {
+    log_step "配置 Python 虚拟环境..."
+
+    # 清理旧环境
+    if [ -d "$APP_DIR/venv" ]; then
+        rm -rf $APP_DIR/venv
+    fi
+
+    # 使用系统 Python 创建虚拟环境
+    PYTHON_CMD="python${PYTHON_VERSION}"
+    if ! command -v $PYTHON_CMD &> /dev/null; then
+        PYTHON_CMD="python3"
+    fi
+
+    $PYTHON_CMD -m venv $APP_DIR/venv
+    log_info "虚拟环境已创建"
+
+    # 升级 pip
+    $APP_DIR/venv/bin/pip install --upgrade pip --quiet
+    log_info "pip 已升级"
+}
+
+# 7. 安装 Python 依赖
+install_python_deps() {
+    log_step "安装 Python 依赖..."
+
+    # 安装依赖
+    if [ -f "$APP_DIR/requirements-prod.txt" ]; then
+        $APP_DIR/venv/bin/pip install -r $APP_DIR/requirements-prod.txt --quiet
+        log_info "Python 依赖安装完成"
+    else
+        log_warn "未找到 requirements-prod.txt，安装基础依赖..."
+        $APP_DIR/venv/bin/pip install flask flask-cors pyyaml bcrypt PyJWT psutil opencv-python numpy --quiet
+    fi
+}
+
+# 8. 初始化数据库
+init_database() {
+    log_step "初始化数据库..."
+
+    DB_FILE="$APP_DIR/data/tasks.db"
+
+    if [ ! -f "$DB_FILE" ]; then
+        $APP_DIR/venv/bin/python << PYEOF
+import sqlite3
+conn = sqlite3.connect('$DB_FILE')
+conn.execute('''CREATE TABLE IF NOT EXISTS tasks (
+    task_id TEXT PRIMARY KEY, task_type TEXT NOT NULL, user_id TEXT NOT NULL,
+    input_path TEXT, output_path TEXT, params TEXT, status TEXT, priority INTEGER,
+    result TEXT, error TEXT, progress REAL, progress_message TEXT,
+    created_at TEXT, started_at TEXT, completed_at TEXT, retry_count INTEGER, max_retries INTEGER)''')
+conn.execute('''CREATE TABLE IF NOT EXISTS strategies (
+    id TEXT PRIMARY KEY, name TEXT NOT NULL, type TEXT NOT NULL,
+    crf INTEGER DEFAULT 28, preset TEXT DEFAULT 'medium', enabled INTEGER DEFAULT 1,
+    config TEXT DEFAULT '{}', created_at TEXT, updated_at TEXT)''')
+conn.execute('''CREATE TABLE IF NOT EXISTS alert_history (
+    alert_id TEXT PRIMARY KEY, level TEXT NOT NULL, title TEXT NOT NULL, message TEXT,
+    metric TEXT, value REAL, threshold REAL, timestamp TEXT,
+    acknowledged INTEGER DEFAULT 0, acknowledged_by TEXT, acknowledged_at TEXT)''')
+conn.execute('''CREATE TABLE IF NOT EXISTS notification_channels (
+    id TEXT PRIMARY KEY, type TEXT NOT NULL, name TEXT NOT NULL,
+    config TEXT NOT NULL DEFAULT '{}', enabled INTEGER DEFAULT 1, created_at TEXT)''')
+conn.execute('''CREATE TABLE IF NOT EXISTS notification_log (
+    id INTEGER PRIMARY KEY AUTOINCREMENT, channel_id TEXT, alert_id TEXT,
+    level TEXT, title TEXT, status TEXT, error TEXT, sent_at TEXT)''')
+conn.commit()
+conn.close()
+print('Database initialized')
+PYEOF
+        log_info "数据库已初始化"
+    else
+        log_info "数据库已存在"
+    fi
+
+    chown $APP_USER:$APP_USER $DB_FILE
+}
+
+# 9. 配置环境变量
+setup_env() {
+    log_step "配置环境变量..."
+
+    ENV_FILE="$APP_DIR/.env"
+
+    if [ ! -f "$ENV_FILE" ]; then
+        # 生成随机密钥
+        SECRET_KEY=$(python3 -c "import secrets; print(secrets.token_hex(32))")
+
+        cat > $ENV_FILE << EOF
+# Pristmax 环境配置
+PRISTMAX_DB=$APP_DIR/data/tasks.db
+AUTH_DB=$APP_DIR/data/auth.db
+PORT=$APP_PORT
+FLASK_ENV=production
+SECRET_KEY=$SECRET_KEY
+PYTHONPATH=$APP_DIR
+EOF
+        log_info "环境变量已配置"
+    else
+        log_info "环境变量已存在"
+    fi
+
+    chown $APP_USER:$APP_USER $ENV_FILE
+    chmod 600 $ENV_FILE
+}
 
 # 10. 配置 systemd 服务
-log_info "配置 systemd 服务..."
-cat > /etc/systemd/system/pristmax.service << EOF
+setup_systemd() {
+    log_step "配置系统服务..."
+
+    cat > /etc/systemd/system/pristmax.service << EOF
 [Unit]
-Description=Pristmax API Server
+Description=Pristmax B端 API Server
 After=network.target
 
 [Service]
@@ -101,41 +268,94 @@ Type=simple
 User=$APP_USER
 Group=$APP_USER
 WorkingDirectory=$APP_DIR
-Environment="PRISTMAX_DB=$APP_DIR/data/tasks.db"
-Environment="AUTH_DB=$APP_DIR/data/auth.db"
-Environment="PORT=$APP_PORT"
+EnvironmentFile=$APP_DIR/.env
 ExecStart=$APP_DIR/venv/bin/python -m src.pristmax.api.server
 Restart=always
-RestartSec=5
+RestartSec=10
 StandardOutput=journal
 StandardError=journal
+SyslogIdentifier=pristmax
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=$APP_DIR/data
 
 [Install]
 WantedBy=multi-user.target
 EOF
 
-# 11. 启动服务
-log_info "启动服务..."
-systemctl daemon-reload
-systemctl enable pristmax
-systemctl start pristmax
+    systemctl daemon-reload
+    log_info "systemd 服务已配置"
+}
 
-# 12. 检查状态
-sleep 2
-if systemctl is-active --quiet pristmax; then
-    log_info "服务启动成功!"
+# 11. 启动服务
+start_service() {
+    log_step "启动服务..."
+
+    systemctl enable pristmax
+    systemctl restart pristmax
+
+    # 等待服务启动
+    sleep 3
+
+    # 检查状态
+    if systemctl is-active --quiet pristmax; then
+        log_info "服务启动成功!"
+    else
+        log_error "服务启动失败，查看日志:"
+        journalctl -u pristmax -n 10 --no-pager
+        exit 1
+    fi
+}
+
+# 12. 验证部署
+verify_deployment() {
+    log_step "验证部署..."
+
+    # 测试 API
+    sleep 1
+    RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:${PORT}/api/stats 2>/dev/null || echo "000")
+
+    if [ "$RESPONSE" = "200" ]; then
+        log_info "API 服务验证成功!"
+    else
+        log_warn "API 服务响应异常 (HTTP $RESPONSE)，但服务已在运行"
+    fi
+}
+
+# 主流程
+main() {
+    detect_os
+    install_dependencies
+    create_user
+    setup_directories
+    extract_package
+    setup_venv
+    install_python_deps
+    init_database
+    setup_env
+    setup_systemd
+    start_service
+    verify_deployment
+
     echo ""
     echo "======================================"
     echo "  部署完成!"
     echo "======================================"
-    echo "服务地址: http://localhost:$APP_PORT"
-    echo "日志查看: journalctl -u pristmax -f"
     echo ""
-    echo "后续步骤:"
-    echo "1. 编辑 $APP_DIR/.env 设置 SECRET_KEY"
-    echo "2. 配置 Nginx反向代理（可选）"
-    echo "3. 配置 HTTPS（可选）"
-else
-    log_error "服务启动失败，请检查日志:"
-    journalctl -u pristmax -n 20 --no-pager
-fi
+    echo "服务地址: http://localhost:${PORT}"
+    echo "API 文档: http://localhost:${PORT}/api/stats"
+    echo ""
+    echo "管理命令:"
+    echo "  查看状态: systemctl status pristmax"
+    echo "  查看日志: journalctl -u pristmax -f"
+    echo "  重启服务: systemctl restart pristmax"
+    echo "  停止服务: systemctl stop pristmax"
+    echo ""
+    echo "配置文件: $APP_DIR/.env"
+    echo "数据目录: $APP_DIR/data"
+    echo "日志目录: $APP_DIR/logs"
+    echo ""
+}
+
+main "$@"

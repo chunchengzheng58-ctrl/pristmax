@@ -91,12 +91,15 @@
         </div>
 
         <div class="download-card">
-            <h2>🔧 部署说明</h2>
-            <p>请参考 <a href="/downloads/DEPLOY.md" style="color:#d4af37;">DEPLOY.md</a> 进行部署。包含一键部署脚本和详细配置说明。</p>
+            <h2>🔧 一键部署（推荐）</h2>
+            <p>上传安装包到服务器，解压后运行 <code>./deploy.sh</code> 即可自动完成所有配置。</p>
             <div class="api-section">
-                <p><strong>快速部署命令:</strong></p>
-                <code>scp pristmax-api-release.tar user@server:/opt/pristmax/ && tar -xf pristmax-api-release.tar && cd /opt/pristmax && ./deploy.sh</code>
+                <p><strong>部署步骤:</strong></p>
+                <code>scp pristmax-api-release.tar user@your-server:/opt/pristmax/</code><br>
+                <code>cd /opt/pristmax && tar -xf pristmax-api-release.tar</code><br>
+                <code>chmod +x deploy.sh && sudo ./deploy.sh</code>
             </div>
+            <p style="margin-top:15px;"><strong>或直接下载 deploy.sh 单独运行（需要先手动放置源码）</strong></p>
         </div>
 
         <div class="download-card">
