@@ -34,3 +34,12 @@ document.querySelectorAll('#storage-terminal').forEach(term=>{const replayBtn=te
 // Counter animation
 function animateCounters(){document.querySelectorAll('.stat-value[data-count]').forEach(el=>{const target=el.dataset.count;const isSpecial=target==='<'||target==='0';if(isSpecial)return;const num=parseInt(target);let current=0;const step=Math.ceil(num/30);const interval=setInterval(()=>{current+=step;if(current>=num){current=num;clearInterval(interval)}el.textContent=current},50)})}
 const statsObserver=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting){animateCounters();statsObserver.disconnect()}})},{threshold:0.5});const statsEl=document.querySelector('.storage-stats');if(statsEl)statsObserver.observe(statsEl);
+
+// CLI command navigation
+const cliCommands=document.querySelectorAll('.cli-command');
+const cliDots=document.querySelectorAll('.cli-dot');
+const prevBtn=document.querySelector('.cli-nav-btn.prev');
+const nextBtn=document.querySelector('.cli-nav-btn.next');
+let currentCli=0;
+function showCli(index){cliCommands.forEach((cmd,i)=>{cmd.classList.toggle('active',i===index)});cliDots.forEach((dot,i)=>{dot.classList.toggle('active',i===index)});prevBtn.disabled=index===0;nextBtn.disabled=index===cliCommands.length-1;currentCli=index}
+if(prevBtn&&nextBtn){prevBtn.addEventListener('click',()=>{if(currentCli>0)showCli(currentCli-1)});nextBtn.addEventListener('click',()=>{if(currentCli<cliCommands.length-1)showCli(currentCli+1)});cliDots.forEach((dot,i)=>{dot.addEventListener('click',()=>showCli(i))})}

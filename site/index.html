@@ -276,6 +276,102 @@
                 </div>
             </div>
 
+            <!-- CLI Showcase -->
+            <div class="storage-cli">
+                <h3>命令行工具</h3>
+                <p class="cli-desc">一条命令，轻松管理存储</p>
+
+                <div class="cli-commands">
+                    <div class="cli-command active" data-cmd="analyze">
+                        <div class="cli-cmd-line">
+                            <span class="cli-prompt">$</span>
+                            <span class="cli-cmd">storage-agent --path /data --analyze</span>
+                        </div>
+                        <div class="cli-output">
+                            <div class="output-line">📊 正在分析: /data</div>
+                            <div class="output-line">─────────────────────────────────────────────────</div>
+                            <div class="output-line success">✅ 扫描完成!</div>
+                            <div class="output-line">   总文件: 12,847</div>
+                            <div class="output-line">   总大小: 128.5 GB</div>
+                            <div class="output-line">&nbsp;</div>
+                            <div class="output-line">📁 按类型分布:</div>
+                            <div class="output-line">   video       ████████████████████░░░░░░  45.2 GB</div>
+                            <div class="output-line">   image       ████████████░░░░░░░░░░░░░░  23.1 GB</div>
+                            <div class="output-line">   document    ██████░░░░░░░░░░░░░░░░░░░░  12.8 GB</div>
+                        </div>
+                    </div>
+
+                    <div class="cli-command" data-cmd="large">
+                        <div class="cli-cmd-line">
+                            <span class="cli-prompt">$</span>
+                            <span class="cli-cmd">storage-agent --large-files --min 100</span>
+                        </div>
+                        <div class="cli-output">
+                            <div class="output-line">📦 查找大于 100MB 的文件...</div>
+                            <div class="output-line">─────────────────────────────────────────────────</div>
+                            <div class="output-line success">✅ 找到 23 个大文件:</div>
+                            <div class="output-line">   #1    2.8 GB   /data/video/archive_2024.mp4</div>
+                            <div class="output-line">   #2    1.5 GB   /data/backup/database.sql</div>
+                            <div class="output-line">   #3   890.5 MB  /data/iso/ubuntu-22.04.iso</div>
+                            <div class="output-line">   #4   456.2 MB  /data/video/meeting.mp4</div>
+                            <div class="output-line">&nbsp;</div>
+                            <div class="output-line">   大文件总占用: 8.2 GB</div>
+                        </div>
+                    </div>
+
+                    <div class="cli-command" data-cmd="duplicates">
+                        <div class="cli-cmd-line">
+                            <span class="cli-prompt">$</span>
+                            <span class="cli-cmd">storage-agent --duplicates</span>
+                        </div>
+                        <div class="cli-output">
+                            <div class="output-line">🔄 搜索重复文件...</div>
+                            <div class="output-line">─────────────────────────────────────────────────</div>
+                            <div class="output-line success">✅ 找到 5 组重复文件:</div>
+                            <div class="output-line">&nbsp;</div>
+                            <div class="output-line">   组 1: 3 个文件, 每文件 45.2 MB</div>
+                            <div class="output-line">      - /data/photos/vacation.jpg</div>
+                            <div class="output-line">      - /data/backup/vacation_copy.jpg</div>
+                            <div class="output-line">      - /data/old/vacation.jpg</div>
+                            <div class="output-line">&nbsp;</div>
+                            <div class="output-line">💰 可节省空间: 90.4 MB</div>
+                        </div>
+                    </div>
+
+                    <div class="cli-command" data-cmd="stats">
+                        <div class="cli-cmd-line">
+                            <span class="cli-prompt">$</span>
+                            <span class="cli-cmd">storage-agent --stats</span>
+                        </div>
+                        <div class="cli-output">
+                            <div class="output-line">📈 存储统计: /data</div>
+                            <div class="output-line">═══════════════════════════════════════════════════</div>
+                            <div class="output-line">&nbsp;</div>
+                            <div class="output-line">【概览】</div>
+                            <div class="output-line">   总文件数: 12,847</div>
+                            <div class="output-line">   总大小:   128.5 GB</div>
+                            <div class="output-line">&nbsp;</div>
+                            <div class="output-line">【类型分布】</div>
+                            <div class="output-line">   video       [████████████████████] 45.2 GB</div>
+                            <div class="output-line">   image       [████████████]        23.1 GB</div>
+                            <div class="output-line">   document    [██████]              12.8 GB</div>
+                            <div class="output-line">   archive     [████]                8.5 GB</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cli-nav">
+                    <button class="cli-nav-btn prev" disabled>← 上一个</button>
+                    <div class="cli-nav-dots">
+                        <span class="cli-dot active" data-cmd="analyze"></span>
+                        <span class="cli-dot" data-cmd="large"></span>
+                        <span class="cli-dot" data-cmd="duplicates"></span>
+                        <span class="cli-dot" data-cmd="stats"></span>
+                    </div>
+                    <button class="cli-nav-btn next">下一个 →</button>
+                </div>
+            </div>
+
             <!-- API Showcase -->
             <div class="storage-api">
                 <h3>API 接口示例</h3>
