@@ -9,12 +9,19 @@
 .section-storage-agent .section-label{font-size:11px;font-family:Consolas,monospace;color:#666;letter-spacing:2px}
 .section-storage-agent h2{font-size:1.8rem;font-weight:700;color:#113577;margin-top:8px}
 
-/* Agent Demo - Compact */
+/* Agent Demo */
 .agent-demo{max-width:700px;margin:0 auto 30px;background:#1a1a2e;border-radius:10px;overflow:hidden}
-.agent-cmd{background:#2d2d44;padding:12px 20px;font-family:"SF Mono",Monaco,monospace;font-size:0.9rem}
-.agent-cmd .prompt{color:#d4af37;margin-right:10px}
-.agent-cmd .cmd{color:#fff}
-.agent-output{background:#1a1a2e;padding:16px 20px;font-family:"SF Mono",Monaco,monospace;font-size:0.85rem;color:#4ade80;border-top:1px solid #2d2d44}
+.terminal-header{display:flex;align-items:center;padding:12px 16px;background:#2d2d44;gap:8px}
+.console-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.dot-red{background:#ff5f56}.dot-yellow{background:#ffbd2e}.dot-green{background:#27ca40}
+.terminal-title{color:#888;font-size:0.875rem;flex:1;margin-left:8px;font-family:"SF Mono",Monaco,monospace}
+.terminal-replay{background:rgba(255,255,255,0.1);border:none;color:#888;padding:4px 10px;border-radius:4px;cursor:pointer;font-size:12px}
+.terminal-replay:hover{background:rgba(255,255,255,0.2)}
+.terminal-body{padding:20px;font-family:"SF Mono",Monaco,monospace;font-size:0.85rem;color:#e0e0e0;min-height:150px}
+.terminal-line{margin-bottom:8px;opacity:0;transform:translateY(10px);transition:all 0.3s}
+.terminal-line.visible{opacity:1;transform:translateY(0)}
+.prompt{color:#d4af37}.cmd{color:#fff}.output{color:#4ade80}.comment{color:#888}.cursor{display:inline-block;width:8px;height:16px;background:#d4af37;animation:blink 1s infinite}
+@keyframes blink{0%,50%{opacity:1}51%,100%{opacity:0}}
 .agent-commands{display:flex;justify-content:center;gap:12px;padding:16px;background:#1a1a2e;border-top:1px solid #2d2d44;flex-wrap:wrap}
 .agent-cmd-chip{background:#2d2d44;color:#888;padding:6px 14px;border-radius:6px;font-family:"SF Mono",Monaco,monospace;font-size:0.8rem}
 

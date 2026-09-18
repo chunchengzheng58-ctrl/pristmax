@@ -178,14 +178,14 @@
             </div>
 
             <div class="agent-demo">
-                <div class="agent-cmd">
-                    <span class="prompt">$</span>
-                    <span class="cmd">pristmax --path /data --analyze</span>
+                <div class="terminal-header">
+                    <span class="console-dot dot-red"></span>
+                    <span class="console-dot dot-yellow"></span>
+                    <span class="console-dot dot-green"></span>
+                    <span class="terminal-title">pristmax --agent</span>
+                    <button class="terminal-replay" aria-label="重新播放">↻</button>
                 </div>
-                <div class="agent-output">
-                    <div>✅ 分析完成 | 文件: 12,847 | 大小: 128.5 GB</div>
-                </div>
-
+                <div class="terminal-body" id="terminal-output"></div>
                 <div class="agent-commands">
                     <span class="agent-cmd-chip">--analyze</span>
                     <span class="agent-cmd-chip">--large-files</span>

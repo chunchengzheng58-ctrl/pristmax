@@ -11,18 +11,18 @@ document.querySelectorAll('.copy-btn').forEach(btn=>{btn.addEventListener('click
 
 // Terminal animation
 const terminalLines=[
-{cls:'prompt',text:'$ ',delay:0},{cls:'cmd',text:'python -m storage_agent --path /data --analyze',delay:100},
+{cls:'prompt',text:'$ ',delay:0},{cls:'cmd',text:'pristmax --path /data --analyze',delay:100},
 {cls:'',text:'',delay:800,br:true},
-{cls:'output',text:'✓ 扫描完成，耗时 12.3s',delay:900},
+{cls:'output',text:'✓ 分析完成，耗时 12.3s',delay:900},
 {cls:'comment',text:'  总文件: 12,847 | 总大小: 128.5 GB',delay:1100},
 {cls:'',text:'',delay:1400,br:true},
-{cls:'prompt',text:'$ ',delay:1500},{cls:'cmd',text:'python -m storage_agent --large-files --min 100MB',delay:1600},
+{cls:'prompt',text:'$ ',delay:1500},{cls:'cmd',text:'pristmax --large-files --min 100MB',delay:1600},
 {cls:'',text:'',delay:2100,br:true},
 {cls:'output',text:'✓ 找到 23 个大文件 (>100MB)',delay:2200},
 {cls:'comment',text:'  #1  video/archive_2024.mp4 — 2.8 GB',delay:2400},
 {cls:'comment',text:'  #2  backup/database.sql — 1.5 GB',delay:2550},
 {cls:'',text:'',delay:2800,br:true},
-{cls:'prompt',text:'$ ',delay:2900},{cls:'cmd',text:'python -m storage_agent --duplicates',delay:3000},
+{cls:'prompt',text:'$ ',delay:2900},{cls:'cmd',text:'pristmax --duplicates',delay:3000},
 {cls:'',text:'',delay:3500,br:true},
 {cls:'output',text:'✓ 找到 5 组重复文件，可节省 4.2 GB',delay:3600},
 {cls:'cursor',text:'',delay:3800}];
