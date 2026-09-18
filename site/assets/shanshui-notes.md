@@ -1,11 +1,9 @@
-# Pristmax footer landscape
+# Footer supplied-art composition — 2026-09-18
 
-Created 2026-09-18 with the built-in imagegen tool. Original illustration inspired by traditional Chinese landscape engraving; supplied reference screenshots are not embedded or traced. Web delivery: pristmax-shanshui.webp, 2172 × 724, WebP quality 88. Animation is independent CSS mist, paused outside the viewport and disabled for reduced motion. Mid-page butterfly panel remains unchanged.
+Supersedes generated pristine-shanshui artwork. Uses the six user-supplied WHYSL screenshots as requested, converted to WebP for delivery (about 2.6 MB total). Artist lettering remains in the source images. These are supplied reference artworks, not original Pristmax artwork or imagegen output.
 
-## Final generation prompt
+The browser crops only the phone UI through overflow-hidden frames. Six overlapping masked panels form a blue/gold panorama. Scroll progress controls each panel's upward translation, scale and opacity, with staggered timing; scrolling back reverses it. On phones the panorama also pans horizontally. Reduced-motion uses a static composition. Without JS the artwork is visible.
 
-Create an original panoramic Chinese shanshui landscape illustration for a premium enterprise brand website footer. Extremely wide horizontal composition, 3:1 aspect ratio. Deep midnight ink blue background #112f44. Intricate hand engraved ice-white and pale silver blue linework, restrained pale champagne gold highlights. Layered monumental mountain ridges with thousands of delicate irregular rock striations and crosshatching, exquisite tiny traditional Chinese pavilions, ancient windswept pine trees, winding river and drifting mountain mist. Inspired by traditional gongbi landscape engraving and mineral pigment paintings, sophisticated and richly detailed, not simple vector outlines, not cartoon. Landscape rises on left and right with a serene misty river valley in center, upper 25 percent fades into clean dark navy negative space so website typography above can breathe. Strong luminous line contrast against dark mountains; predominantly blue and silver, gold only sparse accents on pavilion roofs and a few pine branches. Original arrangement, no text, no logos, no watermark, no border, no UI. Entire image is illustration, absolutely no lettering.
+Sources: six codex-clipboard JPG files supplied in the conversation. Original generated asset is no longer referenced by the homepage. To update this composition, edit site/index.html, site/motion.css and site/motion.js. Publish all six assets/landscape-panel-*.webp before updating HTML. Publish site/ only. GitHub Pages builds via existing workflow; server mirror is /var/www/pristmax. Do not deploy backend directories.
 
-## Deployment
-
-Publish site/ only through the existing Pages workflow. For the server mirror, copy assets/pristmax-shanshui.webp, motion.css and motion.js before index.html. Do not omit WebP files when syncing assets. No backend changes required.
+Validation: desktop 1440x1000 and mobile 390x844, image loads, no horizontal overflow, scroll transforms change, reduced motion disables movement.

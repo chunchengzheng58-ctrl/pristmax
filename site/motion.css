@@ -33,3 +33,17 @@ footer .footer-bottom{margin-top:12px}
 @keyframes landscape-drift{from{transform:translate3d(-4%,5%,0)}to{transform:translate3d(5%,-6%,0)}}
 @media(max-width:600px){.footer-landscape{margin-top:28px}.footer-landscape img{height:320px;min-height:0;width:100%;object-position:61% center}.landscape-mist{filter:blur(14px)}}
 @media(prefers-reduced-motion:reduce){.landscape-mist{animation:none!important}}
+
+/* Six supplied paintings, composed in the browser rather than redrawn. */
+footer{background:#092850;padding-top:28px}
+footer .footer-word{font-size:18vw;line-height:.88;margin:32px 0 28px;color:#d9eafa}
+.footer-invitation{gap:14px}
+.footer-landscape{height:clamp(340px,34vw,600px);margin-top:18px;mask-image:linear-gradient(transparent,#000 15%,#000 87%,transparent);background:#092850}
+.landscape-panorama{position:absolute;inset:0 -10%;display:flex;align-items:stretch}
+.landscape-panel{position:relative;flex:1;min-width:0;overflow:hidden;margin-left:-2%;mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);transform-origin:50% 100%;transform:translate3d(0,var(--rise,0px),0) scale(var(--zoom,1));opacity:var(--shown,1);will-change:transform,opacity}
+.landscape-panel:first-child{margin-left:0}
+.footer-landscape .landscape-panel img{position:absolute;display:block;left:0;top:-30.6%;width:100%;height:167%;min-height:0;object-fit:fill;filter:none}
+.landscape-mist{z-index:2;opacity:.13}
+footer .footer-bottom{margin-top:0;border-color:#567190}
+@media(max-width:600px){footer .footer-word{font-size:18vw;margin:28px 0}.footer-landscape{height:380px;margin-top:18px}.landscape-panorama{inset:0 auto 0 -10%;width:260%;transform:translate3d(calc(var(--pan,0)*-48%),0,0)}.landscape-panel{margin-left:-2%}.footer-landscape .landscape-panel img{height:167%;width:100%;object-position:initial}.footer-invitation{font-size:9px}}
+@media(prefers-reduced-motion:reduce){.landscape-panel{transform:none!important;opacity:1!important;will-change:auto}.landscape-panorama{transform:none!important}}

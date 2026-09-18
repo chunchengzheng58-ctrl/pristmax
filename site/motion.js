@@ -35,6 +35,25 @@
 
 // Motion is progressive enhancement: content stays visible without JavaScript.
 (()=>{
+ const scene=document.querySelector('.footer-landscape');if(!scene)return;
+ const panels=[...scene.querySelectorAll('.landscape-panel')];
+ const reduced=matchMedia('(prefers-reduced-motion: reduce)');let pending=false;
+ const clamp=x=>Math.max(0,Math.min(1,x));
+ function render(){pending=false;const r=scene.getBoundingClientRect();
+ const progress=clamp((innerHeight-r.top)/Math.min(r.height+80,innerHeight*.8));
+ scene.style.setProperty('--pan',reduced.matches?0:progress);
+ panels.forEach((panel,i)=>{const t=reduced.matches?1:clamp((progress-i*.055)/.72);const ease=1-Math.pow(1-t,3);
+ panel.style.setProperty('--rise',`${(1-ease)*(160+i%3*45)}px`);
+ panel.style.setProperty('--zoom',1+(1-ease)*.12);
+ panel.style.setProperty('--shown',.12+ease*.88);
+ });
+ }
+ const schedule=()=>{if(!pending){pending=true;requestAnimationFrame(render)}};
+ addEventListener('scroll',schedule,{passive:true});addEventListener('resize',schedule);addEventListener('pageshow',schedule);reduced.addEventListener('change',schedule);render();
+})();
+
+// Motion is progressive enhancement: content stays visible without JavaScript.
+(()=>{
  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
  const targets=document.querySelectorAll('.section-inner,.feature-card,.console-frame,.workflow-step,.download-card,.statement-inner,.flight-section');
  if(!reduced.matches && 'IntersectionObserver' in window){
