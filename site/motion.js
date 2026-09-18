@@ -32,26 +32,6 @@
  detail.querySelector('.winter-replay').addEventListener('click',bloom);
 })();
 
-
-// Motion is progressive enhancement: content stays visible without JavaScript.
-(()=>{
- const scene=document.querySelector('.footer-landscape');if(!scene)return;
- const panels=[...scene.querySelectorAll('.landscape-panel')];
- const reduced=matchMedia('(prefers-reduced-motion: reduce)');let pending=false;
- const clamp=x=>Math.max(0,Math.min(1,x));
- function render(){pending=false;const r=scene.getBoundingClientRect();
- const progress=clamp((innerHeight-r.top)/Math.min(r.height+80,innerHeight*.8));
- scene.style.setProperty('--pan',reduced.matches?0:progress);
- panels.forEach((panel,i)=>{const t=reduced.matches?1:clamp((progress-i*.055)/.72);const ease=1-Math.pow(1-t,3);
- panel.style.setProperty('--rise',`${(1-ease)*(160+i%3*45)}px`);
- panel.style.setProperty('--zoom',1+(1-ease)*.12);
- panel.style.setProperty('--shown',.12+ease*.88);
- });
- }
- const schedule=()=>{if(!pending){pending=true;requestAnimationFrame(render)}};
- addEventListener('scroll',schedule,{passive:true});addEventListener('resize',schedule);addEventListener('pageshow',schedule);reduced.addEventListener('change',schedule);render();
-})();
-
 // Motion is progressive enhancement: content stays visible without JavaScript.
 (()=>{
  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
@@ -83,4 +63,49 @@
  }
  opening.querySelector('.opening-bottom a').addEventListener('click',e=>{e.preventDefault();scrollTo({top:scrollY+opening.getBoundingClientRect().top+Math.max(0,opening.offsetHeight-innerHeight),behavior:reduced.matches?'instant':'smooth'});});
  addEventListener('scroll',()=>{if(!pending){pending=true;requestAnimationFrame(render)}},{passive:true});addEventListener('resize',render);addEventListener('pageshow',render);reduced.addEventListener('change',render);render();
+})();
+
+// SVG landscape footer: scroll-driven layered reveal
+(()=>{
+ const footer=document.querySelector('footer');
+ const landscape=document.querySelector('.footer-landscape svg');
+ if(!footer||!landscape)return;
+ const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+ const layers=[
+  {sel:'.layer-sky',             fadeStart:0.0, fadeEnd:0.08},
+  {sel:'.layer-far-mountains',   fadeStart:0.05,fadeEnd:0.22},
+  {sel:'.layer-mist-far',        fadeStart:0.08,fadeEnd:0.25},
+  {sel:'.layer-mid-mountains-blue',fadeStart:0.15,fadeEnd:0.35},
+  {sel:'.layer-mid-mountains-turq',fadeStart:0.22,fadeEnd:0.42},
+  {sel:'.layer-mist-mid',        fadeStart:0.30,fadeEnd:0.50},
+  {sel:'.layer-near-mountains',  fadeStart:0.38,fadeEnd:0.58},
+  {sel:'.layer-river',           fadeStart:0.45,fadeEnd:0.62},
+  {sel:'.layer-pavilions',       fadeStart:0.52,fadeEnd:0.70},
+  {sel:'.layer-pines',           fadeStart:0.55,fadeEnd:0.72},
+  {sel:'.layer-mist-near',       fadeStart:0.60,fadeEnd:0.78},
+  {sel:'.layer-foreground',      fadeStart:0.68,fadeEnd:0.85},
+ ];
+ const svgEl=landscape;
+ let pending=false;
+ function apply(){
+  pending=false;
+  const r=footer.getBoundingClientRect();
+  const total=footer.offsetHeight;
+  const scrolled=Math.max(0,-r.top);
+  const progress=reduced.matches?1:Math.min(1,scrolled/(total-innerHeight));
+  layers.forEach(({sel,fadeStart,fadeEnd})=>{
+   const el=svgEl.querySelector(sel);
+   if(!el)return;
+   const t=Math.max(0,Math.min(1,(progress-fadeStart)/(fadeEnd-fadeStart)));
+   el.style.opacity=t;
+  });
+  // Also toggle in-view for CSS-triggered animations
+  footer.classList.toggle('in-view',r.top<innerHeight&&r.bottom>0);
+ }
+ const schedule=()=>{if(!pending){pending=true;requestAnimationFrame(apply)}};
+ addEventListener('scroll',schedule,{passive:true});
+ addEventListener('resize',schedule);
+ addEventListener('pageshow',schedule);
+ reduced.addEventListener('change',schedule);
+ apply();
 })();
