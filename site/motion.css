@@ -116,6 +116,18 @@ html {
 .contributor-track:is(:hover, :focus-within) .contributor-row {
   animation-play-state: paused;
 }
+
+/* Local animation overlays share the painting's exact framing on all screens. */
+.living-painting{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:hidden}
+.landscape-mist{opacity:.24;animation-duration:14s}
+.landscape-mist-near{opacity:.16;animation-duration:20s}
+footer.in-view .art-paused .landscape-mist{animation-play-state:paused}
+.art-reduced .living-painting{display:none}
+.landscape-toggle{display:block;margin:8px 0 18px auto;padding:9px 12px;background:transparent;color:#d4e7f6;border:1px solid #7895ad;font:10px Consolas,monospace;cursor:pointer}
+.landscape-toggle[hidden]{display:none}
+.landscape-toggle:focus-visible{outline:2px solid #e5be6b;outline-offset:4px}
+.landscape-toggle:disabled{cursor:default;opacity:.7}
+@media(prefers-reduced-motion:reduce){.living-painting{display:none}}
 @media (prefers-reduced-motion: reduce) {
   .contributor-row { animation: none; transform: none; }
 }
@@ -151,8 +163,9 @@ html{scroll-behavior:smooth;scrollbar-gutter:stable;-webkit-font-smoothing:antia
 
 /* === Community section === */
 .section-community {
-  background: oklch(0.11 0.01 250);
+  background: #f4f9fc;
   padding: 80px 5% 60px;
+  border-top: 1px solid #d2e0e9;
 }
 .community-inner {
   max-width: 1200px;
@@ -166,20 +179,23 @@ html{scroll-behavior:smooth;scrollbar-gutter:stable;-webkit-font-smoothing:antia
 .community-kicker {
   font: 10px/1 Consolas, monospace;
   letter-spacing: 3px;
-  color: oklch(0.60 0.08 220);
+  color: #6b8da4;
   text-transform: uppercase;
   margin-bottom: 20px;
 }
 .community-title {
-  font: clamp(28px, 4vw, 46px) Georgia, serif;
-  color: oklch(0.92 0.01 250);
-  line-height: 1.15;
-  letter-spacing: -0.02em;
+  font: clamp(22px, 3vw, 36px) Georgia, serif;
+  color: #173d58;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
   margin-bottom: 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .community-desc {
   font: 14px/1.8 'Segoe UI', sans-serif;
-  color: oklch(0.75 0.02 250);
+  color: #536d80;
   line-height: 1.8;
 }
 .community-nav {
@@ -192,20 +208,20 @@ html{scroll-behavior:smooth;scrollbar-gutter:stable;-webkit-font-smoothing:antia
 .community-nav a {
   font: 11px/1 Consolas, monospace;
   letter-spacing: 1.5px;
-  color: oklch(0.60 0.08 220);
+  color: #285f83;
   text-decoration: none;
   padding: 8px 0;
   transition: color 0.2s;
 }
 .community-nav a:hover {
-  color: oklch(0.75 0.08 220);
+  color: #477f9f;
 }
 
 /* Contributor section inside community */
 .contributor-section {
   margin-top: 50px;
   padding-top: 40px;
-  border-top: 1px solid oklch(0.22 0.02 250);
+  border-top: 1px solid #bfd1de;
 }
 .contributor-section {
   display: flex;
@@ -216,7 +232,7 @@ html{scroll-behavior:smooth;scrollbar-gutter:stable;-webkit-font-smoothing:antia
 .contributor-label {
   font: 10px/1 Consolas, monospace;
   letter-spacing: 3px;
-  color: oklch(0.55 0.06 220);
+  color: #6b8da4;
   text-transform: uppercase;
 }
 .contributor-track {
@@ -232,7 +248,7 @@ html{scroll-behavior:smooth;scrollbar-gutter:stable;-webkit-font-smoothing:antia
 }
 .contributor-item {
   font: 13px/1 'Segoe UI', sans-serif;
-  color: oklch(0.70 0.02 250);
+  color: #285f83;
   padding: 0 32px;
   white-space: nowrap;
   letter-spacing: 0.5px;
