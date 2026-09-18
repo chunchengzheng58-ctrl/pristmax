@@ -174,50 +174,38 @@
         <section class="section-storage-agent" id="storage-agent">
             <div class="section-inner">
                 <div class="section-label">02B / STORAGE AGENT</div>
-                <h2>智能存储管家<br><em>让文件管理更简单</em></h2>
-                <p class="section-desc">自动分析存储使用情况，找出大文件、重复文件，统计分类占用。零配置，直接运行。</p>
-                <div class="hero-badges">
-                    <span class="platform-badge">🖥️ Linux</span>
-                    <span class="platform-badge">🍎 macOS</span>
-                    <span class="platform-badge">🪟 Windows</span>
-                    <span class="platform-badge">🐍 Python 3.10+</span>
-                </div>
+                <h2>智能存储管家</h2>
+                <p class="section-desc">自动分析存储 · 找出大文件 · 检测重复文件</p>
             </div>
 
-            <!-- Interactive Terminal -->
             <div class="terminal interactive" id="storage-terminal" tabindex="0">
                 <div class="terminal-header">
                     <span class="console-dot dot-red"></span>
                     <span class="console-dot dot-yellow"></span>
                     <span class="console-dot dot-green"></span>
                     <span class="terminal-title">~/storage-agent</span>
-                    <span class="terminal-hint">按 Tab 补全 · Enter 执行</span>
                     <button class="terminal-replay" aria-label="重新播放">↻</button>
                 </div>
-                <div class="terminal-body" id="terminal-output">
-                    <!-- Dynamic content -->
-                </div>
+                <div class="terminal-body" id="terminal-output"></div>
                 <div class="terminal-input-line">
                     <span class="prompt">$</span>
-                    <input type="text" class="terminal-input" id="terminal-input" placeholder="输入命令..." autocomplete="off" spellcheck="false">
-                    <span class="input-cursor"></span>
+                    <input type="text" class="terminal-input" id="terminal-input" placeholder="输入命令..." autocomplete="off">
                 </div>
                 <div class="terminal-suggestions" id="terminal-suggestions">
-                    <span class="suggestion" data-cmd="storage-agent --path /data --analyze"><span class="sug-key">--analyze</span> 综合分析</span>
-                    <span class="suggestion" data-cmd="storage-agent --large-files --min 100"><span class="sug-key">--large-files</span> 大文件</span>
-                    <span class="suggestion" data-cmd="storage-agent --duplicates"><span class="sug-key">--duplicates</span> 重复文件</span>
-                    <span class="suggestion" data-cmd="storage-agent --stats"><span class="sug-key">--stats</span> 统计信息</span>
+                    <span class="suggestion" data-cmd="storage-agent --path /data --analyze">--analyze</span>
+                    <span class="suggestion" data-cmd="storage-agent --large-files --min 100">--large-files</span>
+                    <span class="suggestion" data-cmd="storage-agent --duplicates">--duplicates</span>
+                    <span class="suggestion" data-cmd="storage-agent --stats">--stats</span>
                 </div>
             </div>
 
-            <!-- Stats Bar -->
             <div class="storage-stats">
                 <div class="stat-item">
                     <span class="stat-value" data-count="100">0</span><span class="stat-unit">K+/s</span>
                     <span class="stat-label">扫描速度</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-value" data-count="1"><</span><span class="stat-unit">GB</span>
+                    <span class="stat-value"><</span><span class="stat-unit">GB</span>
                     <span class="stat-label">内存占用</span>
                 </div>
                 <div class="stat-item">
@@ -225,441 +213,90 @@
                     <span class="stat-label">重复检出率</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-value" data-count="0">0</span>
+                    <span class="stat-value">0</span>
                     <span class="stat-label">外部依赖</span>
                 </div>
             </div>
 
-            <!-- Category Chart -->
             <div class="storage-chart">
-                <h3>存储分布示例</h3>
+                <h3>存储分布</h3>
                 <div class="chart-bars">
-                    <div class="chart-bar" data-category="video" data-percent="35">
-                        <div class="bar-label">视频</div>
-                        <div class="bar-track"><div class="bar-fill" style="--fill: 35%"></div></div>
-                        <div class="bar-value">45.2 GB</div>
-                    </div>
-                    <div class="chart-bar" data-category="image" data-percent="18">
-                        <div class="bar-label">图片</div>
-                        <div class="bar-track"><div class="bar-fill" style="--fill: 18%"></div></div>
-                        <div class="bar-value">23.1 GB</div>
-                    </div>
-                    <div class="chart-bar" data-category="document" data-percent="10">
-                        <div class="bar-label">文档</div>
-                        <div class="bar-track"><div class="bar-fill" style="--fill: 10%"></div></div>
-                        <div class="bar-value">12.8 GB</div>
-                    </div>
-                    <div class="chart-bar" data-category="archive" data-percent="7">
-                        <div class="bar-label">归档</div>
-                        <div class="bar-track"><div class="bar-fill" style="--fill: 7%"></div></div>
-                        <div class="bar-value">8.5 GB</div>
-                    </div>
-                    <div class="chart-bar" data-category="other" data-percent="5">
-                        <div class="bar-label">其他</div>
-                        <div class="bar-track"><div class="bar-fill" style="--fill: 5%"></div></div>
-                        <div class="bar-value">6.2 GB</div>
-                    </div>
+                    <div class="chart-bar" data-percent="35"><div class="bar-label">视频</div><div class="bar-track"><div class="bar-fill" style="--fill: 35%"></div></div><div class="bar-value">45.2 GB</div></div>
+                    <div class="chart-bar" data-percent="18"><div class="bar-label">图片</div><div class="bar-track"><div class="bar-fill" style="--fill: 18%"></div></div><div class="bar-value">23.1 GB</div></div>
+                    <div class="chart-bar" data-percent="10"><div class="bar-label">文档</div><div class="bar-track"><div class="bar-fill" style="--fill: 10%"></div></div><div class="bar-value">12.8 GB</div></div>
+                    <div class="chart-bar" data-percent="7"><div class="bar-label">归档</div><div class="bar-track"><div class="bar-fill" style="--fill: 7%"></div></div><div class="bar-value">8.5 GB</div></div>
                 </div>
             </div>
 
-            <div class="storage-features">
-                <div class="storage-feature-card expandable" data-cmd="storage-agent --path /data --analyze">
-                    <div class="feature-header">
-                        <div class="feature-icon">📊</div>
-                        <h3>存储统计</h3>
-                        <span class="expand-icon">+</span>
-                    </div>
-                    <p>按文件类型、扩展名、目录分类统计，直观展示存储占用分布。</p>
-                    <div class="feature-detail">
-                        <span class="detail-tag">类型统计</span>
-                        <span class="detail-tag">目录排名</span>
-                        <span class="detail-tag">趋势分析</span>
-                    </div>
-                    <div class="feature-expanded">
-                        <div class="feature-cmd">$ storage-agent --path /data --analyze</div>
-                        <div class="feature-output">
-                            <div>📊 正在分析: /data</div>
-                            <div>────────────────────────────────</div>
-                            <div style="color:#4ade80">✅ 扫描完成!</div>
-                            <div>   总文件: 12,847</div>
-                            <div>   总大小: 128.5 GB</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="storage-feature-card expandable" data-cmd="storage-agent --large-files --min 100">
-                    <div class="feature-header">
-                        <div class="feature-icon">📦</div>
-                        <h3>大文件检测</h3>
-                        <span class="expand-icon">+</span>
-                    </div>
-                    <p>快速扫描，找出占用空间最多的文件，支持自定义大小阈值。</p>
-                    <div class="feature-detail">
-                        <span class="detail-tag">自定义阈值</span>
-                        <span class="detail-tag">Top N 排名</span>
-                    </div>
-                    <div class="feature-expanded">
-                        <div class="feature-cmd">$ storage-agent --large-files --min 100</div>
-                        <div class="feature-output">
-                            <div>📦 查找大于 100MB 的文件...</div>
-                            <div>────────────────────────────────</div>
-                            <div style="color:#4ade80">✅ 找到 23 个大文件:</div>
-                            <div>   #1  2.8 GB   /data/video.mp4</div>
-                            <div>   #2  1.5 GB   /data/backup.sql</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="storage-feature-card expandable" data-cmd="storage-agent --duplicates">
-                    <div class="feature-header">
-                        <div class="feature-icon">🔄</div>
-                        <h3>重复文件检测</h3>
-                        <span class="expand-icon">+</span>
-                    </div>
-                    <p>通过 SHA256 哈希检测重复文件，计算可节省的空间。</p>
-                    <div class="feature-detail">
-                        <span class="detail-tag">SHA256</span>
-                        <span class="detail-tag">空间计算</span>
-                    </div>
-                    <div class="feature-expanded">
-                        <div class="feature-cmd">$ storage-agent --duplicates</div>
-                        <div class="feature-output">
-                            <div>🔄 搜索重复文件...</div>
-                            <div>────────────────────────────────</div>
-                            <div style="color:#4ade80">✅ 找到 5 组重复文件:</div>
-                            <div>💰 可节省空间: 4.2 GB</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="storage-feature-card expandable" data-cmd="storage-agent --stats">
-                    <div class="feature-header">
-                        <div class="feature-icon">📁</div>
-                        <h3>大目录分析</h3>
-                        <span class="expand-icon">+</span>
-                    </div>
-                    <p>找出占用空间最大的目录，按大小排序，快速定位问题。</p>
-                    <div class="feature-detail">
-                        <span class="detail-tag">目录树</span>
-                        <span class="detail-tag">大小排序</span>
-                    </div>
-                    <div class="feature-expanded">
-                        <div class="feature-cmd">$ storage-agent --stats</div>
-                        <div class="feature-output">
-                            <div>📈 存储统计</div>
-                            <div>════════════════════════════</div>
-                            <div>【最大目录】</div>
-                            <div>   45.2 GB  /data/video</div>
-                            <div>   23.1 GB  /data/photos</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="storage-feature-card">
-                    <div class="feature-icon">🔌</div>
-                    <h3>RESTful API</h3>
-                    <p>提供 HTTP API 接口，方便集成到现有系统或开发前端界面。</p>
-                    <div class="feature-detail">
-                        <span class="detail-tag">HTTP API</span>
-                        <span class="detail-tag">JSON 格式</span>
-                    </div>
-                </div>
-                <div class="storage-feature-card">
-                    <div class="feature-icon">⚡</div>
-                    <h3>高性能扫描</h3>
-                    <p>多线程并发扫描，支持大目录快速分析，内存占用低。</p>
-                    <div class="feature-detail">
-                        <span class="detail-tag">多线程</span>
-                        <span class="detail-tag">低内存</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- CLI Showcase -->
             <div class="storage-cli">
-                <h3>命令行工具</h3>
-                <p class="cli-desc">一条命令，轻松管理存储</p>
-
+                <h3>命令行</h3>
                 <div class="cli-commands">
                     <div class="cli-command active" data-cmd="analyze">
-                        <div class="cli-cmd-line">
-                            <span class="cli-prompt">$</span>
-                            <span class="cli-cmd">storage-agent --path /data --analyze</span>
-                        </div>
-                        <div class="cli-output">
-                            <div class="output-line">📊 正在分析: /data</div>
-                            <div class="output-line">─────────────────────────────────────────────────</div>
-                            <div class="output-line success">✅ 扫描完成!</div>
-                            <div class="output-line">   总文件: 12,847</div>
-                            <div class="output-line">   总大小: 128.5 GB</div>
-                            <div class="output-line">&nbsp;</div>
-                            <div class="output-line">📁 按类型分布:</div>
-                            <div class="output-line">   video       ████████████████████░░░░░░  45.2 GB</div>
-                            <div class="output-line">   image       ████████████░░░░░░░░░░░░░░  23.1 GB</div>
-                            <div class="output-line">   document    ██████░░░░░░░░░░░░░░░░░░░░  12.8 GB</div>
-                        </div>
+                        <div class="cli-cmd-line"><span class="cli-prompt">$</span><span class="cli-cmd">storage-agent --path /data --analyze</span></div>
+                        <div class="cli-output"><div class="output-line">✅ 扫描完成! 总文件: 12,847 | 128.5 GB</div></div>
                     </div>
-
                     <div class="cli-command" data-cmd="large">
-                        <div class="cli-cmd-line">
-                            <span class="cli-prompt">$</span>
-                            <span class="cli-cmd">storage-agent --large-files --min 100</span>
-                        </div>
-                        <div class="cli-output">
-                            <div class="output-line">📦 查找大于 100MB 的文件...</div>
-                            <div class="output-line">─────────────────────────────────────────────────</div>
-                            <div class="output-line success">✅ 找到 23 个大文件:</div>
-                            <div class="output-line">   #1    2.8 GB   /data/video/archive_2024.mp4</div>
-                            <div class="output-line">   #2    1.5 GB   /data/backup/database.sql</div>
-                            <div class="output-line">   #3   890.5 MB  /data/iso/ubuntu-22.04.iso</div>
-                            <div class="output-line">   #4   456.2 MB  /data/video/meeting.mp4</div>
-                            <div class="output-line">&nbsp;</div>
-                            <div class="output-line">   大文件总占用: 8.2 GB</div>
-                        </div>
+                        <div class="cli-cmd-line"><span class="cli-prompt">$</span><span class="cli-cmd">storage-agent --large-files --min 100</span></div>
+                        <div class="cli-output"><div class="output-line">✅ 找到 23 个大文件 (8.2 GB)</div></div>
                     </div>
-
                     <div class="cli-command" data-cmd="duplicates">
-                        <div class="cli-cmd-line">
-                            <span class="cli-prompt">$</span>
-                            <span class="cli-cmd">storage-agent --duplicates</span>
-                        </div>
-                        <div class="cli-output">
-                            <div class="output-line">🔄 搜索重复文件...</div>
-                            <div class="output-line">─────────────────────────────────────────────────</div>
-                            <div class="output-line success">✅ 找到 5 组重复文件:</div>
-                            <div class="output-line">&nbsp;</div>
-                            <div class="output-line">   组 1: 3 个文件, 每文件 45.2 MB</div>
-                            <div class="output-line">      - /data/photos/vacation.jpg</div>
-                            <div class="output-line">      - /data/backup/vacation_copy.jpg</div>
-                            <div class="output-line">      - /data/old/vacation.jpg</div>
-                            <div class="output-line">&nbsp;</div>
-                            <div class="output-line">💰 可节省空间: 90.4 MB</div>
-                        </div>
+                        <div class="cli-cmd-line"><span class="cli-prompt">$</span><span class="cli-cmd">storage-agent --duplicates</span></div>
+                        <div class="cli-output"><div class="output-line">✅ 找到 5 组重复文件，可节省 4.2 GB</div></div>
                     </div>
-
                     <div class="cli-command" data-cmd="stats">
-                        <div class="cli-cmd-line">
-                            <span class="cli-prompt">$</span>
-                            <span class="cli-cmd">storage-agent --stats</span>
-                        </div>
-                        <div class="cli-output">
-                            <div class="output-line">📈 存储统计: /data</div>
-                            <div class="output-line">═══════════════════════════════════════════════════</div>
-                            <div class="output-line">&nbsp;</div>
-                            <div class="output-line">【概览】</div>
-                            <div class="output-line">   总文件数: 12,847</div>
-                            <div class="output-line">   总大小:   128.5 GB</div>
-                            <div class="output-line">&nbsp;</div>
-                            <div class="output-line">【类型分布】</div>
-                            <div class="output-line">   video       [████████████████████] 45.2 GB</div>
-                            <div class="output-line">   image       [████████████]        23.1 GB</div>
-                            <div class="output-line">   document    [██████]              12.8 GB</div>
-                            <div class="output-line">   archive     [████]                8.5 GB</div>
-                        </div>
+                        <div class="cli-cmd-line"><span class="cli-prompt">$</span><span class="cli-cmd">storage-agent --stats</span></div>
+                        <div class="cli-output"><div class="output-line">📊 视频 45.2GB | 图片 23.1GB | 文档 12.8GB | 归档 8.5GB</div></div>
                     </div>
                 </div>
-
                 <div class="cli-nav">
-                    <button class="cli-nav-btn prev" disabled>← 上一个</button>
-                    <div class="cli-nav-dots">
-                        <span class="cli-dot active" data-cmd="analyze"></span>
-                        <span class="cli-dot" data-cmd="large"></span>
-                        <span class="cli-dot" data-cmd="duplicates"></span>
-                        <span class="cli-dot" data-cmd="stats"></span>
-                    </div>
-                    <button class="cli-nav-btn next">下一个 →</button>
-                </div>
-            </div>
-
-            <!-- Why Storage Agent -->
-            <div class="storage-why">
-                <h3>为什么选择 Storage Agent?</h3>
-                <div class="why-grid">
-                    <div class="why-card">
-                        <div class="why-icon">🚀</div>
-                        <h4>零配置</h4>
-                        <p>安装即可使用，无需复杂配置，开箱即用</p>
-                    </div>
-                    <div class="why-card">
-                        <div class="why-icon">💰</div>
-                        <h4>节省空间</h4>
-                        <p>智能识别重复文件，释放宝贵存储空间</p>
-                    </div>
-                    <div class="why-card">
-                        <div class="why-icon">🔒</div>
-                        <h4>本地处理</h4>
-                        <p>文件不上传，数据安全完全由你掌控</p>
-                    </div>
-                    <div class="why-card">
-                        <div class="why-icon">⚡</div>
-                        <h4>极速扫描</h4>
-                        <p>多线程并发扫描，TB级数据分钟级分析</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Use Cases -->
-            <div class="storage-usecases">
-                <h3>适用场景</h3>
-                <div class="usecase-list">
-                    <div class="usecase-item">
-                        <span class="usecase-icon">🖥️</span>
-                        <div class="usecase-content">
-                            <h4>服务器运维</h4>
-                            <p>快速定位占用空间的大文件，优化服务器存储</p>
-                        </div>
-                    </div>
-                    <div class="usecase-item">
-                        <span class="usecase-icon">📹</span>
-                        <div class="usecase-content">
-                            <h4>视频制作</h4>
-                            <p>管理素材库，找出重复的素材文件</p>
-                        </div>
-                    </div>
-                    <div class="usecase-item">
-                        <span class="usecase-icon">📸</span>
-                        <div class="usecase-content">
-                            <h4>摄影师</h4>
-                            <p>整理照片备份，发现重复照片</p>
-                        </div>
-                    </div>
-                    <div class="usecase-item">
-                        <span class="usecase-icon">🔬</span>
-                        <div class="usecase-content">
-                            <h4>数据研究</h4>
-                            <p>分析数据集分布，优化存储成本</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Savings Calculator -->
-            <div class="storage-calculator">
-                <h3>💡 节省空间计算器</h3>
-                <p class="calc-desc">估算你可以节省多少存储空间</p>
-                <div class="calc-form">
-                    <div class="calc-input-group">
-                        <label for="calc-storage">你的存储总量 (GB)</label>
-                        <input type="number" id="calc-storage" value="500" min="1" max="100000">
-                    </div>
-                    <div class="calc-input-group">
-                        <label for="calc-dupe">预估重复率 (%)</label>
-                        <input type="range" id="calc-dupe" value="15" min="0" max="50">
-                        <span class="calc-range-value"><span id="dupe-value">15</span>%</span>
-                    </div>
-                    <div class="calc-result">
-                        <div class="calc-result-item">
-                            <span class="calc-result-label">预估可节省</span>
-                            <span class="calc-result-value" id="calc-savings">75 GB</span>
-                        </div>
-                        <div class="calc-result-item">
-                            <span class="calc-result-label">按 0.1元/GB/月 节省</span>
-                            <span class="calc-result-value" id="calc-money">7.5 元/月</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Quick Start Guide -->
-            <div class="storage-quickstart">
-                <h3>🚀 快速入门</h3>
-                <div class="quickstart-steps">
-                    <div class="qs-step">
-                        <div class="qs-number">1</div>
-                        <div class="qs-content">
-                            <h4>安装</h4>
-                            <code>pip install storage-agent</code>
-                        </div>
-                    </div>
-                    <div class="qs-step">
-                        <div class="qs-number">2</div>
-                        <div class="qs-content">
-                            <h4>扫描</h4>
-                            <code>storage-agent --path /your/data --analyze</code>
-                        </div>
-                    </div>
-                    <div class="qs-step">
-                        <div class="qs-number">3</div>
-                        <div class="qs-content">
-                            <h4>查看结果</h4>
-                            <code>✓ 扫描完成! 总文件: 12,847</code>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- API Showcase -->
-            <div class="storage-api">
-                <h3>API 接口示例</h3>
-                <div class="api-tabs">
-                    <button class="api-tab active" data-api="stats">存储统计</button>
-                    <button class="api-tab" data-api="large-files">大文件</button>
-                    <button class="api-tab" data-api="duplicates">重复文件</button>
-                </div>
-                <div class="api-content">
-                    <div class="api-panel active" id="api-stats">
-                        <div class="api-method">GET</div>
-                        <div class="api-endpoint">/api/agent/stats?path=/data</div>
-                        <div class="api-response">
-                            <span class="response-label">Response:</span>
-                            <pre>{
-  "total_files": 12847,
-  "total_size": 128500000000,
-  "by_extension": {...},
-  "by_directory": [...]
-}</pre>
-                        </div>
-                    </div>
-                    <div class="api-panel" id="api-large-files">
-                        <div class="api-method">GET</div>
-                        <div class="api-endpoint">/api/agent/large-files?path=/data&min_size_mb=100</div>
-                        <div class="api-response">
-                            <span class="response-label">Response:</span>
-                            <pre>{
-  "files": [
-    {"path": "/data/video.mp4", "size": 2800000000},
-    {"path": "/data/backup.sql", "size": 1500000000}
-  ],
-  "count": 23
-}</pre>
-                        </div>
-                    </div>
-                    <div class="api-panel" id="api-duplicates">
-                        <div class="api-method">GET</div>
-                        <div class="api-endpoint">/api/agent/duplicates?path=/data</div>
-                        <div class="api-response">
-                            <span class="response-label">Response:</span>
-                            <pre>{
-  "groups": [...],
-  "total_groups": 5,
-  "total_wasted_space": 4200000000
-}</pre>
-                        </div>
-                    </div>
+                    <button class="cli-nav-btn prev" disabled>←</button>
+                    <div class="cli-nav-dots"><span class="cli-dot active" data-cmd="analyze"></span><span class="cli-dot" data-cmd="large"></span><span class="cli-dot" data-cmd="duplicates"></span><span class="cli-dot" data-cmd="stats"></span></div>
+                    <button class="cli-nav-btn next">→</button>
                 </div>
             </div>
 
             <div class="storage-install">
-                <h3>快速安装</h3>
+                <h3>安装</h3>
                 <div class="install-tabs">
-                    <button class="install-tab active" data-tab="pip">pip 安装</button>
-                    <button class="install-tab" data-tab="source">源码安装</button>
-                    <button class="install-tab" data-tab="package">下载安装包</button>
+                    <button class="install-tab active" data-tab="pip">pip</button>
+                    <button class="install-tab" data-tab="source">源码</button>
+                    <button class="install-tab" data-tab="package">下载</button>
                 </div>
                 <div class="install-content">
-                    <div class="install-panel active" id="install-pip">
-                        <code>pip install storage-agent<br>storage-agent --path /your/data --analyze</code>
-                        <button class="copy-btn" data-copy="pip install storage-agent\nstorage-agent --path /your/data --analyze">复制</button>
+                    <div class="install-panel active" id="install-pip"><code>pip install storage-agent</code></div>
+                    <div class="install-panel" id="install-source"><code>git clone https://github.com/chunchengzheng58-ctrl/pristmax.git</code></div>
+                    <div class="install-panel" id="install-package"><code>curl -O https://jiangchenghehe.top/downloads/pristmax-api-release.tar</code></div>
+                </div>
+            </div>
+
+            <div class="storage-api">
+                <h3>API</h3>
+                <div class="api-tabs">
+                    <button class="api-tab active" data-api="stats">/stats</button>
+                    <button class="api-tab" data-api="large-files">/large-files</button>
+                    <button class="api-tab" data-api="duplicates">/duplicates</button>
+                </div>
+                <div class="api-content">
+                    <div class="api-panel active" id="api-stats"><div class="api-method">GET</div><div class="api-endpoint">/api/agent/stats?path=/data</div></div>
+                    <div class="api-panel" id="api-large-files"><div class="api-method">GET</div><div class="api-endpoint">/api/agent/large-files?path=/data&min_size_mb=100</div></div>
+                    <div class="api-panel" id="api-duplicates"><div class="api-method">GET</div><div class="api-endpoint">/api/agent/duplicates?path=/data</div></div>
+                </div>
+            </div>
+
+            <div class="storage-calculator">
+                <h3>节省计算</h3>
+                <div class="calc-form">
+                    <div class="calc-input-group">
+                        <label>存储总量 (GB)</label>
+                        <input type="number" id="calc-storage" value="500" min="1">
                     </div>
-                    <div class="install-panel" id="install-source">
-                        <code>git clone https://github.com/chunchengzheng58-ctrl/pristmax.git<br>cd pristmax<br>pip install -r requirements.txt<br>python -m src.pristmax.agent.storage_agent --help</code>
-                        <button class="copy-btn" data-copy="git clone https://github.com/chunchengzheng58-ctrl/pristmax.git
-cd pristmax
-pip install -r requirements.txt
-python -m src.pristmax.agent.storage_agent --help">复制</button>
+                    <div class="calc-input-group">
+                        <label>重复率</label>
+                        <input type="range" id="calc-dupe" value="15" min="0" max="50">
+                        <span id="dupe-value">15%</span>
                     </div>
-                    <div class="install-panel" id="install-package">
-                        <code>curl -O https://jiangchenghehe.top/downloads/pristmax-api-release.tar<br>tar -xf pristmax-api-release.tar<br>cd src/pristmax/agent<br>python storage_agent.py --help</code>
-                        <button class="copy-btn" data-copy="curl -O https://jiangchenghehe.top/downloads/pristmax-api-release.tar
-tar -xf pristmax-api-release.tar
-cd src/pristmax/agent
-python storage_agent.py --help">复制</button>
+                    <div class="calc-result">
+                        <span>可节省: <strong id="calc-savings">75 GB</strong></span>
                     </div>
                 </div>
             </div>
