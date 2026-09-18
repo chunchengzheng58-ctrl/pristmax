@@ -68,3 +68,12 @@ document.querySelectorAll('.storage-feature-card.expandable').forEach(card=>{car
 
 // Keyboard navigation for CLI commands
 document.querySelectorAll('.cli-command').forEach((cmd,index)=>{cmd.setAttribute('tabindex','0');cmd.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();showCli(index)}})})
+
+// Savings calculator
+const calcStorage=document.getElementById('calc-storage');
+const calcDupe=document.getElementById('calc-dupe');
+const dupeValueEl=document.getElementById('dupe-value');
+const calcSavings=document.getElementById('calc-savings');
+const calcMoney=document.getElementById('calc-money');
+function updateCalculator(){const storage=parseFloat(calcStorage.value)||0;const dupe=parseFloat(calcDupe.value)||0;const savings=storage*(dupe/100);calcSavings.textContent=savings.toFixed(0)+' GB';calcMoney.textContent=(savings*0.1).toFixed(1)+' 元/月'}
+if(calcStorage&&calcDupe){calcStorage.addEventListener('input',updateCalculator);calcDupe.addEventListener('input',function(){dupeValueEl.textContent=this.value;updateCalculator()});updateCalculator()}

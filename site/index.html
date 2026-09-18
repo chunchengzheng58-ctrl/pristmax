@@ -529,6 +529,61 @@
                 </div>
             </div>
 
+            <!-- Savings Calculator -->
+            <div class="storage-calculator">
+                <h3>💡 节省空间计算器</h3>
+                <p class="calc-desc">估算你可以节省多少存储空间</p>
+                <div class="calc-form">
+                    <div class="calc-input-group">
+                        <label for="calc-storage">你的存储总量 (GB)</label>
+                        <input type="number" id="calc-storage" value="500" min="1" max="100000">
+                    </div>
+                    <div class="calc-input-group">
+                        <label for="calc-dupe">预估重复率 (%)</label>
+                        <input type="range" id="calc-dupe" value="15" min="0" max="50">
+                        <span class="calc-range-value"><span id="dupe-value">15</span>%</span>
+                    </div>
+                    <div class="calc-result">
+                        <div class="calc-result-item">
+                            <span class="calc-result-label">预估可节省</span>
+                            <span class="calc-result-value" id="calc-savings">75 GB</span>
+                        </div>
+                        <div class="calc-result-item">
+                            <span class="calc-result-label">按 0.1元/GB/月 节省</span>
+                            <span class="calc-result-value" id="calc-money">7.5 元/月</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Start Guide -->
+            <div class="storage-quickstart">
+                <h3>🚀 快速入门</h3>
+                <div class="quickstart-steps">
+                    <div class="qs-step">
+                        <div class="qs-number">1</div>
+                        <div class="qs-content">
+                            <h4>安装</h4>
+                            <code>pip install storage-agent</code>
+                        </div>
+                    </div>
+                    <div class="qs-step">
+                        <div class="qs-number">2</div>
+                        <div class="qs-content">
+                            <h4>扫描</h4>
+                            <code>storage-agent --path /your/data --analyze</code>
+                        </div>
+                    </div>
+                    <div class="qs-step">
+                        <div class="qs-number">3</div>
+                        <div class="qs-content">
+                            <h4>查看结果</h4>
+                            <code>✓ 扫描完成! 总文件: 12,847</code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- API Showcase -->
             <div class="storage-api">
                 <h3>API 接口示例</h3>
