@@ -1,0 +1,60 @@
+/* Privacy notice banner */
+.privacy-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #173d58;
+  color: white;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  z-index: 1000;
+  font-size: 13px;
+  line-height: 1.5;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.privacy-banner.visible {
+  transform: translateY(0);
+}
+.privacy-banner p {
+  color: #d2e6f2;
+  margin: 0;
+  flex: 1;
+}
+.privacy-banner a {
+  color: #8dc8e8;
+  text-decoration: underline;
+}
+.privacy-accept {
+  background: white;
+  color: #173d58;
+  border: none;
+  padding: 8px 20px;
+  font: 12px/1 Consolas, monospace;
+  letter-spacing: 1px;
+  cursor: pointer;
+  border-radius: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+.privacy-accept:hover {
+  background: #e8f4f9;
+}
+
+@media (max-width: 600px) {
+  .privacy-banner {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+    padding: 14px 16px;
+  }
+  .privacy-accept {
+    width: 100%;
+  }
+}

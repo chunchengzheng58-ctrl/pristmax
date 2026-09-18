@@ -8,6 +8,8 @@
     <meta name="robots" content="index, follow">
     <title>Pristmax — Less storage. More clarity.</title>
     <link rel="icon" href="assets/pristmax-symbol.svg" type="image/svg+xml">
+    <link rel="manifest" href="manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
     <!-- Preconnect to external origins -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,6 +26,7 @@
     <link rel="stylesheet" href="motion.css">
     <link rel="stylesheet" href="footer-art.css">
     <link rel="stylesheet" href="feature-botanical.css">
+    <link rel="stylesheet" href="privacy.css">
 <noscript><style>.opening{height:auto}.opening-screen{position:relative;min-height:900px;--intro-progress:1;background:white;color:#477f9f}.opening-content{visibility:visible;opacity:1}</style></noscript>
 
 <script type="application/ld+json">
@@ -473,6 +476,32 @@
     <script src="footer-art.js" defer></script>
     <script src="community.js" defer></script>
     <script src="feature-botanical.js" defer></script>
+
+    <!-- Privacy notice -->
+    <div class="privacy-banner" id="privacy-banner" role="dialog" aria-label="隐私提示" aria-live="polite">
+        <p>我们使用 cookies 优化访问体验，分析站点流量。<a href="docs.html#boundary" target="_blank">了解更多 →</a></p>
+        <button class="privacy-accept" type="button" aria-label="接受并关闭">我知道了</button>
+    </div>
+    <script>
+    (function() {
+        var banner = document.getElementById('privacy-banner');
+        if (!banner) return;
+        if (!sessionStorage.getItem('privacy-accepted')) {
+            // Show after short delay so it doesn't flash on page load
+            setTimeout(function() {
+                banner.classList.add('visible');
+            }, 1200);
+        }
+        var btn = banner.querySelector('.privacy-accept');
+        if (btn) {
+            btn.addEventListener('click', function() {
+                sessionStorage.setItem('privacy-accepted', '1');
+                banner.classList.remove('visible');
+                setTimeout(function() { banner.remove(); }, 400);
+            });
+        }
+    })();
+    </script>
 
 </body>
 </html>
