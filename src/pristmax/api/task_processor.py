@@ -310,11 +310,138 @@ def scan_task_handler(task: Task, progress_callback: Callable = None) -> Dict:
     }
 
 
+def roi_task_handler(task: Task, progress_callback: Callable = None) -> Dict:
+    """
+    ROI 编码任务处理器
+
+    Args:
+        task: 任务对象
+        progress_callback: 进度回调函数
+
+    Returns:
+        处理结果字典
+    """
+    from commercial.surveillance.roi.roi_encoder import ROIEncoderSafe, ROIEncoderConfig
+
+    input_path = task.input_path
+    output_path = task.output_path
+
+    if not os.path.exists(input_path):
+        raise FileNotFoundError(f"Input file not found: {input_path}")
+
+    # 获取 ROI 参数
+    params = task.params or {}
+    crf = params.get('crf', 28)
+    preset = params.get('preset', 'medium')
+    motion_threshold = params.get('motion_threshold', 25)
+    blur_kernel = params.get('blur_kernel', 21)
+
+    # 确定输出目录
+    if not output_path:
+        output_dir = str(Path(input_path).parent)
+    else:
+        output_dir = str(Path(output_path).parent) if Path(output_path).suffix else output_path
+        output_path = str(Path(output_path) / f"{Path(input_path).stem}_roi.mp4") if Path(output_path).is_dir() else output_path
+
+    if progress_callback:
+        progress_callback(5, "Initializing ROI encoder...")
+
+    # 创建 ROI 编码器
+    config = ROIEncoderConfig(
+        h265_crf=crf,
+        h265_preset=preset,
+        motion_threshold=motion_threshold,
+        blur_kernel=blur_kernel,
+        require_authorization=False  # API 模式自动授权
+    )
+    encoder = ROIEncoderSafe(config=config)
+
+    # 请求授权（自动授权模式）
+    record_id = encoder.request_encode(
+        input_path=input_path,
+        output_path=output_path,
+        description=f"ROI encoding task: {task.task_id}"
+    )
+    encoder.authorize(record_id)
+
+    if progress_callback:
+        progress_callback(10, "Motion detection...")
+
+    # 执行 ROI 编码
+    result = encoder.encode(
+        input_path=input_path,
+        output_dir=output_dir,
+        record_id=record_id,
+        skip_authorization=True
+    )
+
+    if result.status == "completed":
+        return {
+            'status': 'success',
+            'task_id': task.task_id,
+            'input_path': input_path,
+            'output_path': result.output_path,
+            'original_size': result.input_size_bytes,
+            'encoded_size': result.encoded_size_bytes,
+            'compression_ratio': result.compression_ratio,
+            'roi_ratio': result.roi_ratio,
+            'motion_ratio': result.motion_ratio,
+            'original_sha256': result.original_sha256,
+            'output_sha256': result.output_sha256,
+            'integrity_verified': result.integrity_verified
+        }
+    else:
+        raise RuntimeError(result.error or "ROI encoding failed")
+
+
+def _notify_task_completion(task: Task):
+    """
+    任务完成时发送通知
+    """
+    try:
+        from src.pristmax.monitor.notifications import get_notification_manager
+        from src.pristmax.monitor.metrics import Alert, AlertLevel
+
+        nm = get_notification_manager()
+        channels = nm.get_channels()
+        if not channels:
+            return
+
+        if task.status.value == 'completed':
+            title = f"任务完成: {task.task_type}"
+            message = f"任务 {task.task_id} 已成功完成"
+            level = AlertLevel.INFO
+        else:
+            title = f"任务失败: {task.task_type}"
+            message = f"任务 {task.task_id} 失败: {task.error}"
+            level = AlertLevel.WARNING
+
+        alert = Alert(
+            level=level,
+            title=title,
+            message=message,
+            metric='task',
+            value=0,
+            threshold=0
+        )
+        alert.alert_id = f"task-{task.task_id}"
+
+        results = nm.send_alert(alert)
+        for ch_id, res in results.items():
+            if res['status'] == 'sent':
+                print(f"[TaskNotify] Sent to {ch_id}")
+            else:
+                print(f"[TaskNotify] Failed to {ch_id}: {res.get('error')}")
+    except Exception as e:
+        print(f"[TaskNotify] Notification error: {e}")
+
+
 # 任务处理器注册表
 TASK_HANDLERS = {
     'encode': encode_task_handler,
     'dedup': dedup_task_handler,
     'scan': scan_task_handler,
+    'roi': roi_task_handler,
 }
 
 

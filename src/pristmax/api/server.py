@@ -627,6 +627,93 @@ def prometheus_metrics():
     return monitor.export_prometheus(), 200, {'Content-Type': 'text/plain'}
 
 
+# ============== 通知渠道 API ==============
+
+@app.route('/api/notifications/channels', methods=['GET'])
+@require_role('admin')
+def get_notification_channels():
+    """获取通知渠道列表 (仅管理员)"""
+    from src.pristmax.monitor.notifications import get_notification_manager
+    nm = get_notification_manager()
+    channels = nm.get_channels(include_disabled=True)
+    return jsonify({
+        'channels': [
+            {
+                'id': c.id,
+                'type': c.type,
+                'name': c.name,
+                'enabled': c.enabled,
+                'config': c.config  # 不暴露敏感字段
+            } for c in channels
+        ]
+    })
+
+
+@app.route('/api/notifications/channels', methods=['POST'])
+@require_role('admin')
+def add_notification_channel():
+    """添加通知渠道 (仅管理员)"""
+    data = request.get_json() or {}
+    channel_type = data.get('type')
+    name = data.get('name')
+    config = data.get('config', {})
+
+    if channel_type not in ('webhook', 'email'):
+        return jsonify({'error': 'type must be webhook or email'}), 400
+    if not name:
+        return jsonify({'error': 'name is required'}), 400
+
+    from src.pristmax.monitor.notifications import get_notification_manager
+    nm = get_notification_manager()
+    channel_id = nm.add_channel(channel_type, name, config)
+    return jsonify({'status': 'created', 'channel_id': channel_id}), 201
+
+
+@app.route('/api/notifications/channels/<channel_id>', methods=['DELETE'])
+@require_role('admin')
+def delete_notification_channel(channel_id):
+    """删除通知渠道 (仅管理员)"""
+    from src.pristmax.monitor.notifications import get_notification_manager
+    nm = get_notification_manager()
+    nm.remove_channel(channel_id)
+    return jsonify({'status': 'deleted'})
+
+
+@app.route('/api/notifications/channels/<channel_id>/test', methods=['POST'])
+@require_role('admin')
+def test_notification_channel(channel_id):
+    """测试通知渠道 (仅管理员)"""
+    from src.pristmax.monitor.notifications import get_notification_manager
+    nm = get_notification_manager()
+    channels = nm.get_channels(include_disabled=True)
+    channel = next((c for c in channels if c.id == channel_id), None)
+    if not channel:
+        return jsonify({'error': 'Channel not found'}), 404
+
+    # 构造测试告警
+    from src.pristmax.monitor.metrics import Alert, AlertLevel
+    test_alert = Alert(
+        level=AlertLevel.INFO,
+        title='测试通知',
+        message=f'这是一条来自 Pristmax 的测试消息，渠道: {channel.name}',
+        metric='test',
+        value=0,
+        threshold=0
+    )
+    result = nm._send_to_channel(channel, test_alert)
+    return jsonify(result)
+
+
+@app.route('/api/notifications/history', methods=['GET'])
+@require_role('admin')
+def get_notification_history():
+    """获取通知历史 (仅管理员)"""
+    from src.pristmax.monitor.notifications import get_notification_manager
+    nm = get_notification_manager()
+    history = nm.get_notification_history(limit=50)
+    return jsonify({'history': history})
+
+
 # ============== Web UI ==============
 
 @app.route('/')
@@ -665,8 +752,11 @@ def main():
     parser.add_argument('--host', default='0.0.0.0', help='Host')
     parser.add_argument('--port', type=int, default=5001, help='Port')
     parser.add_argument('--debug', action='store_true', help='Debug mode')
+    parser.add_argument('--db', default=None, help='Database path (or set PRISTMAX_DB env)')
 
     args = parser.parse_args()
+    if args.db:
+        os.environ['PRISTMAX_DB'] = args.db
 
     print(f"[API] Starting Pristmax API Server...")
     print(f"[API] Web UI: http://{args.host}:{args.port}/")

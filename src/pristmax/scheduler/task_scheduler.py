@@ -492,6 +492,13 @@ class TaskScheduler:
 
             self.db.update_task(task)
 
+        # 发送任务完成/失败通知
+        try:
+            from src.pristmax.api.task_processor import _notify_task_completion
+            _notify_task_completion(task)
+        except Exception as e:
+            print(f"[Scheduler] Notification error: {e}")
+
     def _scheduler_loop(self):
         """定时任务调度循环"""
         while self.running:

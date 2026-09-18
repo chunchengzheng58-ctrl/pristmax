@@ -218,6 +218,22 @@ class SystemMonitor:
                 callback(alert)
             except Exception as e:
                 print(f"[Monitor] Alert callback error: {e}")
+        # 异步发送通知
+        self._notify_alert(alert)
+
+    def _notify_alert(self, alert: Alert):
+        """发送告警通知"""
+        try:
+            from .notifications import get_notification_manager
+            nm = get_notification_manager()
+            results = nm.send_alert(alert)
+            for ch_id, res in results.items():
+                if res['status'] == 'sent':
+                    print(f"[Monitor] Alert {alert.alert_id} sent to {ch_id}")
+                else:
+                    print(f"[Monitor] Alert {alert.alert_id} failed to {ch_id}: {res.get('error')}")
+        except Exception as e:
+            print(f"[Monitor] Notification error: {e}")
 
     def _persist_alert(self, alert: Alert):
         """持久化告警到数据库"""
