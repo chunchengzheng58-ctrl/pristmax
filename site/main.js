@@ -11,21 +11,18 @@ document.querySelectorAll('.copy-btn').forEach(btn=>{btn.addEventListener('click
 
 // Terminal animation
 const terminalLines=[
-{cls:'prompt',text:'$ ',delay:0},{cls:'cmd',text:'pristmax --path /data --analyze',delay:100},
-{cls:'',text:'',delay:800,br:true},
-{cls:'output',text:'✓ 分析完成，耗时 12.3s',delay:900},
-{cls:'comment',text:'  总文件: 12,847 | 总大小: 128.5 GB',delay:1100},
-{cls:'',text:'',delay:1400,br:true},
-{cls:'prompt',text:'$ ',delay:1500},{cls:'cmd',text:'pristmax --large-files --min 100MB',delay:1600},
-{cls:'',text:'',delay:2100,br:true},
-{cls:'output',text:'✓ 找到 23 个大文件 (>100MB)',delay:2200},
-{cls:'comment',text:'  #1  video/archive_2024.mp4 — 2.8 GB',delay:2400},
-{cls:'comment',text:'  #2  backup/database.sql — 1.5 GB',delay:2550},
-{cls:'',text:'',delay:2800,br:true},
-{cls:'prompt',text:'$ ',delay:2900},{cls:'cmd',text:'pristmax --duplicates',delay:3000},
-{cls:'',text:'',delay:3500,br:true},
-{cls:'output',text:'✓ 找到 5 组重复文件，可节省 4.2 GB',delay:3600},
-{cls:'cursor',text:'',delay:3800}];
+{cls:'prompt',text:'$ ',delay:0},{cls:'cmd',text:'pristmax --analyze',delay:100},
+{cls:'',text:'',delay:600,br:true},
+{cls:'output',text:'✓ 完成 | 12,847 文件 | 128.5 GB',delay:700},
+{cls:'',text:'',delay:1200,br:true},
+{cls:'prompt',text:'$ ',delay:1300},{cls:'cmd',text:'pristmax --large-files',delay:1400},
+{cls:'',text:'',delay:2000,br:true},
+{cls:'output',text:'✓ 23 个大文件 (8.2 GB)',delay:2100},
+{cls:'',text:'',delay:2600,br:true},
+{cls:'prompt',text:'$ ',delay:2700},{cls:'cmd',text:'pristmax --duplicates',delay:2800},
+{cls:'',text:'',delay:3300,br:true},
+{cls:'output',text:'✓ 5 组重复 | 节省 4.2 GB',delay:3400},
+{cls:'cursor',text:'',delay:3600}];
 let terminalTimeout=null;function playTerminal(){if(terminalTimeout)clearTimeout(terminalTimeout);const output=document.getElementById('terminal-output');if(!output)return;output.innerHTML='';terminalLines.forEach((line,i)=>{terminalTimeout=setTimeout(()=>{const el=document.createElement('div');el.className='terminal-line'+(line.br?' br':'');if(line.cls==='prompt')el.innerHTML='<span class="prompt">'+line.text+'</span>';else if(line.cls==='cmd')el.innerHTML='<span class="cmd">'+line.text+'</span>';else if(line.cls==='output')el.innerHTML='<span class="output">'+line.text+'</span>';else if(line.cls==='comment')el.innerHTML='<span class="comment">'+line.text+'</span>';else if(line.cls==='cursor')el.innerHTML='<span class="cursor"></span>';else if(line.br)return;output.appendChild(el);requestAnimationFrame(()=>el.classList.add('visible'));if(!line.br)output.scrollTop=output.scrollHeight},line.delay)})}
 
 // Init terminal on load
