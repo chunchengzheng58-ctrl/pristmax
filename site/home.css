@@ -4,11 +4,19 @@
 @media(max-width:800px){#banner-gate{padding-top:155px}#site-header{gap:8px}#site-header .github-link{height:36px;padding:6px 15px;font-size:12px}}
 
 /* Storage Agent Section */
-.section-storage-agent{padding:90px 6%;background:#f8f9fa}
-.section-storage-agent .section-inner{max-width:800px}
-.section-storage-agent .section-desc{margin-bottom:24px}
-.hero-badges{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}
-.hero-badges .platform-badge{background:#fff;border:1px solid #d7ddd9;padding:8px 16px;border-radius:20px;font-size:13px;font-weight:600}
+.section-storage-agent{padding:60px 6%;background:#f8f9fa}
+.section-storage-agent .section-inner{text-align:center;margin-bottom:30px}
+.section-storage-agent .section-label{font-size:11px;font-family:Consolas,monospace;color:#666;letter-spacing:2px}
+.section-storage-agent h2{font-size:1.8rem;font-weight:700;color:#113577;margin-top:8px}
+
+/* Agent Demo - Compact */
+.agent-demo{max-width:700px;margin:0 auto 30px;background:#1a1a2e;border-radius:10px;overflow:hidden}
+.agent-cmd{background:#2d2d44;padding:12px 20px;font-family:"SF Mono",Monaco,monospace;font-size:0.9rem}
+.agent-cmd .prompt{color:#d4af37;margin-right:10px}
+.agent-cmd .cmd{color:#fff}
+.agent-output{background:#1a1a2e;padding:16px 20px;font-family:"SF Mono",Monaco,monospace;font-size:0.85rem;color:#4ade80;border-top:1px solid #2d2d44}
+.agent-commands{display:flex;justify-content:center;gap:12px;padding:16px;background:#1a1a2e;border-top:1px solid #2d2d44;flex-wrap:wrap}
+.agent-cmd-chip{background:#2d2d44;color:#888;padding:6px 14px;border-radius:6px;font-family:"SF Mono",Monaco,monospace;font-size:0.8rem}
 
 /* Terminal */
 .terminal{background:#1a1a2e;border-radius:12px;overflow:hidden;margin:40px 0;max-width:800px;box-shadow:0 20px 60px rgba(0,0,0,0.15)}

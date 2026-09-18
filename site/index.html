@@ -172,24 +172,25 @@
 
         <!-- Storage Agent -->
         <section class="section-storage-agent" id="storage-agent">
-            <div class="terminal interactive" id="storage-terminal" tabindex="0">
-                <div class="terminal-header">
-                    <span class="console-dot dot-red"></span>
-                    <span class="console-dot dot-yellow"></span>
-                    <span class="console-dot dot-green"></span>
-                    <span class="terminal-title">pristmax --agent</span>
-                    <button class="terminal-replay" aria-label="重新播放">↻</button>
-                </div>
-                <div class="terminal-body" id="terminal-output"></div>
-                <div class="terminal-input-line">
+            <div class="section-inner">
+                <div class="section-label">02B / AGENT</div>
+                <h2>Storage Agent</h2>
+            </div>
+
+            <div class="agent-demo">
+                <div class="agent-cmd">
                     <span class="prompt">$</span>
-                    <input type="text" class="terminal-input" id="terminal-input" placeholder="输入命令..." autocomplete="off">
+                    <span class="cmd">pristmax --path /data --analyze</span>
                 </div>
-                <div class="terminal-suggestions" id="terminal-suggestions">
-                    <span class="suggestion" data-cmd="pristmax --path /data --analyze">--analyze</span>
-                    <span class="suggestion" data-cmd="pristmax --large-files --min 100">--large-files</span>
-                    <span class="suggestion" data-cmd="pristmax --duplicates">--duplicates</span>
-                    <span class="suggestion" data-cmd="pristmax --stats">--stats</span>
+                <div class="agent-output">
+                    <div>✅ 分析完成 | 文件: 12,847 | 大小: 128.5 GB</div>
+                </div>
+
+                <div class="agent-commands">
+                    <span class="agent-cmd-chip">--analyze</span>
+                    <span class="agent-cmd-chip">--large-files</span>
+                    <span class="agent-cmd-chip">--duplicates</span>
+                    <span class="agent-cmd-chip">--stats</span>
                 </div>
             </div>
 
