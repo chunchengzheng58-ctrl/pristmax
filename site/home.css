@@ -10,20 +10,20 @@
 .section-storage-agent h2{font-size:1.4rem;font-weight:700;color:#113577;margin-top:6px}
 
 /* Agent Demo - Compact */
-.agent-demo{max-width:600px;margin:0 auto 20px;background:#1a1a2e;border-radius:8px;overflow:hidden}
-.terminal-header{display:flex;align-items:center;padding:8px 12px;background:#2d2d44;gap:6px}
+.agent-demo{max-width:900px;margin:0 auto 20px;background:#1a1a2e;border-radius:8px;overflow:hidden}
+.terminal-header{display:flex;align-items:center;padding:6px 10px;background:#2d2d44;gap:6px}
 .console-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
 .dot-red{background:#ff5f56}.dot-yellow{background:#ffbd2e}.dot-green{background:#27ca40}
-.terminal-title{color:#666;font-size:0.75rem;flex:1;margin-left:6px;font-family:"SF Mono",Monaco,monospace}
-.terminal-replay{background:rgba(255,255,255,0.1);border:none;color:#666;padding:2px 8px;border-radius:3px;cursor:pointer;font-size:10px}
+.terminal-title{color:#666;font-size:0.7rem;flex:1;margin-left:6px;font-family:"SF Mono",Monaco,monospace}
+.terminal-replay{background:rgba(255,255,255,0.1);border:none;color:#666;padding:2px 6px;border-radius:3px;cursor:pointer;font-size:10px}
 .terminal-replay:hover{background:rgba(255,255,255,0.2)}
-.terminal-body{padding:12px;font-family:"SF Mono",Monaco,monospace;font-size:0.75rem;color:#e0e0e0;min-height:80px}
-.terminal-line{margin-bottom:4px;opacity:0;transform:translateY(5px);transition:all 0.2s}
+.terminal-body{padding:10px;font-family:"SF Mono",Monaco,monospace;font-size:0.7rem;color:#e0e0e0;min-height:50px;line-height:1.4}
+.terminal-line{margin-bottom:2px;opacity:0;transform:translateY(5px);transition:all 0.2s}
 .terminal-line.visible{opacity:1;transform:translateY(0)}
-.prompt{color:#d4af37}.cmd{color:#fff}.output{color:#4ade80}.comment{color:#666}.cursor{display:inline-block;width:6px;height:12px;background:#d4af37;animation:blink 1s infinite}
+.prompt{color:#d4af37}.cmd{color:#fff}.output{color:#4ade80}.comment{color:#666}.cursor{display:inline-block;width:6px;height:10px;background:#d4af37;animation:blink 1s infinite}
 @keyframes blink{0%,50%{opacity:1}51%,100%{opacity:0}}
-.agent-commands{display:flex;justify-content:center;gap:8px;padding:10px;background:#1a1a2e;border-top:1px solid #2d2d44;flex-wrap:wrap}
-.agent-cmd-chip{background:#2d2d44;color:#888;padding:4px 10px;border-radius:4px;font-family:"SF Mono",Monaco,monospace;font-size:0.7rem}
+.agent-commands{display:flex;justify-content:center;gap:8px;padding:8px;background:#1a1a2e;border-top:1px solid #2d2d44;flex-wrap:wrap}
+.agent-cmd-chip{background:#2d2d44;color:#888;padding:3px 8px;border-radius:4px;font-family:"SF Mono",Monaco,monospace;font-size:0.65rem}
 
 /* Terminal */
 .terminal{background:#1a1a2e;border-radius:12px;overflow:hidden;margin:40px 0;max-width:800px;box-shadow:0 20px 60px rgba(0,0,0,0.15)}
