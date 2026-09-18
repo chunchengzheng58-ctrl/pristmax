@@ -1,11 +1,11 @@
 // Pine botanical animation for feature card expansions.
-// Grows a stylized pine tree on each feature card expansion.
 
 (function () {
   var REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   function init() {
-    document.querySelectorAll('.feature-card').forEach(function (card) {
+    var cards = document.querySelectorAll('.feature-card');
+    cards.forEach(function (card) {
       card.addEventListener('toggle', function () {
         if (card.open && !REDUCED) {
           growPine(card);
@@ -22,27 +22,24 @@
     var existing = expansion.querySelector('.pine-svg');
     if (existing) existing.remove();
 
-    var idx = [].slice.call(document.querySelectorAll('.feature-card')).indexOf(card);
+    var idx = Array.prototype.slice.call(document.querySelectorAll('.feature-card')).indexOf(card);
     var seed = (idx + 1) * 7919;
 
     var svg = createPineSVG(seed, idx);
-    // Insert as first child so it's behind text content
     expansion.insertAdjacentHTML('afterbegin', svg);
 
-    // Small delay to ensure SVG is in DOM
+    // Trigger animation
     requestAnimationFrame(function () {
       requestAnimationFrame(function () {
         expansion.classList.add('pine-growing');
       });
     });
 
-    // Allow replay by removing class after animation
     expansion.addEventListener('animationend', function () {
       expansion.classList.remove('pine-growing');
     }, { once: true });
   }
 
-  // Seeded pseudo-random (LCG)
   function makeRand(seed) {
     var s = seed;
     return function () {
@@ -55,64 +52,66 @@
     var rand = makeRand(seed);
     var r = function () { return rand(); };
 
-    var W = 360, H = 280;
+    // Compact viewBox - fits within ~80px expansion height
+    var W = 280, H = 100;
 
     // Trunk
-    var trunkX = W * 0.5;
-    var trunkBaseY = H;
-    var trunkH = 110 + r() * 30;
-    var trunkTopX = trunkX + (r() - 0.5) * 8;
-    var trunkTopY = trunkBaseY - trunkH;
-    var trunkLen = Math.sqrt(Math.pow(trunkTopX - trunkX, 2) + Math.pow(trunkTopY - trunkBaseY, 2));
+    var tx = W * 0.5;
+    var tbY = H;
+    var trunkH = 45 + r() * 15;
+    var ttX = tx + (r() - 0.5) * 4;
+    var ttY = tbY - trunkH;
 
-    // 4 branch levels
-    var levels = [];
-    for (var i = 0; i < 4; i++) {
-      var t = (i + 1) / 5;
-      var ly = trunkBaseY - trunkH * t;
-      var lx = trunkX + (trunkTopX - trunkX) * t;
-      var llen = (35 + r() * 20) * (1 - t * 0.25);
+    // 3 branch levels
+    var lvls = [];
+    for (var i = 0; i < 3; i++) {
+      var t = (i + 1) / 4;
+      var ly = tbY - trunkH * t;
+      var lx = tx + (ttX - tx) * t;
+      var llen = (18 + r() * 12) * (1 - t * 0.3);
       var dir = (i % 2 === 0) ? 1 : -1;
-      levels.push({ x: lx, y: ly, len: llen, dir: dir });
+      lvls.push({ x: lx, y: ly, len: llen, dir: dir });
     }
 
-    var parts = [];
+    var p = [];
 
-    // Trunk path
-    parts.push('<path class="pine-trunk" d="M' + trunkX + ',' + trunkBaseY + ' L' + trunkTopX + ',' + trunkTopY + '"/>');
+    // Trunk
+    p.push('<path class="pine-trunk" d="M' + tx.toFixed(1) + ',' + tbY + ' L' + ttX.toFixed(1) + ',' + ttY.toFixed(1) + '"/>');
 
-    // Branches (one side then mirror)
-    levels.forEach(function (lv, i) {
-      var delay = (0.25 + i * 0.12).toFixed(2);
-      // right branch
+    // Branches + needles
+    lvls.forEach(function (lv, i) {
+      var d = (0.2 + i * 0.1).toFixed(2);
+
+      // Right branch
       var rEx = lv.x + lv.dir * lv.len;
-      var rEy = lv.y - lv.len * 0.25;
-      parts.push('<path class="pine-branch" d="M' + lv.x + ',' + lv.y + ' Q' + (lv.x + lv.dir * lv.len * 0.5) + ',' + (lv.y - 8) + ' ' + rEx + ',' + rEy + '" style="animation-delay:' + delay + 's"/>');
-      // left branch (mirror)
-      var mlen = lv.len * (0.75 + r() * 0.2);
-      var mEx = lv.x - lv.dir * mlen;
-      var mEy = lv.y - mlen * 0.25;
-      parts.push('<path class="pine-branch" d="M' + lv.x + ',' + lv.y + ' Q' + (lv.x - lv.dir * mlen * 0.5) + ',' + (lv.y - 7) + ' ' + mEx + ',' + mEy + '" style="animation-delay:' + (parseFloat(delay) + 0.05).toFixed(2) + 's"/>');
+      var rEy = lv.y - lv.len * 0.2;
+      p.push('<path class="pine-branch" d="M' + lv.x.toFixed(1) + ',' + lv.y.toFixed(1) + ' Q' + (lv.x + lv.dir * lv.len * 0.5).toFixed(1) + ',' + (lv.y - 4) + ' ' + rEx.toFixed(1) + ',' + rEy.toFixed(1) + '" style="animation-delay:' + d + 's"/>');
 
-      // needles cluster at branch tip
-      var needleCount = 5 + Math.floor(r() * 4);
-      for (var n = 0; n < needleCount; n++) {
-        var nt = n / needleCount;
-        var nx = lv.x + lv.dir * lv.len * nt * 0.9;
-        var ny = lv.y - 4 + r() * 8;
-        var nlen = 12 + r() * 18;
-        var nAngle = lv.dir * (60 + r() * 40) * (n % 2 === 0 ? 1 : -1);
+      // Left branch (mirror)
+      var mlen = lv.len * (0.7 + r() * 0.2);
+      var mEx = lv.x - lv.dir * mlen;
+      var mEy = lv.y - mlen * 0.2;
+      p.push('<path class="pine-branch" d="M' + lv.x.toFixed(1) + ',' + lv.y.toFixed(1) + ' Q' + (lv.x - lv.dir * mlen * 0.5).toFixed(1) + ',' + (lv.y - 3) + ' ' + mEx.toFixed(1) + ',' + mEy.toFixed(1) + '" style="animation-delay:' + (parseFloat(d) + 0.04).toFixed(2) + 's"/>');
+
+      // Needle clusters at branch tips
+      var nCount = 3 + Math.floor(r() * 3);
+      for (var n = 0; n < nCount; n++) {
+        var nt = n / nCount;
+        var nx = lv.x + lv.dir * lv.len * nt * 0.85;
+        var ny = lv.y - 2 + r() * 4;
+        var nlen = 8 + r() * 12;
+        var nAngle = lv.dir * (50 + r() * 50) * (n % 2 === 0 ? 1 : -1);
         var rad = (nAngle - 90) * Math.PI / 180;
         var nx2 = nx + Math.cos(rad) * nlen;
         var ny2 = ny + Math.sin(rad) * nlen;
-        var nd = (0.55 + i * 0.1 + n * 0.01).toFixed(2);
-        parts.push('<line class="pine-needle" x1="' + nx.toFixed(1) + '" y1="' + ny.toFixed(1) + '" x2="' + nx2.toFixed(1) + '" y2="' + ny2.toFixed(1) + '" style="animation-delay:' + nd + 's"/>');
+        var nd = (0.4 + i * 0.08 + n * 0.02).toFixed(2);
+        p.push('<line class="pine-needle" x1="' + nx.toFixed(1) + '" y1="' + ny.toFixed(1) + '" x2="' + nx2.toFixed(1) + '" y2="' + ny2.toFixed(1) + '" style="animation-delay:' + nd + 's"/>');
       }
     });
 
     return '<svg class="pine-svg" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="xMaxYMax meet" aria-hidden="true" focusable="false">' +
-      '<defs><linearGradient id="pg' + idx + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="white" stop-opacity="0"/><stop offset="50%" stop-color="white" stop-opacity="0.5"/><stop offset="100%" stop-color="white" stop-opacity="0.85"/></linearGradient></defs>' +
-      '<g>' + parts.join('') + '</g>' +
+      '<defs><linearGradient id="pg' + idx + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="white" stop-opacity="0"/><stop offset="60%" stop-color="white" stop-opacity="0.5"/><stop offset="100%" stop-color="white" stop-opacity="0.9"/></linearGradient></defs>' +
+      '<g>' + p.join('') + '</g>' +
       '<rect width="' + W + '" height="' + H + '" fill="url(#pg' + idx + ')"/>' +
       '</svg>';
   }
