@@ -1,1 +1,4 @@
 const menu=document.querySelector('.menu');const nav=document.querySelector('nav');if(menu&&nav){menu.addEventListener('click',()=>{const open=menu.getAttribute('aria-expanded')!=='true';menu.setAttribute('aria-expanded',String(open));nav.classList.toggle('open',open)});nav.addEventListener('click',e=>{if(e.target.closest('a')){nav.classList.remove('open');menu.setAttribute('aria-expanded','false')}});document.addEventListener('keydown',e=>{if(e.key==='Escape'){nav.classList.remove('open');menu.setAttribute('aria-expanded','false')}})}
+
+// Storage Agent install tabs
+document.querySelectorAll('.install-tab').forEach(tab=>{tab.addEventListener('click',()=>{const panelId='install-'+tab.dataset.tab;document.querySelectorAll('.install-tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.install-panel').forEach(p=>p.classList.remove('active'));tab.classList.add('active');document.getElementById(panelId).classList.add('active')})})

@@ -2,3 +2,43 @@
 #banner-gate{padding:145px 5% 70px;text-align:center;background:#fff;min-height:85svh}.banner-brand{font:normal 18vw/1 Georgia,serif;letter-spacing:-.065em;color:#477f9f;margin:30px 0}.banner-tagline{font:normal clamp(30px,4vw,60px)/1.2 Georgia,serif;margin:24px 0}.banner-desc{line-height:1.9}.banner-eyebrow,.section-label,.section-note,.feature-tag,.feature-num,.step-num,.card-tag,.banner-hint{font:11px/1.8 Consolas,monospace;letter-spacing:2px}.banner-actions{display:flex;justify-content:center;gap:15px;margin:30px 0}.banner-btn{padding:12px 25px;border:1px solid #adc5d5;font-size:13px}.banner-btn.primary{background:#173d58;color:white}.banner-hint{margin-top:45px}#site-header{position:fixed;inset:0 0 auto;z-index:5}#site-header .github-link{padding:9px 20px}.section-features,.section-product,.section-workflow,.section-download,.section-faq{padding:90px 6%;border-top:1px solid #cbdce8}.section-features{display:grid;grid-template-columns:1fr 1fr;gap:8%}.feature-card{padding:26px 0;border-bottom:1px solid #bfd1de}.feature-card:first-child{border-top:1px solid #bfd1de}.feature-card h3{margin:15px 0}.feature-card small{display:block;font:13px/1.5 'Segoe UI',sans-serif;margin-top:10px}.feature-tag{font-size:9px}.section-note{font-family:'Segoe UI',sans-serif;letter-spacing:0;color:#587185}.section-statement{background:#112f44;color:#fff;position:relative;overflow:hidden;padding:70px 8%;min-height:520px}.statement-inner{position:relative;z-index:1}.statement-inner h2{font-size:clamp(65px,8vw,110px)}.statement-inner p{color:#d2e6f2}.statement-bg{position:absolute;inset:0 0 0 45%;background:url('assets/pristmax-symbol-light.svg') center/90% 90% no-repeat}.console-frame{background:#fff;border:1px solid #c4d6e2;margin-top:45px;box-shadow:0 25px 70px #173d5810}.console-bar{padding:16px 24px;border-bottom:1px solid #cbdce8;display:flex;gap:8px;align-items:center}.console-dot{width:7px;height:7px;background:#9ab7ca;border-radius:50%}.console-title{font:11px Consolas,monospace;margin-left:12px}.console-body{display:grid;grid-template-columns:190px 1fr}.console-sidebar{background:#eaf3f9;padding:25px}.sidebar-item{padding:12px 0;font-size:12px}.sidebar-item.active{font-weight:600}.console-main{padding:30px}.console-head,.console-row{display:flex;justify-content:space-between;align-items:center;gap:10px}.console-head h3{margin:0}.console-pill,.card-pill{font-size:11px;background:#eaf3f9;padding:4px 10px;display:inline-block}.console-metrics{display:grid;grid-template-columns:repeat(3,1fr);margin:30px 0}.metric{padding:0 18px;border-left:1px solid #d2e0e9}.metric:first-child{padding-left:0;border:0}.metric small,.metric span{display:block;font-size:12px;color:#627b8e}.metric strong{display:block;font:32px/1.7 'Segoe UI',sans-serif;font-variant-numeric:lining-nums tabular-nums}.metric i{font-size:15px;font-style:normal}.console-divider,.console-row{padding:17px 0;border-top:1px solid #d2e0e9;font-size:13px}.console-note{font-size:12px}.workflow-steps,.download-cards{display:grid;grid-template-columns:repeat(3,1fr);margin-top:45px;border-top:1px solid #bfd1de}.workflow-step,.download-card{padding:35px 28px;border-right:1px solid #bfd1de}.workflow-step:first-child,.download-card:first-child{padding-left:0}.workflow-step:last-child,.download-card:last-child{border:0}.workflow-step h3,.download-card h3{margin-top:30px}.download-card a{display:inline-block;border-bottom:1px solid #779fb9;font-size:13px}.section-download{background:#eaf3f9}.section-faq{max-width:1050px;margin:auto}.faq-list p{padding-bottom:22px}@media(max-width:800px){#banner-gate{padding:120px 5% 45px;min-height:75svh}.banner-brand{margin:40px 0}.banner-desc{font-size:13px}#site-header{gap:12px}#site-header .brand{font-size:20px}#site-header .github-link{padding:7px 11px;font-size:12px}.menu{margin-left:auto}.section-features{grid-template-columns:1fr;gap:25px}.section-features,.section-product,.section-workflow,.section-download,.section-faq{padding:55px 6%}.statement-bg{inset:0 -20% 0 20%;opacity:.2}.console-body{display:block}.console-sidebar{display:none}.console-main{padding:20px 14px}.console-head h3{font-size:22px}.console-pill{white-space:nowrap}.metric{padding:0 10px}.metric strong{font-size:26px}.workflow-steps,.download-cards{grid-template-columns:1fr}.workflow-step,.download-card,.workflow-step:first-child,.download-card:first-child{padding:26px 0;border-right:0;border-bottom:1px solid #bfd1de}.section-statement{min-height:440px}.banner-eyebrow{font-size:9px;letter-spacing:1px}}
 
 @media(max-width:800px){#banner-gate{padding-top:155px}#site-header{gap:8px}#site-header .github-link{height:36px;padding:6px 15px;font-size:12px}}
+
+/* Storage Agent Section */
+.section-storage-agent{padding:90px 6%;background:#f8f9fa}
+.section-storage-agent .section-inner{max-width:800px}
+.section-storage-agent .section-desc{margin-bottom:24px}
+.hero-badges{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}
+.hero-badges .platform-badge{background:#fff;border:1px solid #d7ddd9;padding:8px 16px;border-radius:20px;font-size:13px;font-weight:600}
+
+/* Terminal */
+.terminal{background:#1a1a2e;border-radius:12px;overflow:hidden;margin:40px 0;max-width:800px}
+.terminal-header{background:#2d2d44;padding:12px 16px;display:flex;gap:8px}
+.terminal-body{padding:24px;font-family:"SF Mono",Monaco,monospace;font-size:0.9rem;color:#e0e0e0}
+.terminal-line{margin-bottom:12px}
+.prompt{color:#d4af37}
+.cmd{color:#fff}
+.output{color:#4ade80}
+.comment{color:#888}
+.cursor{display:inline-block;width:8px;height:16px;background:#d4af37;animation:blink 1s infinite}
+@keyframes blink{0%,50%{opacity:1}51%,100%{opacity:0}}
+.terminal-title{color:#888;margin-left:12px;font-size:0.875rem}
+
+/* Storage Features Grid */
+.storage-features{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin-top:40px;max-width:1000px}
+.storage-feature-card{background:#fff;border:1px solid #d7ddd9;border-radius:12px;padding:28px;transition:all 0.3s}
+.storage-feature-card:hover{border-color:#113577;transform:translateY(-4px);box-shadow:0 12px 40px rgba(17,53,119,0.1)}
+.storage-feature-card .feature-icon{font-size:28px;margin-bottom:14px}
+.storage-feature-card h3{font-size:1.1rem;font-weight:700;margin-bottom:8px}
+.storage-feature-card p{color:#666;font-size:0.9rem;line-height:1.5}
+
+/* Storage Install */
+.storage-install{max-width:800px;margin-top:50px;background:#fff;border:1px solid #d7ddd9;border-radius:12px;padding:32px}
+.storage-install h3{font-size:1.3rem;font-weight:700;margin-bottom:20px}
+.install-tabs{display:flex;gap:8px;margin-bottom:20px;border-bottom:1px solid #d7ddd9;padding-bottom:12px}
+.install-tab{background:0;border:1px solid #d7ddd9;padding:10px 20px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s}
+.install-tab:hover{border-color:#113577}
+.install-tab.active{background:#113577;color:#fff;border-color:#113577}
+.install-content{}
+.install-panel{display:none}
+.install-panel.active{display:block}
+.install-panel code{display:block;background:#f5f7f9;padding:20px;border-radius:8px;font-family:"SF Mono",Monaco,monospace;font-size:0.85rem;line-height:1.7;color:#333;white-space:pre-wrap}

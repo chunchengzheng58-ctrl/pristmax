@@ -83,6 +83,7 @@
         <button class="menu" aria-expanded="false" aria-controls="navigation">Menu ＋</button><nav id="navigation">
             <a href="#features">Features</a>
             <a href="#architecture">Product</a>
+            <a href="#storage-agent">Storage Agent</a>
             <a href="docs.html">Docs</a>
             <a href="docs.html#install">Install 安装</a>
         </nav>
@@ -164,6 +165,117 @@
                         <div class="console-row"><span>01 &nbsp; Local storage</span><span class="console-pill">未连接</span></div>
                         <div class="console-row"><span>02 &nbsp; Network storage</span><span class="console-pill">未连接</span></div>
                         <p class="console-note">从小规模样本开始，验证节省率与恢复结果。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Storage Agent -->
+        <section class="section-storage-agent" id="storage-agent">
+            <div class="section-inner">
+                <div class="section-label">02B / STORAGE AGENT</div>
+                <h2>智能存储管家<br><em>让文件管理更简单</em></h2>
+                <p class="section-desc">自动分析存储使用情况，找出大文件、重复文件，统计分类占用。零配置，直接运行。</p>
+                <div class="hero-badges">
+                    <span class="platform-badge">🖥️ Linux</span>
+                    <span class="platform-badge">🍎 macOS</span>
+                    <span class="platform-badge">🪟 Windows</span>
+                    <span class="platform-badge">🐍 Python 3.10+</span>
+                </div>
+            </div>
+
+            <div class="terminal">
+                <div class="terminal-header">
+                    <span class="console-dot"></span>
+                    <span class="console-dot"></span>
+                    <span class="console-dot"></span>
+                    <span class="terminal-title">~/storage-agent — scan</span>
+                </div>
+                <div class="terminal-body">
+                    <div class="terminal-line">
+                        <span class="prompt">$</span> <span class="cmd">python -m storage_agent --path /data --analyze</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output">✓ 扫描完成，耗时 12.3s</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="comment">  总文件: 12,847 | 总大小: 128.5 GB</span>
+                    </div>
+                    <br>
+                    <div class="terminal-line">
+                        <span class="prompt">$</span> <span class="cmd">python -m storage_agent --large-files --min 100MB</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output">✓ 找到 23 个大文件 (>100MB)</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="comment">  #1  video/archive_2024.mp4 — 2.8 GB</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="comment">  #2  backup/database.sql — 1.5 GB</span>
+                    </div>
+                    <br>
+                    <div class="terminal-line">
+                        <span class="prompt">$</span> <span class="cmd">python -m storage_agent --duplicates</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output">✓ 找到 5 组重复文件，可节省 4.2 GB</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="cursor"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="storage-features">
+                <div class="storage-feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>存储统计</h3>
+                    <p>按文件类型、扩展名、目录分类统计，直观展示存储占用分布。</p>
+                </div>
+                <div class="storage-feature-card">
+                    <div class="feature-icon">📦</div>
+                    <h3>大文件检测</h3>
+                    <p>快速扫描，找出占用空间最多的文件，支持自定义大小阈值。</p>
+                </div>
+                <div class="storage-feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <h3>重复文件检测</h3>
+                    <p>通过 SHA256 哈希检测重复文件，计算可节省的空间。</p>
+                </div>
+                <div class="storage-feature-card">
+                    <div class="feature-icon">📁</div>
+                    <h3>大目录分析</h3>
+                    <p>找出占用空间最大的目录，按大小排序，快速定位问题。</p>
+                </div>
+                <div class="storage-feature-card">
+                    <div class="feature-icon">🔌</div>
+                    <h3>RESTful API</h3>
+                    <p>提供 HTTP API 接口，方便集成到现有系统或开发前端界面。</p>
+                </div>
+                <div class="storage-feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>高性能扫描</h3>
+                    <p>多线程并发扫描，支持大目录快速分析，内存占用低。</p>
+                </div>
+            </div>
+
+            <div class="storage-install">
+                <h3>快速安装</h3>
+                <div class="install-tabs">
+                    <button class="install-tab active" data-tab="pip">pip 安装</button>
+                    <button class="install-tab" data-tab="source">源码安装</button>
+                    <button class="install-tab" data-tab="package">下载安装包</button>
+                </div>
+                <div class="install-content">
+                    <div class="install-panel active" id="install-pip">
+                        <code>pip install storage-agent<br>storage-agent --path /your/data --analyze</code>
+                    </div>
+                    <div class="install-panel" id="install-source">
+                        <code>git clone https://github.com/chunchengzheng58-ctrl/pristmax.git<br>cd pristmax<br>pip install -r requirements.txt<br>python -m src.pristmax.agent.storage_agent --help</code>
+                    </div>
+                    <div class="install-panel" id="install-package">
+                        <code>curl -O https://jiangchenghehe.top/downloads/pristmax-api-release.tar<br>tar -xf pristmax-api-release.tar<br>cd src/pristmax/agent<br>python storage_agent.py --help</code>
                     </div>
                 </div>
             </div>

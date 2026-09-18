@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Storage Agent - 智能存储管家</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --primary: #113577;
+            --accent: #d4af37;
+            --bg: #fff;
+            --text: #101313;
+            --muted: #666;
+            --border: #d7ddd9;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+            padding: 16px 0;
+        }
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo { font-weight: 900; font-size: 1.5rem; color: var(--primary); text-decoration: none; }
+        nav a { margin-left: 24px; text-decoration: none; color: var(--muted); font-weight: 600; transition: color 0.2s; }
+        nav a:hover { color: var(--primary); }
+        .btn {
+            background: var(--primary);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+        .btn:hover { opacity: 0.9; }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 80px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            color: var(--text);
+        }
+        .hero h1 span { color: var(--primary); }
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--muted);
+            max-width: 600px;
+            margin-bottom: 32px;
+        }
+        .hero-badges {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+        .badge {
+            background: white;
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        /* Terminal */
+        .terminal {
+            background: #1a1a2e;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            margin: 40px 0;
+        }
+        .terminal-header {
+            background: #2d2d44;
+            padding: 12px 16px;
+            display: flex;
+            gap: 8px;
+        }
+        .terminal-dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27ca40; }
+        .terminal-title { color: #888; margin-left: 12px; font-size: 0.875rem; }
+        .terminal-body {
+            padding: 24px;
+            font-family: "SF Mono", Monaco, monospace;
+            font-size: 0.9rem;
+            color: #e0e0e0;
+        }
+        .terminal-line { margin-bottom: 12px; }
+        .prompt { color: var(--accent); }
+        .cmd { color: #fff; }
+        .output { color: #4ade80; }
+        .comment { color: #888; }
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 16px;
+            background: var(--accent);
+            animation: blink 1s infinite;
+        }
+        @keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
+
+        /* Section */
+        section { padding: 80px 0; }
+        section h2 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 16px;
+        }
+        section h2 span { color: var(--primary); }
+        .section-desc { color: var(--muted); font-size: 1.125rem; margin-bottom: 48px; max-width: 600px; }
+
+        /* Features */
+        .features { background: white; }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+        .feature-card {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 32px;
+            transition: all 0.3s;
+        }
+        .feature-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(17,53,119,0.1);
+        }
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary), #1a4a8a);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+        .feature-card h3 { font-size: 1.25rem; font-weight: 700; margin-bottom: 8px; }
+        .feature-card p { color: var(--muted); font-size: 0.95rem; }
+
+        /* Install */
+        .install { background: var(--primary); color: white; }
+        .install h2 { color: white; }
+        .install h2 span { color: var(--accent); }
+        .install .section-desc { color: rgba(255,255,255,0.8); }
+        .install-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 24px;
+        }
+        .install-card h3 { margin-bottom: 16px; font-size: 1.25rem; }
+        .code-block {
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+            padding: 16px;
+            font-family: "SF Mono", Monaco, monospace;
+            font-size: 0.875rem;
+            overflow-x: auto;
+            position: relative;
+        }
+        .code-block code { color: #e0e0e0; }
+        .copy-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+        .copy-btn:hover { background: rgba(255,255,255,0.3); }
+
+        /* Stats */
+        .stats { background: #f8f9fa; }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 32px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+        .stat-value { font-size: 3rem; font-weight: 900; color: var(--primary); }
+        .stat-label { color: var(--muted); margin-top: 8px; }
+
+        /* Footer */
+        footer {
+            background: #1a1a2e;
+            color: white;
+            padding: 48px 0;
+            text-align: center;
+        }
+        footer p { color: #888; margin-top: 16px; }
+        footer a { color: var(--accent); text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav { display: none; }
+            .hero h1 { font-size: 2.5rem; }
+            section h2 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="/" class="logo">Storage Agent</a>
+            <nav>
+                <a href="#features">功能</a>
+                <a href="#install">安装</a>
+                <a href="#stats">统计</a>
+            </nav>
+            <a href="/download.html" class="btn">下载</a>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>智能存储管家<br><span>让文件管理更简单</span></h1>
+            <p>自动分析存储使用情况，找出大文件、重复文件，统计分类占用。零配置，直接运行。</p>
+            <div class="hero-badges">
+                <span class="badge">🖥️ Linux</span>
+                <span class="badge">🍎 macOS</span>
+                <span class="badge">🪟 Windows</span>
+                <span class="badge">🐍 Python 3.10+</span>
+            </div>
+            <a href="#install" class="btn">快速安装</a>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <div class="terminal">
+                <div class="terminal-header">
+                    <span class="terminal-dot dot-red"></span>
+                    <span class="terminal-dot dot-yellow"></span>
+                    <span class="terminal-dot dot-green"></span>
+                    <span class="terminal-title">~/storage-agent — scan</span>
+                </div>
+                <div class="terminal-body">
+                    <div class="terminal-line">
+                        <span class="prompt">$</span> <span class="cmd">python -m storage_agent --path /data --analyze</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output">✓ 扫描完成，耗时 12.3s</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="comment">  总文件: 12,847 | 总大小: 128.5 GB</span>
+                    </div>
+                    <br>
+                    <div class="terminal-line">
+                        <span class="prompt">$</span> <span class="cmd">python -m storage_agent --large-files --min 100MB</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output">✓ 找到 23 个大文件 (>100MB)</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="comment">  #1  video/archive_2024.mp4 — 2.8 GB</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="comment">  #2  backup/database.sql — 1.5 GB</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="comment">  #3  iso/ubuntu-22.04.iso — 890 MB</span>
+                    </div>
+                    <br>
+                    <div class="terminal-line">
+                        <span class="prompt">$</span> <span class="cmd">python -m storage_agent --duplicates</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output">✓ 找到 5 组重复文件，可节省 4.2 GB</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="cursor"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="container">
+            <h2>核心<span>功能</span></h2>
+            <p class="section-desc">智能分析存储，解放你的磁盘空间</p>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>存储统计</h3>
+                    <p>按文件类型、扩展名、目录分类统计，直观展示存储占用分布。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📦</div>
+                    <h3>大文件检测</h3>
+                    <p>快速扫描，找出占用空间最多的文件，支持自定义大小阈值。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <h3>重复文件检测</h3>
+                    <p>通过 SHA256 哈希检测重复文件，计算可节省的空间。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📁</div>
+                    <h3>大目录分析</h3>
+                    <p>找出占用空间最大的目录，按大小排序，快速定位问题。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔌</div>
+                    <h3>RESTful API</h3>
+                    <p>提供 HTTP API 接口，方便集成到现有系统或开发前端界面。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>高性能扫描</h3>
+                    <p>多线程并发扫描，支持大目录快速分析，内存占用低。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="install" id="install">
+        <div class="container">
+            <h2><span>快速</span>安装</h2>
+            <p class="section-desc">一条命令，即刻开始使用</p>
+
+            <div class="install-card">
+                <h3>方式一：pip 安装</h3>
+                <div class="code-block">
+                    <code>pip install storage-agent<br>storage-agent --path /your/data --analyze</code>
+                    <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                </div>
+            </div>
+
+            <div class="install-card">
+                <h3>方式二：从源码安装</h3>
+                <div class="code-block">
+                    <code>git clone https://github.com/chunchengzheng58-ctrl/pristmax.git<br>cd pristmax<br>pip install -r requirements.txt<br>python -m src.pristmax.agent.storage_agent --path /your/data --analyze</code>
+                    <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                </div>
+            </div>
+
+            <div class="install-card">
+                <h3>方式三：下载安装包</h3>
+                <div class="code-block">
+                    <code>curl -O https://jiangchenghehe.top/downloads/pristmax-api-release.tar<br>tar -xf pristmax-api-release.tar<br>cd src/pristmax/agent<br>python storage_agent.py --help</code>
+                    <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats" id="stats">
+        <div class="container">
+            <h2>性能<span>指标</span></h2>
+            <p class="section-desc">高效、快速、可靠</p>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">100K+</div>
+                    <div class="stat-label">文件/秒 扫描速度</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value"><1GB</div>
+                    <div class="stat-label">内存占用</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">99.9%</div>
+                    <div class="stat-label">重复文件检出率</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">依赖（纯 Python）</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <h2>API <span>接口</span></h2>
+            <p class="section-desc">通过 HTTP API 调用，方便集成</p>
+
+            <div class="terminal">
+                <div class="terminal-header">
+                    <span class="terminal-dot dot-red"></span>
+                    <span class="terminal-dot dot-yellow"></span>
+                    <span class="terminal-dot dot-green"></span>
+                    <span class="terminal-title">API Examples</span>
+                </div>
+                <div class="terminal-body">
+                    <div class="terminal-line">
+                        <span class="comment"># 获取存储统计</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="prompt">$</span> <span class="cmd">curl "http://localhost:5001/api/agent/stats?path=/data"</span>
+                    </div>
+                    <br>
+                    <div class="terminal-line">
+                        <span class="comment"># 查找大文件</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="prompt">$</span> <span class="cmd">curl "http://localhost:5001/api/agent/large-files?path=/data&min_size_mb=100"</span>
+                    </div>
+                    <br>
+                    <div class="terminal-line">
+                        <span class="comment"># 查找重复文件</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="prompt">$</span> <span class="cmd">curl "http://localhost:5001/api/agent/duplicates?path=/data"</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <a href="/" class="logo" style="color: white;">Storage Agent</a>
+            <p>开源项目 · <a href="https://github.com/chunchengzheng58-ctrl/pristmax">GitHub</a></p>
+        </div>
+    </footer>
+
+    <script>
+        function copyCode(btn) {
+            const code = btn.parentElement.querySelector('code');
+            navigator.clipboard.writeText(code.textContent);
+            btn.textContent = '已复制!';
+            setTimeout(() => btn.textContent = '复制', 2000);
+        }
+    </script>
+</body>
+</html>
