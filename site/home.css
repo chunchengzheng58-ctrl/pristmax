@@ -101,3 +101,31 @@
 .cli-nav-dots{display:flex;gap:10px}
 .cli-dot{width:10px;height:10px;border-radius:50%;background:#d7ddd9;cursor:pointer;transition:all 0.2s}
 .cli-dot.active{background:#113577;transform:scale(1.2)}
+
+/* Interactive Terminal */
+.terminal.interactive{border-radius:12px 12px 0 0}
+.terminal.interactive .terminal-body{border-radius:0;min-height:250px}
+.terminal-input-line{display:none;background:#1a1a2e;padding:16px 20px;border-top:1px solid #2d2d44;align-items:center;gap:12px}
+.terminal.interactive:hover .terminal-input-line,.terminal.interactive .terminal-input-line:focus-within{display:flex}
+.terminal-input-line .prompt{color:#d4af37;font-family:"SF Mono",Monaco,monospace}
+.terminal-input{background:0;border:0;color:#fff;font-family:"SF Mono",Monaco,monospace;font-size:0.9rem;flex:1;outline:none}
+.terminal-input::placeholder{color:#555}
+.terminal-suggestions{display:none;background:#1a1a2e;padding:0 20px 16px;border-top:1px solid #2d2d44;flex-wrap:wrap;gap:8px}
+.terminal.interactive:hover .terminal-suggestions,.terminal-input:focus~.terminal-suggestions{display:flex}
+.suggestion{background:#2d2d44;color:#888;padding:6px 12px;border-radius:4px;font-size:0.8rem;cursor:pointer;transition:all 0.2s;font-family:"SF Mono",Monaco,monospace}
+.suggestion:hover{background:#d4af37;color:#1a1a2e}
+
+/* Storage Chart */
+.storage-chart{max-width:800px;margin:40px auto;background:#fff;border:1px solid #d7ddd9;border-radius:12px;padding:32px}
+.storage-chart h3{font-size:1.2rem;font-weight:700;margin-bottom:24px;text-align:center}
+.chart-bars{display:flex;flex-direction:column;gap:16px}
+.chart-bar{display:grid;grid-template-columns:60px 1fr 80px;align-items:center;gap:16px}
+.bar-label{font-size:0.9rem;font-weight:600;color:#333}
+.bar-track{height:24px;background:#f0f4f8;border-radius:12px;overflow:hidden}
+.bar-fill{height:100%;width:var(--fill);background:linear-gradient(90deg,#113577,#1a4a8a);border-radius:12px;transition:width 1s ease-out}
+.chart-bar:hover .bar-fill{background:linear-gradient(90deg,#d4af37,#b8962e)}
+.bar-value{font-size:0.85rem;color:#666;text-align:right;font-family:"SF Mono",Monaco,monospace}
+
+/* Code block styling for API responses */
+.api-response pre{background:#f8f9fa;border-radius:6px;padding:16px;overflow-x:auto}
+.api-method.get{background:#27ca40}

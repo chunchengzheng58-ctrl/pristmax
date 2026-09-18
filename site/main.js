@@ -43,3 +43,10 @@ const nextBtn=document.querySelector('.cli-nav-btn.next');
 let currentCli=0;
 function showCli(index){cliCommands.forEach((cmd,i)=>{cmd.classList.toggle('active',i===index)});cliDots.forEach((dot,i)=>{dot.classList.toggle('active',i===index)});prevBtn.disabled=index===0;nextBtn.disabled=index===cliCommands.length-1;currentCli=index}
 if(prevBtn&&nextBtn){prevBtn.addEventListener('click',()=>{if(currentCli>0)showCli(currentCli-1)});nextBtn.addEventListener('click',()=>{if(currentCli<cliCommands.length-1)showCli(currentCli+1)});cliDots.forEach((dot,i)=>{dot.addEventListener('click',()=>showCli(i))})}
+
+// Chart animation
+const chartObserver=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting){document.querySelectorAll('.bar-fill').forEach((bar,index)=>{setTimeout(()=>{bar.style.width=bar.style.getPropertyValue('--fill')},index*100)});chartObserver.disconnect()}})},{threshold:0.3});const chartEl=document.querySelector('.storage-chart');if(chartEl)chartObserver.observe(chartEl);
+
+// Interactive terminal suggestions
+const terminalInput=document.getElementById('terminal-input');
+if(terminalInput){terminalInput.addEventListener('focus',()=>{document.getElementById('terminal-suggestions').style.display='flex'});terminalInput.addEventListener('blur',()=>{setTimeout(()=>{document.getElementById('terminal-suggestions').style.display='none'},200)});terminalInput.addEventListener('input',function(){const val=this.value.toLowerCase();document.querySelectorAll('.suggestion').forEach(s=>{const cmd=s.dataset.cmd.toLowerCase();s.style.opacity=val&&!cmd.includes(val.replace('--',''))?'0.3':'1'})});document.querySelectorAll('.suggestion').forEach(s=>{s.addEventListener('click',function(){terminalInput.value=this.dataset.cmd;terminalInput.focus()})})}

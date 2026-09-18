@@ -184,17 +184,27 @@
                 </div>
             </div>
 
-            <!-- Terminal Demo -->
-            <div class="terminal" id="storage-terminal">
+            <!-- Interactive Terminal -->
+            <div class="terminal interactive" id="storage-terminal">
                 <div class="terminal-header">
                     <span class="console-dot dot-red"></span>
                     <span class="console-dot dot-yellow"></span>
                     <span class="console-dot dot-green"></span>
-                    <span class="terminal-title">~/storage-agent — scan</span>
+                    <span class="terminal-title">~/storage-agent</span>
                     <button class="terminal-replay" aria-label="重新播放">↻</button>
                 </div>
                 <div class="terminal-body" id="terminal-output">
                     <!-- Dynamic content -->
+                </div>
+                <div class="terminal-input-line">
+                    <span class="prompt">$</span>
+                    <input type="text" class="terminal-input" id="terminal-input" placeholder="输入命令尝试..." autocomplete="off">
+                </div>
+                <div class="terminal-suggestions" id="terminal-suggestions">
+                    <span class="suggestion" data-cmd="storage-agent --path /data --analyze">--analyze</span>
+                    <span class="suggestion" data-cmd="storage-agent --large-files --min 100">--large-files</span>
+                    <span class="suggestion" data-cmd="storage-agent --duplicates">--duplicates</span>
+                    <span class="suggestion" data-cmd="storage-agent --stats">--stats</span>
                 </div>
             </div>
 
@@ -215,6 +225,38 @@
                 <div class="stat-item">
                     <span class="stat-value" data-count="0">0</span>
                     <span class="stat-label">外部依赖</span>
+                </div>
+            </div>
+
+            <!-- Category Chart -->
+            <div class="storage-chart">
+                <h3>存储分布示例</h3>
+                <div class="chart-bars">
+                    <div class="chart-bar" data-category="video" data-percent="35">
+                        <div class="bar-label">视频</div>
+                        <div class="bar-track"><div class="bar-fill" style="--fill: 35%"></div></div>
+                        <div class="bar-value">45.2 GB</div>
+                    </div>
+                    <div class="chart-bar" data-category="image" data-percent="18">
+                        <div class="bar-label">图片</div>
+                        <div class="bar-track"><div class="bar-fill" style="--fill: 18%"></div></div>
+                        <div class="bar-value">23.1 GB</div>
+                    </div>
+                    <div class="chart-bar" data-category="document" data-percent="10">
+                        <div class="bar-label">文档</div>
+                        <div class="bar-track"><div class="bar-fill" style="--fill: 10%"></div></div>
+                        <div class="bar-value">12.8 GB</div>
+                    </div>
+                    <div class="chart-bar" data-category="archive" data-percent="7">
+                        <div class="bar-label">归档</div>
+                        <div class="bar-track"><div class="bar-fill" style="--fill: 7%"></div></div>
+                        <div class="bar-value">8.5 GB</div>
+                    </div>
+                    <div class="chart-bar" data-category="other" data-percent="5">
+                        <div class="bar-label">其他</div>
+                        <div class="bar-track"><div class="bar-fill" style="--fill: 5%"></div></div>
+                        <div class="bar-value">6.2 GB</div>
+                    </div>
                 </div>
             </div>
 
