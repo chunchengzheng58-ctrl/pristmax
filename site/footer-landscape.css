@@ -1,19 +1,158 @@
-/* Footer landscape — simple static SVG image */
+/* Footer SVG landscape: layered scroll-driven animation.
+   Each layer fades/rises in as the user scrolls into the footer area. */
+
+/* SVG wrapper */
 .footer-landscape {
   position: relative;
   margin: 24px -5.56% 0;
   overflow: hidden;
+  pointer-events: none;
+  isolation: isolate;
+  mask-image: none;
+  -webkit-mask-image: none;
 }
 
-.footer-svg-img {
+.footer-landscape .landscape-svg-wrapper {
   display: block;
   width: 100%;
   height: auto;
-  max-height: 520px;
-  object-fit: cover;
+  overflow: visible;
 }
 
+.footer-landscape .landscape-svg-wrapper svg.landscape-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* SVG layers: start invisible */
+.footer-landscape svg .layer-sky {
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.footer-landscape svg .layer-far-mountains {
+  opacity: 0;
+  transform: translateY(60px);
+  transition: opacity 1.0s ease, transform 1.0s ease;
+}
+
+.footer-landscape svg .layer-mist-far {
+  opacity: 0;
+  transition: opacity 1.2s ease 0.1s;
+}
+
+.footer-landscape svg .layer-mid-mountains-blue {
+  opacity: 0;
+  transform: translateY(80px);
+  transition: opacity 1.0s ease 0.15s, transform 1.0s ease 0.15s;
+}
+
+.footer-landscape svg .layer-mid-mountains-turq {
+  opacity: 0;
+  transform: translateY(70px);
+  transition: opacity 1.0s ease 0.25s, transform 1.0s ease 0.25s;
+}
+
+.footer-landscape svg .layer-mist-mid {
+  opacity: 0;
+  transition: opacity 1.2s ease 0.35s;
+}
+
+.footer-landscape svg .layer-near-mountains {
+  opacity: 0;
+  transform: translateY(90px);
+  transition: opacity 1.0s ease 0.4s, transform 1.0s ease 0.4s;
+}
+
+.footer-landscape svg .layer-river {
+  opacity: 0;
+  transition: opacity 1.0s ease 0.5s;
+}
+
+.footer-landscape svg .layer-pavilions {
+  opacity: 0;
+  transform: translateY(40px) scale(0.95);
+  transition: opacity 0.8s ease 0.55s, transform 0.8s ease 0.55s;
+}
+
+.footer-landscape svg .layer-pines {
+  opacity: 0;
+  transition: opacity 0.8s ease 0.6s;
+}
+
+.footer-landscape svg .layer-mist-near {
+  opacity: 0;
+  transition: opacity 1.0s ease 0.65s;
+}
+
+.footer-landscape svg .layer-foreground {
+  opacity: 0;
+  transition: opacity 0.8s ease 0.7s;
+}
+
+.footer-landscape svg .layer-texture {
+  opacity: 0;
+  transition: opacity 0.5s ease 0.8s;
+}
+
+/* When footer is in-view (IntersectionObserver), trigger all layers */
+.footer.in-view .footer-landscape svg .layer-sky             { opacity: 1; }
+.footer.in-view .footer-landscape svg .layer-far-mountains   { opacity: 1; transform: translateY(0); }
+.footer.in-view .footer-landscape svg .layer-mist-far         { opacity: 1; }
+.footer.in-view .footer-landscape svg .layer-mid-mountains-blue { opacity: 1; transform: translateY(0); }
+.footer.in-view .footer-landscape svg .layer-mid-mountains-turq { opacity: 1; transform: translateY(0); }
+.footer.in-view .footer-landscape svg .layer-mist-mid         { opacity: 1; }
+.footer.in-view .footer-landscape svg .layer-near-mountains   { opacity: 1; transform: translateY(0); }
+.footer.in-view .footer-landscape svg .layer-river            { opacity: 1; }
+.footer.in-view .footer-landscape svg .layer-pavilions        { opacity: 1; transform: translateY(0) scale(1); }
+.footer.in-view .footer-landscape svg .layer-pines            { opacity: 1; }
+.footer.in-view .footer-landscape svg .layer-mist-near        { opacity: 1; }
+.footer.in-view .footer-landscape svg .layer-foreground       { opacity: 1; }
+.footer.in-view .footer-landscape svg .layer-texture           { opacity: 1; }
+
+/* Mist glow animation when in view */
+@keyframes mist-glow {
+  0%, 100% { filter: blur(8px) brightness(1); }
+  50% { filter: blur(12px) brightness(1.1); }
+}
+
+.footer.in-view .footer-landscape svg .layer-mist-far,
+.footer.in-view .footer-landscape svg .layer-mist-mid,
+.footer.in-view .footer-landscape svg .layer-mist-near {
+  animation: mist-glow 8s ease-in-out 1s infinite;
+}
+
+/* Pavilion warm glow animation */
+@keyframes pavilion-warm {
+  0%, 100% { filter: drop-shadow(0 0 3px rgba(200, 100, 20, 0.5)); }
+  50% { filter: drop-shadow(0 0 8px rgba(220, 130, 30, 0.8)); }
+}
+
+.footer.in-view .footer-landscape svg .layer-pavilions {
+  animation: pavilion-warm 6s ease-in-out 2s infinite;
+}
+
+/* River shimmer */
+@keyframes river-shimmer {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; }
+}
+
+.footer.in-view .footer-landscape svg .layer-river {
+  animation: river-shimmer 4s ease-in-out 1.5s infinite;
+}
+
+/* Responsive */
 @media (max-width: 600px) {
   .footer-landscape { margin-top: 28px; }
-  .footer-svg-img { max-height: 300px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer-landscape svg [class^="layer-"] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
 }
