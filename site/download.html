@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pristmax 下载中心</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #113577 0%, #1a4a8a 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 40px 20px;
+        }
+        .container { max-width: 900px; margin: 0 auto; }
+        h1 { text-align: center; font-size: 2.5rem; margin-bottom: 10px; }
+        .subtitle { text-align: center; color: rgba(255,255,255,0.8); margin-bottom: 40px; }
+        .download-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+        .download-card h2 { margin-bottom: 15px; font-size: 1.5rem; }
+        .download-card p { color: rgba(255,255,255,0.8); margin-bottom: 20px; line-height: 1.6; }
+        .download-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #d4af37 0%, #f5d77a 50%, #d4af37 100%);
+            color: #113577;
+            padding: 15px 40px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+        }
+        .version {
+            background: rgba(255,255,255,0.2);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-left: 10px;
+        }
+        .file-info {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.6);
+        }
+        .file-info span { margin-right: 20px; }
+        .api-section {
+            background: rgba(0,0,0,0.2);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .api-section code {
+            background: rgba(0,0,0,0.3);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: rgba(255,255,255,0.6);
+            font-size: 0.9rem;
+        }
+        footer a { color: #d4af37; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Pristmax 下载中心<span class="version">v1.0</span></h1>
+        <p class="subtitle">开源视频编码处理平台 · B端 API 服务</p>
+
+        <div class="download-card">
+            <h2>📦 Pristmax API 服务包</h2>
+            <p>包含完整的 Python API 服务、编码器和部署脚本。适用于 Linux 服务器部署。</p>
+            <a href="/downloads/pristmax-api-release.tar" class="download-btn" download>下载安装包</a>
+            <div class="file-info">
+                <span>📁 格式: tar.gz</span>
+                <span>💾 大小: ~590KB</span>
+                <span>🖥️ 平台: Linux (Python 3.10+)</span>
+            </div>
+        </div>
+
+        <div class="download-card">
+            <h2>🔧 部署说明</h2>
+            <p>请参考 <a href="/downloads/DEPLOY.md" style="color:#d4af37;">DEPLOY.md</a> 进行部署。包含一键部署脚本和详细配置说明。</p>
+            <div class="api-section">
+                <p><strong>快速部署命令:</strong></p>
+                <code>scp pristmax-api-release.tar user@server:/opt/pristmax/ && tar -xf pristmax-api-release.tar && cd /opt/pristmax && ./deploy.sh</code>
+            </div>
+        </div>
+
+        <div class="download-card">
+            <h2>🔌 API 服务地址</h2>
+            <p>部署后可通过以下地址访问 API 服务：</p>
+            <div class="api-section">
+                <p><strong>服务器地址:</strong> <code id="server-addr">请配置 Nginx 反向代理</code></p>
+                <p style="margin-top:10px;"><strong>健康检查:</strong> <code>/api/health</code></p>
+                <p style="margin-top:10px;"><strong>API 文档:</strong> <code>/api/stats</code></p>
+            </div>
+        </div>
+
+        <footer>
+            <p>Pristmax 开源项目 · <a href="https://github.com/chunchengzheng58-ctrl/pristmax">GitHub</a></p>
+        </footer>
+    </div>
+
+    <script>
+        // 自动检测服务器地址
+        fetch('/api/stats', { method: 'GET' })
+            .then(r => r.ok ? r.json() : null)
+            .then(data => {
+                if (data) {
+                    document.getElementById('server-addr').textContent = window.location.origin;
+                }
+            })
+            .catch(() => {});
+    </script>
+</body>
+</html>
