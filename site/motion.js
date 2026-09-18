@@ -82,5 +82,49 @@
  const active=!reduced.matches && t<.85 && r.bottom>0;document.body.classList.toggle('opening-active',active);document.getElementById('site-header').inert=active;
  }
  opening.querySelector('.opening-bottom a').addEventListener('click',e=>{e.preventDefault();scrollTo({top:scrollY+opening.getBoundingClientRect().top+Math.max(0,opening.offsetHeight-innerHeight),behavior:reduced.matches?'instant':'smooth'});});
- addEventListener('scroll',()=>{if(!pending){pending=true;requestAnimationFrame(render)}},{passive:true});addEventListener('resize',render);addEventListener('pageshow',render);reduced.addEventListener('change',render);render();
+ addEventListener('scroll',()=>{if(!pending){pending=true;requestAnimationFrame(render)}},{passive:true
+
+// === Aruacle-inspired: bfcache restore, Ctrl+Wheel zoom prevention, page step ===
+(()=>{
+ // 1. Ctrl+Wheel zoom prevention on non-/test paths
+ window.addEventListener('wheel', function(e){
+   if(!e.ctrlKey && !e.metaKey) return;
+   if(location.pathname.indexOf('/test') === 0) return;
+   e.preventDefault();
+ }, {passive: false});
+
+ // 2. BFCache / pageshow restore — re-apply state after bfcache
+ window.addEventListener('pageshow', function(e){
+   if(e.persisted){
+     // Re-apply header scrolled state after bfcache restore
+     var header = document.getElementById('site-header');
+     if(header) header.classList.toggle('scrolled', scrollY > 40);
+   }
+ });
+
+ // 3. data-page-step on body — controls CSS without JS class toggling
+ var step = location.pathname === '/' ? 'main' : 'main';
+ document.body.setAttribute('data-page-step', step);
+
+ // 4. History state for page step (for SPA-like back/forward behavior)
+ if(history.state && history.state['pristmax-step']){
+   // restore step from history state
+ } else {
+   history.replaceState({ 'pristmax-step': step }, '', location.pathname);
+ }
+
+ // 5. Session storage for opening completion (only show once per session)
+ try {
+   var opened = sessionStorage.getItem('pristmax-opening-done');
+   var opening = document.querySelector('.opening');
+   if(opened && opening){
+     // Skip opening animation, show main content directly
+     opening.style.setProperty('--intro-progress', '1');
+     var screen = opening.querySelector('.opening-screen');
+     if(screen) screen.style.setProperty('--opening-bg', 'rgb(255,255,255)');
+   }
+ } catch(e){}
+})();
+
+});addEventListener('resize',render);addEventListener('pageshow',render);reduced.addEventListener('change',render);render();
 })();

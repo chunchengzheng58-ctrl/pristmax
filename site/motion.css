@@ -89,3 +89,12 @@ html {
 }
 
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}::selection{background:oklch(0.70 0.10 245);color:#000}.paper-wing{will-change:auto;transform:none!important}}
+
+/* === Aruacle-inspired: page metadata via data attributes === */
+body[data-page="opening"] .opening { display: block; }
+body[data-page="main"] .opening { display: none; }
+
+/* Ctrl+Wheel zoom prevention — applied to non-opening paths */
+html[data-aru-nozoom="true"] {
+  overflow-x: hidden;
+}
