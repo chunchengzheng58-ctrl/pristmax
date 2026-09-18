@@ -6,8 +6,10 @@
  const mix=(a,b,t)=>`rgb(${a.map((v,i)=>Math.round(v+(b[i]-v)*t)).join(',')})`;
  function render(){pending=false;
   const r=section.getBoundingClientRect();
+  // distance = extra height beyond one viewport — gives scroll travel room
   const distance=Math.max(1,section.offsetHeight-innerHeight);
-  let t=Math.max(0,Math.min(1,(scrollY-r.top)/distance));
+  // r.top=0 when section top hits viewport top (sticky begins); r.top=-distance when scrolled through
+  let t=Math.max(0,Math.min(1,-r.top/distance));
   if(reduced.matches)t=0;
   // Background: light blue-white → deep dark navy
   screen.style.setProperty('--closing-bg',mix([244,249,252],[7,13,18],t));
@@ -15,21 +17,21 @@
   screen.style.setProperty('--closing-ink',mix([23,61,88],[166,210,236],t));
   // Small/meta text
   screen.style.setProperty('--closing-small',mix([107,141,164],[165,187,201],t));
-  // Brand word: scale down and fade as progress increases
+  // Brand word: visible at first, fades quickly as content arrives
   screen.style.setProperty('--closing-scale',1-t*.06);
   screen.style.setProperty('--closing-word-opacity',String(Math.max(0,1-t*2.2)));
   screen.style.setProperty('--closing-word-y',`${t*22}px`);
-  // Content: fade in at start, fade out near end
+  // Content: appears after word fades, then fades at end
   const cVis=t<.15?0:Math.min(1,(t-.15)*5.5);
   const cFade=t>.78?Math.max(0,1-(t-.78)*4.5):1;
   screen.style.setProperty('--closing-content-opacity',String(cVis*cFade));
   screen.style.setProperty('--closing-content-y',`${(1-cVis)*18}px`);
-  // Actions: appear later, disappear last
+  // Actions: appear last, fade last
   const aVis=t<.3?0:Math.min(1,(t-.3)*5);
   const aFade=t>.85?Math.max(0,1-(t-.85)*6.7):1;
   screen.style.setProperty('--closing-actions-opacity',String(aVis*aFade));
   screen.style.setProperty('--closing-actions-y',`${(1-aVis)*14}px`);
-  // Button bg
+  // Button bg: switch to brighter blue when content fades in
   screen.style.setProperty('--closing-btn-bg',t<.5?'#173d58':'#285f83');
   // Arrow: visible at start, fades as content appears
   screen.style.setProperty('--closing-arrow-opacity',String(Math.max(0,1-t*3.5)));
