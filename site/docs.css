@@ -1,0 +1,158 @@
+/* docs.css — Documentation page styles matching the homepage design language */
+
+.doc-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  margin: 28px 0 36px;
+  padding: 16px 0;
+  border-top: 1px solid #d2e0e9;
+  border-bottom: 1px solid #d2e0e9;
+}
+.doc-nav a {
+  font: 11px/1 Consolas, monospace;
+  letter-spacing: 1.5px;
+  color: #285f83;
+  text-decoration: none;
+  padding: 4px 0;
+  transition: color 0.2s;
+}
+.doc-nav a:hover {
+  color: #477f9f;
+}
+
+/* Breadcrumb */
+.doc-breadcrumb {
+  font: 11px/1 Consolas, monospace;
+  letter-spacing: 1.5px;
+  color: #8aa8bc;
+  margin-bottom: 20px;
+}
+.doc-breadcrumb a {
+  color: #6b8da4;
+  text-decoration: none;
+}
+.doc-breadcrumb a:hover {
+  color: #285f83;
+}
+
+/* Code blocks */
+.doc pre {
+  background: #112f44;
+  color: #e4f2fa;
+  padding: 24px;
+  overflow: auto;
+  font-size: 13px;
+  border-radius: 6px;
+  margin: 20px 0;
+  position: relative;
+}
+.doc code {
+  font-family: 'Consolas', 'Monaco', monospace;
+  font-size: 13px;
+}
+.doc pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+}
+
+/* Inline code */
+.doc p code,
+.doc li code {
+  background: #e8f1f6;
+  color: #173d58;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+/* Copy button for code blocks */
+.doc-copy {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #a0c4dc;
+  padding: 4px 10px;
+  font: 10px/1 Consolas, monospace;
+  letter-spacing: 1px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+.doc-copy:hover {
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+}
+
+/* Notice box */
+.doc .notice {
+  padding: 18px 20px;
+  background: #e2eef6;
+  border-left: 3px solid #477f9f;
+  border-radius: 0 6px 6px 0;
+  margin: 24px 0;
+}
+
+/* Section links */
+.doc h2 a,
+.doc h3 a {
+  color: inherit;
+  text-decoration: none;
+}
+.doc h2:hover::after,
+.doc h3:hover::after {
+  content: ' #';
+  color: #8aa8bc;
+  font-size: 0.7em;
+}
+
+/* Lists */
+.doc ol,
+.doc ul {
+  padding-left: 24px;
+}
+.doc li {
+  margin-bottom: 10px;
+  color: #536d80;
+  line-height: 1.7;
+}
+
+/* Back link */
+.doc-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font: 11px/1 Consolas, monospace;
+  letter-spacing: 1.5px;
+  color: #285f83;
+  margin-top: 40px;
+  padding: 8px 0;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s, color 0.2s;
+}
+.doc-back:hover {
+  color: #477f9f;
+  border-color: #477f9f;
+}
+
+/* Mobile */
+@media (max-width: 800px) {
+  .doc-nav {
+    gap: 6px 16px;
+    margin: 20px 0 28px;
+  }
+  .doc-nav a {
+    font-size: 10px;
+  }
+  .doc pre {
+    padding: 16px;
+    font-size: 12px;
+    border-radius: 4px;
+  }
+  .doc code {
+    font-size: 12px;
+  }
+}

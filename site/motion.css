@@ -168,13 +168,13 @@ html{scroll-behavior:smooth;scrollbar-gutter:stable;-webkit-font-smoothing:antia
   border-top: 1px solid #d2e0e9;
 }
 .community-inner {
-  max-width: 1200px;
+  max-width: 900px;
   margin: 0 auto;
 }
 .community-header {
   text-align: center;
   max-width: 700px;
-  margin: 0 auto 50px;
+  margin: 0 auto;
 }
 .community-kicker {
   font: 10px/1 Consolas, monospace;
@@ -188,22 +188,56 @@ html{scroll-behavior:smooth;scrollbar-gutter:stable;-webkit-font-smoothing:antia
   color: #173d58;
   line-height: 1.4;
   letter-spacing: -0.01em;
-  margin-bottom: 20px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  margin-bottom: 16px;
 }
 .community-desc {
   font: 14px/1.8 'Segoe UI', sans-serif;
   color: #536d80;
   line-height: 1.8;
+  margin-bottom: 28px;
 }
+
+/* GitHub Stats */
+.github-stats {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin: 32px 0 28px;
+  flex-wrap: wrap;
+}
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 80px;
+}
+.stat-icon {
+  width: 28px;
+  height: 28px;
+  color: #285f83;
+  opacity: 0.7;
+}
+.stat-value {
+  font: 28px/1 'Segoe UI', sans-serif;
+  font-weight: 600;
+  color: #173d58;
+  font-variant-numeric: tabular-nums;
+}
+.stat-label {
+  font: 10px/1 Consolas, monospace;
+  letter-spacing: 1.5px;
+  color: #6b8da4;
+  text-transform: uppercase;
+}
+
+/* Community Nav Links */
 .community-nav {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 8px 24px;
-  margin-top: 28px;
+  gap: 8px 28px;
+  margin-top: 8px;
 }
 .community-nav a {
   font: 11px/1 Consolas, monospace;
@@ -217,46 +251,540 @@ html{scroll-behavior:smooth;scrollbar-gutter:stable;-webkit-font-smoothing:antia
   color: #477f9f;
 }
 
-/* Contributor section inside community */
-.contributor-section {
+/* Activity Feed */
+.activity-section {
   margin-top: 50px;
   padding-top: 40px;
   border-top: 1px solid #bfd1de;
+  text-align: center;
 }
-.contributor-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 14px;
-}
-.contributor-label {
+.activity-label {
   font: 10px/1 Consolas, monospace;
   letter-spacing: 3px;
   color: #6b8da4;
   text-transform: uppercase;
+  margin-bottom: 24px;
 }
-.contributor-track {
-  overflow: hidden;
-  -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
-  mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
-}
-.contributor-row {
+.activity-list {
   display: flex;
-  width: max-content;
-  animation: marquee-slide 38s linear infinite;
-  will-change: transform;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 400px;
+  margin: 0 auto;
 }
-.contributor-item {
-  font: 13px/1 'Segoe UI', sans-serif;
+.activity-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font: 13px/1.6 'Segoe UI', sans-serif;
+  color: #536d80;
+}
+.activity-type {
+  font-size: 10px;
+  width: 16px;
+  text-align: center;
+}
+.activity-commit { color: #285f83; }
+.activity-star { color: #f0b429; }
+.activity-issue { color: #28a745; }
+.activity-pr { color: #6f42c1; }
+
+/* === FAQ Section === */
+.faq-search-wrap {
+  max-width: 400px;
+  margin: 28px auto 0;
+}
+.faq-search {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #bfd1de;
+  border-radius: 8px;
+  font: 14px/1.5 'Segoe UI', sans-serif;
+  color: #173d58;
+  background: white;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.faq-search::placeholder { color: #8aa8bc; }
+.faq-search:focus {
+  outline: none;
+  border-color: #285f83;
+  box-shadow: 0 0 0 3px rgba(40, 95, 131, 0.12);
+}
+
+.faq-categories {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin: 24px 0 20px;
+}
+.faq-cat {
+  background: transparent;
+  border: 1px solid #bfd1de;
+  border-radius: 20px;
+  padding: 6px 18px;
+  font: 11px/1 Consolas, monospace;
+  letter-spacing: 1px;
+  color: #536d80;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.faq-cat:hover {
+  border-color: #285f83;
   color: #285f83;
-  padding: 0 32px;
-  white-space: nowrap;
+}
+.faq-cat.active {
+  background: #285f83;
+  border-color: #285f83;
+  color: white;
+}
+
+.faq-list { max-width: 780px; margin: 0 auto; }
+.faq-list details {
+  border-top: 1px solid #bfd1de;
+  padding: 0;
+}
+.faq-list details:last-child { border-bottom: 1px solid #bfd1de; }
+.faq-list summary {
+  padding: 22px 12px;
+  font-size: 15px;
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: #173d58;
+}
+.faq-list summary::-webkit-details-marker { display: none; }
+.faq-list summary b {
+  margin-left: auto;
+  font-size: 18px;
+  font-weight: 400;
+  color: #6b8da4;
+  transition: transform 0.2s;
+}
+.faq-list details[open] summary b { transform: rotate(45deg); }
+.faq-list details p {
+  margin: 0;
+  padding: 0 12px 24px 44px;
+  font-size: 14px;
+  color: #536d80;
+  line-height: 1.8;
+  max-width: none;
+}
+.faq-list details[hidden] { display: none; }
+
+.faq-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: #8aa8bc;
+  font: 14px/1.6 'Segoe UI', sans-serif;
+}
+
+/* === Download Section === */
+.platform-badges {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 24px;
+}
+.platform-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border: 1px solid #bfd1de;
+  border-radius: 20px;
+  font: 11px/1 Consolas, monospace;
+  color: #285f83;
   letter-spacing: 0.5px;
 }
-@keyframes marquee-slide {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+.platform-note {
+  font: 11px/1 'Segoe UI', sans-serif;
+  color: #8aa8bc;
+  margin-left: 8px;
 }
-.contributor-track:is(:hover, :focus-within) .contributor-row {
-  animation-play-state: paused;
+
+/* Roadmap */
+.release-roadmap {
+  max-width: 700px;
+  margin: 40px auto 0;
+  padding: 30px 40px;
+  background: white;
+  border: 1px solid #d2e0e9;
+  border-radius: 12px;
+}
+.roadmap-title {
+  font: 12px/1 Consolas, monospace;
+  letter-spacing: 2px;
+  color: #6b8da4;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+  text-align: center;
+}
+.roadmap-track {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  position: relative;
+}
+.roadmap-track::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #d2e0e9;
+}
+.roadmap-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  z-index: 1;
+  flex: 1;
+}
+.roadmap-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #d2e0e9;
+  border: 3px solid #f4f9fc;
+  box-shadow: 0 0 0 2px #d2e0e9;
+}
+.roadmap-item.done .roadmap-dot {
+  background: #28a745;
+  box-shadow: 0 0 0 2px #28a745;
+}
+.roadmap-item.active .roadmap-dot {
+  background: #285f83;
+  box-shadow: 0 0 0 2px #285f83;
+  animation: roadmap-pulse 2s ease-in-out infinite;
+}
+@keyframes roadmap-pulse {
+  0%, 100% { box-shadow: 0 0 0 2px #285f83; }
+  50% { box-shadow: 0 0 0 5px rgba(40, 95, 131, 0.3); }
+}
+.roadmap-label {
+  font: 12px/1.3 'Segoe UI', sans-serif;
+  color: #173d58;
+  text-align: center;
+}
+.roadmap-date {
+  font: 10px/1 Consolas, monospace;
+  color: #8aa8bc;
+  letter-spacing: 0.5px;
+}
+.roadmap-item.done .roadmap-label { color: #28a745; }
+
+/* Download cards */
+.download-cards { max-width: 1000px; margin: 0 auto; }
+.release-card { position: relative; }
+.release-status {
+  margin: 20px 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.release-progress {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.release-bar {
+  flex: 1;
+  height: 6px;
+  background: #d2e0e9;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.release-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #285f83, #477f9f);
+  border-radius: 3px;
+  transition: width 1s ease;
+}
+.release-pct {
+  font: 12px/1 Consolas, monospace;
+  color: #285f83;
+  min-width: 36px;
+}
+.release-label {
+  font: 11px/1 Consolas, monospace;
+  color: #6b8da4;
+  letter-spacing: 1px;
+}
+.release-notify {
+  display: inline-block;
+  font: 12px/1 'Segoe UI', sans-serif;
+  color: #285f83;
+  border-bottom: 1px solid #bfd1de;
+  padding-bottom: 4px;
+  transition: color 0.2s;
+}
+.release-notify:hover { color: #477f9f; }
+
+/* Quick links */
+.download-quicklinks {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 36px;
+  padding-top: 30px;
+  border-top: 1px solid #d2e0e9;
+}
+.quicklink {
+  font: 12px/1 Consolas, monospace;
+  letter-spacing: 1px;
+  color: #285f83;
+  transition: color 0.2s;
+}
+.quicklink:hover { color: #477f9f; }
+
+/* === Motion enhancements === */
+
+/* Card hover lift */
+.download-card,
+.workflow-step {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.3s ease;
+}
+.download-card:hover,
+.workflow-step:hover {
+  transform: translate3d(0, -4px, 0);
+  box-shadow: 0 16px 40px rgba(23, 61, 88, 0.12);
+}
+
+/* Feature card expansion animation */
+.feature-expansion {
+  animation: expand-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes expand-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -12px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Button press feedback */
+.banner-btn:active,
+.button:active {
+  transform: scale(0.97);
+}
+
+/* FAQ expand spring */
+.faq-list details[open] summary b {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Stat count-up animation */
+.stat-value.counting {
+  animation: stat-pop 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes stat-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+/* Roadmap active pulse */
+.roadmap-item.active .roadmap-dot {
+  animation: dot-pulse 2s ease-in-out infinite;
+}
+@keyframes dot-pulse {
+  0%, 100% { box-shadow: 0 0 0 2px #285f83; }
+  50% { box-shadow: 0 0 0 6px rgba(40, 95, 131, 0.3); }
+}
+
+/* Nav link underline */
+.community-nav a {
+  position: relative;
+}
+.community-nav a::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #285f83;
+  transform: scaleX(0);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.community-nav a:hover::after {
+  transform: scaleX(1);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .download-card:hover,
+  .workflow-step:hover {
+    transform: none;
+    box-shadow: none;
+  }
+  .roadmap-item.active .roadmap-dot {
+    animation: none;
+  }
+  .feature-expansion {
+    animation: none;
+  }
+}
+
+/* === Mobile Responsive === */
+@media (max-width: 600px) {
+  /* Community section */
+  .github-stats {
+    gap: 20px;
+  }
+  .stat-value {
+    font-size: 22px;
+  }
+  .community-nav {
+    gap: 6px 16px;
+  }
+
+  /* FAQ */
+  .faq-categories {
+    gap: 6px;
+  }
+  .faq-cat {
+    padding: 5px 12px;
+    font-size: 10px;
+  }
+  .faq-list summary {
+    font-size: 14px;
+    padding: 18px 8px;
+  }
+  .faq-list details p {
+    padding: 0 8px 20px 36px;
+    font-size: 13px;
+  }
+
+  /* Download */
+  .platform-badges {
+    justify-content: flex-start;
+  }
+  .platform-note {
+    display: none;
+  }
+  .release-roadmap {
+    padding: 20px 16px;
+  }
+  .roadmap-label {
+    font-size: 10px;
+  }
+  .roadmap-date {
+    font-size: 9px;
+  }
+  .download-quicklinks {
+    gap: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Community */
+  .community-title {
+    font-size: 20px;
+  }
+  .github-stats {
+    gap: 12px;
+  }
+  .stat-item {
+    min-width: 60px;
+  }
+  .stat-value {
+    font-size: 18px;
+  }
+  .stat-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Roadmap - stack on very small screens */
+  .roadmap-track {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .roadmap-track::before {
+    display: none;
+  }
+  .roadmap-item {
+    flex-direction: row;
+    gap: 12px;
+  }
+  .roadmap-dot {
+    flex-shrink: 0;
+  }
+  .roadmap-label,
+  .roadmap-date {
+    text-align: left;
+  }
+}
+
+/* Touch optimization - larger tap targets */
+@media (max-width: 800px) {
+  .community-nav a,
+  .faq-cat,
+  .quicklink {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+  .download-card a,
+  .winter-replay {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+  /* Prevent horizontal overflow */
+  body {
+    overflow-x: hidden;
+  }
+  .footer-word {
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+}
+
+/* Console sidebar button styles */
+.sidebar-item {
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  padding: 12px 0;
+  font-size: 12px;
+  width: 100%;
+}
+.sidebar-item:hover {
+  color: #173d58;
+}
+.sidebar-item:focus-visible {
+  outline: 3px solid #4887ae;
+  outline-offset: 5px;
+}
+.sidebar-item.active {
+  font-weight: 600;
+  color: #173d58;
+}
+
+/* Landscape phone */
+@media (max-width: 800px) and (orientation: landscape) {
+  .opening-content {
+    top: 38%;
+  }
+  .opening-word {
+    font-size: 14vw;
+  }
 }

@@ -1,2 +1,107 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Deployment notes — Pristmax</title><link rel="icon" href="assets/pristmax-symbol.svg"><link rel="stylesheet" href="style.css"></head><body><header><a class="brand" href="index.html"><img src="assets/pristmax-symbol.svg" width="34" height="34" alt="">pristmax</a><div class="header-actions"><a class="button outline" href="https://github.com/chunchengzheng58-ctrl/pristmax" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a class="button install-button" href="#install">Install 安装</a></div></header><main class="doc"><span class="eyebrow">DOCUMENTATION / PREVIEW EDITION</span><h1>Start small.<br>Verify everything.</h1><p>Pristmax 部署与试点说明 · 预发布版</p><p class="notice">目前未发布正式安装包，源码仓库已公开，使用范围以仓库许可证为准。本文用于已有源码的开发与试点评估，不表示产品已通过生产验收。</p><h2>01 / 官网与产品分开</h2><p>官网是独立静态网站，只展示介绍、文档与发行状态。产品在企业自己的环境中运行；本地控制台与 API 不应直接暴露到公网。</p><h2 id="install">02 / 安装与开发环境启动</h2><p>已有本项目源码时，可在隔离的测试环境中运行以下命令。先准备 Python、依赖与 FFmpeg；视频处理需要单独检查 FFmpeg 是否可用。</p><pre>python -m pip install -r src/pristmax/requirements.txt
-python main.py --host 127.0.0.1 --port 5001</pre><p>启动后访问 <code>http://127.0.0.1:5001</code>。首次按界面完成账号配置。当前部分统计与模块仍使用演示数据，不能作为真实节省率证明。</p><h2>03 / 试点验收</h2><ol><li>准备代表性样本与独立原件，记录字节数、文件哈希、类型与访问频率。</li><li>先验证无损路径的逐字节恢复，再单独评估视频降量的画质与业务准确率。</li><li>计算包含索引、元数据与副本的净存储占用，同时测量处理时间与恢复时间。</li><li>覆盖任务中断、容量不足、损坏检测与权限隔离。通过恢复演练后再扩大范围。</li></ol><h2>04 / 发行与开源</h2><p>正式发行将提供版本说明、安装包校验值、支持的平台与升级路径。源码参见 <a href="https://github.com/chunchengzheng58-ctrl/pristmax" target="_blank" rel="noopener noreferrer">GitHub 仓库</a>；正式安装包尚未发布。</p><h2>05 / 数据保留边界</h2><p>无损压缩与去重是数据的编码方式，不等同于“系统从未保存数据”。自部署环境仍需明确工作目录、缓存、日志、备份和删除策略。视频有损降量与原文件无损归档应分开配置和验收。</p><p><a href="index.html">返回 Pristmax →</a></p></main></body></html>
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="Pristmax 部署与试点说明 — 在自己的环境中运行，先小规模验证再扩大范围。">
+    <title>Deployment notes — Pristmax</title>
+    <link rel="icon" href="assets/pristmax-symbol.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="docs.css">
+</head>
+<body>
+
+<header>
+    <a class="brand" href="index.html"><img src="assets/pristmax-symbol.svg" width="34" height="34" alt="">pristmax</a>
+    <div class="header-actions">
+        <a class="button outline" href="https://github.com/chunchengzheng58-ctrl/pristmax" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+        <a class="button install-button" href="#install">Install 安装</a>
+    </div>
+</header>
+
+<main class="doc">
+    <p class="doc-breadcrumb"><a href="index.html">Pristmax</a> / 文档</p>
+
+    <span class="eyebrow">DOCUMENTATION / PREVIEW EDITION</span>
+    <h1>Start small.<br>Verify everything.</h1>
+    <p>Pristmax 部署与试点说明 · 预发布版</p>
+
+    <p class="notice">目前未发布正式安装包，源码仓库已公开，使用范围以仓库许可证为准。本文用于已有源码的开发与试点评估，不表示产品已通过生产验收。</p>
+
+    <nav class="doc-nav" aria-label="文档章节导航">
+        <a href="#architecture">01 / 官网与产品分开</a>
+        <a href="#install">02 / 安装与开发环境</a>
+        <a href="#pilot">03 / 试点验收</a>
+        <a href="#release">04 / 发行与开源</a>
+        <a href="#boundary">05 / 数据保留边界</a>
+    </nav>
+
+    <h2 id="architecture">01 / 官网与产品分开</h2>
+    <p>官网是独立静态网站，只展示介绍、文档与发行状态。产品在企业自己的环境中运行；本地控制台与 API 不应直接暴露到公网。</p>
+
+    <h2 id="install">02 / 安装与开发环境启动</h2>
+    <p>已有本项目源码时，可在隔离的测试环境中运行以下命令。先准备 Python、依赖与 FFmpeg；视频处理需要单独检查 FFmpeg 是否可用。</p>
+    <pre><code>python -m pip install -r src/pristmax/requirements.txt
+python main.py --host 127.0.0.1 --port 5001</code></pre>
+    <p>启动后访问 <code>http://127.0.0.1:5001</code>。首次按界面完成账号配置。当前部分统计与模块仍使用演示数据，不能作为真实节省率证明。</p>
+
+    <h2 id="pilot">03 / 试点验收</h2>
+    <ol>
+        <li>准备代表性样本与独立原件，记录字节数、文件哈希、类型与访问频率。</li>
+        <li>先验证无损路径的逐字节恢复，再单独评估视频降量的画质与业务准确率。</li>
+        <li>计算包含索引、元数据与副本的净存储占用，同时测量处理时间与恢复时间。</li>
+        <li>覆盖任务中断、容量不足、损坏检测与权限隔离。通过恢复演练后再扩大范围。</li>
+    </ol>
+
+    <h2 id="release">04 / 发行与开源</h2>
+    <p>正式发行将提供版本说明、安装包校验值、支持的平台与升级路径。源码参见 <a href="https://github.com/chunchengzheng58-ctrl/pristmax" target="_blank" rel="noopener noreferrer">GitHub 仓库</a>；正式安装包尚未发布。</p>
+
+    <h2 id="boundary">05 / 数据保留边界</h2>
+    <p>无损压缩与去重是数据的编码方式，不等同于"系统从未保存数据"。自部署环境仍需明确工作目录、缓存、日志、备份和删除策略。视频有损降量与原文件无损归档应分开配置和验收。</p>
+
+    <a href="index.html" class="doc-back">← 返回 Pristmax</a>
+</main>
+
+<script>
+(function() {
+  // Code copy button
+  document.querySelectorAll('pre').forEach(function(pre) {
+    var btn = document.createElement('button');
+    btn.className = 'doc-copy';
+    btn.textContent = 'COPY';
+    btn.setAttribute('aria-label', '复制代码');
+    btn.addEventListener('click', function() {
+      var code = pre.querySelector('code');
+      var text = code ? code.textContent : pre.textContent;
+      navigator.clipboard.writeText(text).then(function() {
+        btn.textContent = 'COPIED!';
+        setTimeout(function() { btn.textContent = 'COPY'; }, 2000);
+      }).catch(function() {
+        btn.textContent = 'FAILED';
+        setTimeout(function() { btn.textContent = 'COPY'; }, 2000);
+      });
+    });
+    pre.style.position = 'relative';
+    pre.appendChild(btn);
+  });
+
+  // Active nav highlight on scroll
+  var navLinks = document.querySelectorAll('.doc-nav a');
+  if (navLinks.length) {
+    var sections = document.querySelectorAll('.doc h2[id]');
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          navLinks.forEach(function(a) { a.style.color = ''; });
+          var active = document.querySelector('.doc-nav a[href="#' + entry.target.id + '"]');
+          if (active) active.style.color = '#477f9f';
+        }
+      });
+    }, { threshold: 0.3 });
+    sections.forEach(function(s) { observer.observe(s); });
+  }
+})();
+</script>
+
+</body>
+</html>

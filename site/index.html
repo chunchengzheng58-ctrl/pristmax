@@ -3,13 +3,27 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="description" content="Pristmax 企业存储优化，在自己的环境中减少冗余、验证还原、管理存储。">
+    <meta name="description" content="Pristmax 企业存储优化软件，在企业自己的环境中减少冗余、验证还原、管理存储。开源去重 / 语义分块 / 无损压缩。">
+    <meta name="theme-color" content="#f4f9fc">
+    <meta name="robots" content="index, follow">
     <title>Pristmax — Less storage. More clarity.</title>
-    <link rel="icon" href="assets/pristmax-symbol.svg">
+    <link rel="icon" href="assets/pristmax-symbol.svg" type="image/svg+xml">
+    <!-- Preconnect to external origins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://api.github.com">
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Pristmax — Less storage. More clarity.">
+    <meta property="og:description" content="Pristmax 企业存储优化软件，在企业自己的环境中减少冗余、验证还原、管理存储。">
+    <meta property="og:url" content="https://jiangchenghehe.top/">
+    <meta property="og:site_name" content="Pristmax">
+    <link rel="canonical" href="https://jiangchenghehe.top/">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="home.css">
     <link rel="stylesheet" href="motion.css">
     <link rel="stylesheet" href="footer-art.css">
+    <link rel="stylesheet" href="feature-botanical.css">
 <noscript><style>.opening{height:auto}.opening-screen{position:relative;min-height:900px;--intro-progress:1;background:white;color:#477f9f}.opening-content{visibility:visible;opacity:1}</style></noscript>
 
 <script type="application/ld+json">
@@ -43,6 +57,8 @@
 </head>
 <body>
 
+    <a href="#main-content" class="skip">跳过导航，直达内容</a>
+
     <section class="opening" aria-label="Pristmax 企业存储">
         <div class="opening-screen">
             <div class="opening-meta">PRISTMAX / 01<br>ENTERPRISE STORAGE</div>
@@ -70,7 +86,7 @@
         <div class="header-actions"><a class="button outline github-link" href="https://github.com/chunchengzheng58-ctrl/pristmax" target="_blank" rel="noopener noreferrer" aria-label="在新标签页打开 Pristmax GitHub 仓库">GitHub ↗</a><a class="button install-button" href="docs.html#install">Install 安装</a></div>
     </header>
 
-    <main>
+    <main id="main-content">
 
         <!-- Features -->
         <section class="section-features" id="features">
@@ -121,11 +137,11 @@
                 </div>
                 <div class="console-body">
                     <div class="console-sidebar">
-                        <div class="sidebar-item active">Overview</div>
-                        <div class="sidebar-item">Storage</div>
-                        <div class="sidebar-item">Tasks</div>
-                        <div class="sidebar-item">Policies</div>
-                        <div class="sidebar-item">Activity</div>
+                        <button class="sidebar-item active" type="button">Overview</button>
+                        <button class="sidebar-item" type="button">Storage</button>
+                        <button class="sidebar-item" type="button">Tasks</button>
+                        <button class="sidebar-item" type="button">Policies</button>
+                        <button class="sidebar-item" type="button">Activity</button>
                     </div>
                     <div class="console-main">
                         <div class="console-head">
@@ -189,7 +205,52 @@
                 <div class="section-label">04 / DOWNLOAD & DEPLOY</div>
                 <h2>Run it.<br><em>On your terms.</em></h2>
                 <p class="section-desc">Pristmax 正在准备首个公开发行版。<br>当前未提供正式安装包，<br>请先阅读部署与试点评估说明。</p>
+
+                <!-- Platform badges -->
+                <div class="platform-badges">
+                    <span class="platform-badge">
+                        <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>
+                        Linux
+                    </span>
+                    <span class="platform-badge">
+                        <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><rect x="2" y="2" width="20" height="20" rx="2"/></svg>
+                        macOS
+                    </span>
+                    <span class="platform-badge">
+                        <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><rect x="2" y="2" width="20" height="20" rx="2"/></svg>
+                        Windows
+                    </span>
+                    <span class="platform-note">v1.0 首发支持 Linux/macOS/Windows (x86_64)</span>
+                </div>
             </div>
+
+            <!-- Release Roadmap -->
+            <div class="release-roadmap">
+                <h3 class="roadmap-title">Release Roadmap</h3>
+                <div class="roadmap-track">
+                    <div class="roadmap-item done">
+                        <span class="roadmap-dot"></span>
+                        <span class="roadmap-label">概念验证</span>
+                        <span class="roadmap-date">已完成</span>
+                    </div>
+                    <div class="roadmap-item done">
+                        <span class="roadmap-dot"></span>
+                        <span class="roadmap-label">核心去重引擎</span>
+                        <span class="roadmap-date">已完成</span>
+                    </div>
+                    <div class="roadmap-item active">
+                        <span class="roadmap-dot"></span>
+                        <span class="roadmap-label">首个公测版</span>
+                        <span class="roadmap-date">进行中</span>
+                    </div>
+                    <div class="roadmap-item">
+                        <span class="roadmap-dot"></span>
+                        <span class="roadmap-label">正式发布 v1.0</span>
+                        <span class="roadmap-date">待定</span>
+                    </div>
+                </div>
+            </div>
+
             <div class="download-cards">
                 <div class="download-card">
                     <span class="card-tag">01 / SELF-HOSTED</span>
@@ -197,11 +258,22 @@
                     <p>了解本地控制台、部署边界及试点准备工作。</p>
                     <a href="docs.html">Read the guide →</a>
                 </div>
-                <div class="download-card">
+                <div class="download-card release-card">
                     <span class="card-tag">02 / RELEASE</span>
                     <h3>安装包</h3>
                     <p>发布后在此提供版本、平台要求、校验值和更新说明。</p>
-                    <span class="card-pill">Preparing release · 尚未发布</span>
+                    <div class="release-status">
+                        <div class="release-progress">
+                            <div class="release-bar">
+                                <div class="release-fill" style="width: 70%"></div>
+                            </div>
+                            <span class="release-pct">70%</span>
+                        </div>
+                        <span class="release-label">公测版开发中</span>
+                    </div>
+                    <a href="docs.html#quickstart" class="release-notify">
+                        抢先了解 →
+                    </a>
                 </div>
                 <div class="download-card">
                     <span class="card-tag" id="opensource">03 / SOURCE CODE</span>
@@ -210,6 +282,14 @@
                     <a href="https://github.com/chunchengzheng58-ctrl/pristmax" target="_blank" rel="noopener noreferrer">Explore on GitHub ↗</a>
                 </div>
             </div>
+
+            <!-- Quick links -->
+            <div class="download-quicklinks">
+                <a href="docs.html#requirements" class="quicklink">环境要求 ↗</a>
+                <a href="docs.html#quickstart" class="quicklink">快速开始 ↗</a>
+                <a href="https://github.com/chunchengzheng58-ctrl/pristmax/blob/main/CHANGELOG.md" target="_blank" class="quicklink">更新日志 ↗</a>
+                <a href="https://github.com/chunchengzheng58-ctrl/pristmax/blob/main/docs/SECURITY.md" target="_blank" class="quicklink">安全说明 ↗</a>
+            </div>
         </section>
 
         <!-- FAQ -->
@@ -217,21 +297,82 @@
             <div class="section-inner">
                 <div class="section-label">QUESTIONS / ANSWERS</div>
                 <h2>Before you begin.</h2>
+                <!-- FAQ Search -->
+                <div class="faq-search-wrap">
+                    <input type="search" class="faq-search" id="faq-search" placeholder="搜索问题..." aria-label="搜索常见问题">
+                </div>
+                <!-- FAQ Categories -->
+                <div class="faq-categories" role="tablist" aria-label="问题分类">
+                    <button class="faq-cat active" role="tab" data-category="all">全部</button>
+                    <button class="faq-cat" role="tab" data-category="savings">节省效果</button>
+                    <button class="faq-cat" role="tab" data-category="tech">技术细节</button>
+                    <button class="faq-cat" role="tab" data-category="privacy">数据隐私</button>
+                    <button class="faq-cat" role="tab" data-category="deploy">部署运维</button>
+                </div>
             </div>
             <div class="faq-list">
-                <details>
+                <!-- 节省效果 -->
+                <details data-category="savings">
                     <summary>能保证节省多少存储空间？<b>＋</b></summary>
                     <p>无法为所有数据提供统一比例。重复文件、文本和日志往往更有优化空间；已压缩媒体与加密数据需要单独测试。请使用真实样本测量净节省，包括索引与元数据开销。</p>
                 </details>
-                <details>
+                <details data-category="savings">
+                    <summary>什么样的数据去重效果最好？<b>＋</b></summary>
+                    <p>备份快照、虚拟机镜像、日志归档、邮件存储等重复度高的数据效果最佳。已压缩文件（H.264、ZIP、JPEG 等）几乎没有冗余可寻，视频素材的重复帧检测需要单独评估。</p>
+                </details>
+                <details data-category="savings">
+                    <summary>视频文件能省多少空间？<b>＋</b></summary>
+                    <p>视频有损降量可显著减小体积，但画质和业务可用性需要逐项目验证。不同于无损归档，视频路径不承诺逐帧还原，请在试点阶段确认是否符合质量预期。</p>
+                </details>
+
+                <!-- 技术细节 -->
+                <details data-category="tech">
                     <summary>取回的文件和原文件一样吗？<b>＋</b></summary>
                     <p>无损归档路径应以还原文件的哈希校验确认一致性。视频有损降量是独立策略，不具有同样的保证，请在试点时分别验收。</p>
                 </details>
-                <details>
+                <details data-category="tech">
+                    <summary>支持哪些操作系统和存储类型？<b>＋</b></summary>
+                    <p>Linux 服务器为主要支持目标，支持本地磁盘、NFS、SMB、CIFS 等协议。可管理本地目录或挂载点。macOS 和 Windows 端可在 WSL2 环境下运行。</p>
+                </details>
+                <details data-category="tech">
+                    <summary>数据加密后还能去重吗？<b>＋</b></summary>
+                    <p>加密后的数据无法做内容级去重，因为相同原始内容加密后结果不同。如需在加密状态下管理，可考虑在加密前做去重，或使用支持相同密钥的透明加密方案。</p>
+                </details>
+                <details data-category="tech">
+                    <summary>处理过程会占用多少带宽和内存？<b>＋</b></summary>
+                    <p>去重过程主要为本地计算，不产生外部流量。内存占用与分块大小和并发任务数相关。详细规格请参考 docs.html 中的技术文档。</p>
+                </details>
+
+                <!-- 数据隐私 -->
+                <details data-category="privacy">
                     <summary>这个网站会保存我们的文件吗？<b>＋</b></summary>
                     <p>本网站仅提供产品介绍与文档，不接收企业文件。自部署产品的数据存储、备份、保留与删除策略由实际部署配置决定。</p>
                 </details>
+                <details data-category="privacy">
+                    <summary>文件处理是在我们自己环境里进行的吗？<b>＋</b></summary>
+                    <p>是的。产品部署与品牌官网完全分离。文件处理在你自己部署的软件中进行，数据不经过任何第三方服务。</p>
+                </details>
+                <details data-category="privacy">
+                    <summary>如何验证数据完整性和可恢复性？<b>＋</b></summary>
+                    <p>无损路径通过 SHA-256 哈希校验确认还原文件与原始文件一致。每次归档任务生成校验报告，可在控制台查阅。</p>
+                </details>
+
+                <!-- 部署运维 -->
+                <details data-category="deploy">
+                    <summary>如何部署第一个试点环境？<b>＋</b></summary>
+                    <p>建议从 100 GB 以内的代表性样本开始，验证节省率和恢复结果。详细步骤请参考 docs.html 中的部署指南，包含环境准备、权限配置和首验流程。</p>
+                </details>
+                <details data-category="deploy">
+                    <summary>遇到问题可以获得支持吗？<b>＋</b></summary>
+                    <p>当前通过 GitHub Issues 提供社区支持。技术讨论、安全漏洞和功能建议均可在仓库中提交。</p>
+                </details>
+                <details data-category="deploy">
+                    <summary>可以定制开发或集成吗？<b>＋</b></summary>
+                    <p>源码开放，欢迎基于实际需求做定制集成。如需商业合作，可通过仓库联系。</p>
+                </details>
             </div>
+            <!-- No results message -->
+            <p class="faq-empty" id="faq-empty" hidden>没有找到相关问题，试试其他关键词。</p>
         </section>
 
         <!-- Community -->
@@ -241,6 +382,31 @@
                     <p class="community-kicker">Community · 社区</p>
                     <h2 class="community-title">所有贡献，都应留下可复核的路径。</h2>
                     <p class="community-desc">Pristmax 在 GitHub 公开开发。每个 Issue、PR 与验证结果，都应留下可检查的输入、方法和结论。</p>
+
+                    <!-- GitHub Stats -->
+                    <div class="github-stats" aria-label="GitHub 统计数据">
+                        <div class="stat-item">
+                            <svg class="stat-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                            <span class="stat-value" id="gh-stars">—</span>
+                            <span class="stat-label">Stars</span>
+                        </div>
+                        <div class="stat-item">
+                            <svg class="stat-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                            <span class="stat-value" id="gh-forks">—</span>
+                            <span class="stat-label">Forks</span>
+                        </div>
+                        <div class="stat-item">
+                            <svg class="stat-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                            <span class="stat-value" id="gh-issues">—</span>
+                            <span class="stat-label">Issues</span>
+                        </div>
+                        <div class="stat-item">
+                            <svg class="stat-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                            <span class="stat-value" id="gh-contributors">—</span>
+                            <span class="stat-label">Contributors</span>
+                        </div>
+                    </div>
+
                     <nav class="community-nav" aria-label="社区参与入口">
                         <a href="https://github.com/chunchengzheng58-ctrl/pristmax/blob/main/docs/QUICKSTART.md" target="_blank" rel="noopener noreferrer">验证方法 ↗</a>
                         <a href="https://github.com/chunchengzheng58-ctrl/pristmax/issues" target="_blank" rel="noopener noreferrer">技术讨论 ↗</a>
@@ -248,20 +414,18 @@
                         <a href="https://github.com/chunchengzheng58-ctrl/pristmax/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer">贡献指南 ↗</a>
                     </nav>
                 </div>
-                <div class="contributor-section">
-                    <p class="contributor-label">Contributors · 贡献者</p>
-                    <div class="contributor-track" aria-label="Contributors">
-                        <div class="contributor-row">
-                            <span class="contributor-item">@chunchengzheng58</span>
-                            <span class="contributor-item">@pristmax-contributor</span>
-                            <span class="contributor-item">@open-source-helper</span>
-                            <span class="contributor-item">@storage-researcher</span>
-                            <span class="contributor-item">@dedup-engineer</span>
-                            <span class="contributor-item">@chunchengzheng58</span>
-                            <span class="contributor-item">@pristmax-contributor</span>
-                            <span class="contributor-item">@open-source-helper</span>
-                            <span class="contributor-item">@storage-researcher</span>
-                            <span class="contributor-item">@dedup-engineer</span>
+
+                <!-- Activity Feed -->
+                <div class="activity-section">
+                    <p class="activity-label">Recent Activity · 最近活动</p>
+                    <div class="activity-list" id="gh-activity" aria-live="polite">
+                        <div class="activity-item">
+                            <span class="activity-type activity-commit">●</span>
+                            <span class="activity-text">Initial commit — 2026-09-18</span>
+                        </div>
+                        <div class="activity-item">
+                            <span class="activity-type activity-star">★</span>
+                            <span class="activity-text">First star received</span>
                         </div>
                     </div>
                 </div>
@@ -304,9 +468,11 @@
         </div>
     </footer>
 
-    <script src="main.js"></script>
-    <script src="motion.js"></script>
-    <script src="footer-art.js"></script>
+    <script src="main.js" defer></script>
+    <script src="motion.js" defer></script>
+    <script src="footer-art.js" defer></script>
+    <script src="community.js" defer></script>
+    <script src="feature-botanical.js" defer></script>
 
 </body>
 </html>
