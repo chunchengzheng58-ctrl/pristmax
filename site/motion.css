@@ -139,26 +139,62 @@ html{scroll-behavior:smooth;scrollbar-gutter:stable;-webkit-font-smoothing:antia
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:oklch(0.55 0.08 245);border-radius:3px}
 ::-webkit-scrollbar-thumb:hover{background:oklch(0.60 0.10 245)}
-/* Contributor section */
-.contributor-section {
+/* Contributors section */
+.contributors-section {
+  margin-top: 40px;
+  text-align: center;
+}
+.contributors-label {
+  font: 10px/1 Consolas, monospace;
+  letter-spacing: 3px;
+  color: #666;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.contributors-track {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+}
+.contributors-row {
+  display: flex;
+  width: max-content;
+  animation: contributors-slide 30s linear infinite;
+  will-change: transform;
+  gap: 24px;
+}
+.contributors-track:is(:hover, :focus-within) .contributors-row {
+  animation-play-state: paused;
+}
+@keyframes contributors-slide {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.contributor-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
-  padding: 20px 5% 8px;
+  gap: 8px;
+  text-decoration: none;
+  transition: transform 0.2s;
 }
-.contributor-label {
-  font: 10px/1 Consolas, monospace;
-  letter-spacing: 3px;
-  color: oklch(0.75 0.04 220);
-  text-transform: uppercase;
+.contributor-item:hover {
+  transform: scale(1.05);
 }
-.contributor-item {
-  font: 13px/1 'Segoe UI', sans-serif;
-  color: oklch(0.82 0.02 245);
-  padding: 0 32px;
+.contributor-item img {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e0e0e0;
+}
+.contributor-item span {
+  font: 11px/1 Consolas, monospace;
+  color: #477f9f;
   white-space: nowrap;
-  letter-spacing: 0.5px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .contributors-row { animation: none; transform: none; }
 }
 
 /* === Community section === */
