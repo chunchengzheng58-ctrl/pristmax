@@ -1,14 +1,12 @@
-// Footer closing: scroll-driven light→dark transition, mirroring the opening.
+// Footer closing: scroll-driven light→dark transition, original content rises in.
 (()=>{
- const section=document.querySelector('.footer-closing');if(!section)return;
+ const section=document.querySelector('#footer-closing');if(!section)return;
  const screen=section.querySelector('.footer-closing-screen');
  const reduced=matchMedia('(prefers-reduced-motion: reduce)');let pending=false;
  const mix=(a,b,t)=>`rgb(${a.map((v,i)=>Math.round(v+(b[i]-v)*t)).join(',')})`;
  function render(){pending=false;
   const r=section.getBoundingClientRect();
-  // distance = extra height beyond one viewport — gives scroll travel room
   const distance=Math.max(1,section.offsetHeight-innerHeight);
-  // r.top=0 when section top hits viewport top (sticky begins); r.top=-distance when scrolled through
   let t=Math.max(0,Math.min(1,-r.top/distance));
   if(reduced.matches)t=0;
   // Background: light blue-white → deep dark navy
@@ -17,24 +15,34 @@
   screen.style.setProperty('--closing-ink',mix([23,61,88],[166,210,236],t));
   // Small/meta text
   screen.style.setProperty('--closing-small',mix([107,141,164],[165,187,201],t));
-  // Brand word: visible at first, fades quickly as content arrives
+  // Brand word: fades out as content rises in
   screen.style.setProperty('--closing-scale',1-t*.06);
   screen.style.setProperty('--closing-word-opacity',String(Math.max(0,1-t*2.2)));
   screen.style.setProperty('--closing-word-y',`${t*22}px`);
-  // Content: appears after word fades, then fades at end
-  const cVis=t<.15?0:Math.min(1,(t-.15)*5.5);
-  const cFade=t>.78?Math.max(0,1-(t-.78)*4.5):1;
-  screen.style.setProperty('--closing-content-opacity',String(cVis*cFade));
-  screen.style.setProperty('--closing-content-y',`${(1-cVis)*18}px`);
-  // Actions: appear last, fade last
-  const aVis=t<.3?0:Math.min(1,(t-.3)*5);
-  const aFade=t>.85?Math.max(0,1-(t-.85)*6.7):1;
-  screen.style.setProperty('--closing-actions-opacity',String(aVis*aFade));
-  screen.style.setProperty('--closing-actions-y',`${(1-aVis)*14}px`);
-  // Button bg: switch to brighter blue when content fades in
-  screen.style.setProperty('--closing-btn-bg',t<.5?'#173d58':'#285f83');
-  // Arrow: visible at start, fades as content appears
-  screen.style.setProperty('--closing-arrow-opacity',String(Math.max(0,1-t*3.5)));
+  // Meta text: fades in
+  screen.style.setProperty('--closing-meta-opacity',String(Math.min(1,t*2)));
+  // Closing content (slogan + actions): visible when scroll starts, fades as footer content rises
+  const closingContentVis=Math.min(1,Math.max(0,(1-t)*2.5));
+  screen.style.setProperty('--closing-content-opacity',String(closingContentVis));
+  screen.style.setProperty('--closing-content-y',`${t*15}px`);
+  screen.style.setProperty('--closing-actions-opacity',String(closingContentVis));
+  // Original footer content: rises in as scroll progresses
+  // footer-word: visible at ~15% scroll, fully visible at ~50%
+  const wordVis=Math.min(1,Math.max(0,(t-.12)*3.3));
+  screen.style.setProperty('--footer-word-opacity',String(wordVis));
+  screen.style.setProperty('--footer-word-y',`${(1-wordVis)*40}px`);
+  // footer-invitation: rises after word
+  const invVis=Math.min(1,Math.max(0,(t-.28)*3.3));
+  screen.style.setProperty('--footer-inv-opacity',String(invVis));
+  screen.style.setProperty('--footer-inv-y',`${(1-invVis)*30}px`);
+  // landscape: rises after invitation
+  const landVis=Math.min(1,Math.max(0,(t-.44)*3.3));
+  screen.style.setProperty('--footer-landscape-opacity',String(landVis));
+  screen.style.setProperty('--footer-landscape-y',`${(1-landVis)*40}px`);
+  // footer-bottom: rises last
+  const botVis=Math.min(1,Math.max(0,(t-.62)*3.3));
+  screen.style.setProperty('--footer-bottom-opacity',String(botVis));
+  screen.style.setProperty('--footer-bottom-y',`${(1-botVis)*20}px`);
  }
  const schedule=()=>{if(!pending){pending=true;requestAnimationFrame(render)}};
  addEventListener('scroll',schedule,{passive:true});addEventListener('resize',schedule);
