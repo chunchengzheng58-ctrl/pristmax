@@ -11,25 +11,60 @@
 .hero-badges .platform-badge{background:#fff;border:1px solid #d7ddd9;padding:8px 16px;border-radius:20px;font-size:13px;font-weight:600}
 
 /* Terminal */
-.terminal{background:#1a1a2e;border-radius:12px;overflow:hidden;margin:40px 0;max-width:800px}
-.terminal-header{background:#2d2d44;padding:12px 16px;display:flex;gap:8px}
-.terminal-body{padding:24px;font-family:"SF Mono",Monaco,monospace;font-size:0.9rem;color:#e0e0e0}
-.terminal-line{margin-bottom:12px}
+.terminal{background:#1a1a2e;border-radius:12px;overflow:hidden;margin:40px 0;max-width:800px;box-shadow:0 20px 60px rgba(0,0,0,0.15)}
+.terminal-header{background:#2d2d44;padding:12px 16px;display:flex;align-items:center;gap:8px}
+.console-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.dot-red{background:#ff5f56}
+.dot-yellow{background:#ffbd2e}
+.dot-green{background:#27ca40}
+.terminal-title{color:#888;margin-left:12px;font-size:0.875rem;flex-grow:1}
+.terminal-replay{background:rgba(255,255,255,0.1);border:none;color:#888;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:14px;transition:all 0.2s}
+.terminal-replay:hover{background:rgba(255,255,255,0.2);color:#fff}
+.terminal-body{padding:24px;font-family:"SF Mono",Monaco,monospace;font-size:0.9rem;color:#e0e0e0;min-height:200px}
+.terminal-line{margin-bottom:12px;opacity:0;transform:translateY(10px);transition:all 0.3s}
+.terminal-line.visible{opacity:1;transform:translateY(0)}
+.terminal-line.br{line-height:1.8}
 .prompt{color:#d4af37}
 .cmd{color:#fff}
 .output{color:#4ade80}
 .comment{color:#888}
-.cursor{display:inline-block;width:8px;height:16px;background:#d4af37;animation:blink 1s infinite}
+.cursor{display:inline-block;width:8px;height:16px;background:#d4af37;animation:blink 1s infinite;vertical-align:middle}
 @keyframes blink{0%,50%{opacity:1}51%,100%{opacity:0}}
 .terminal-title{color:#888;margin-left:12px;font-size:0.875rem}
 
+/* Stats Bar */
+.storage-stats{display:flex;justify-content:center;gap:60px;margin:40px 0;flex-wrap:wrap}
+.stat-item{text-align:center}
+.stat-value{font-size:2.5rem;font-weight:900;color:#113577;display:inline}
+.stat-unit{font-size:1.2rem;color:#113577;margin-left:2px}
+.stat-label{display:block;font-size:0.85rem;color:#666;margin-top:4px}
+
 /* Storage Features Grid */
 .storage-features{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin-top:40px;max-width:1000px}
-.storage-feature-card{background:#fff;border:1px solid #d7ddd9;border-radius:12px;padding:28px;transition:all 0.3s}
+.storage-feature-card{background:#fff;border:1px solid #d7ddd9;border-radius:12px;padding:28px;transition:all 0.3s;position:relative;overflow:hidden}
 .storage-feature-card:hover{border-color:#113577;transform:translateY(-4px);box-shadow:0 12px 40px rgba(17,53,119,0.1)}
 .storage-feature-card .feature-icon{font-size:28px;margin-bottom:14px}
 .storage-feature-card h3{font-size:1.1rem;font-weight:700;margin-bottom:8px}
 .storage-feature-card p{color:#666;font-size:0.9rem;line-height:1.5}
+.feature-detail{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+.detail-tag{background:#f0f4f8;color:#477f9f;padding:4px 10px;border-radius:12px;font-size:0.75rem;font-weight:600}
+.storage-feature-card:hover .detail-tag{background:#113577;color:#fff}
+
+/* API Showcase */
+.storage-api{max-width:800px;margin:50px auto 0;background:#fff;border:1px solid #d7ddd9;border-radius:12px;padding:32px}
+.storage-api h3{font-size:1.3rem;font-weight:700;margin-bottom:20px}
+.api-tabs{display:flex;gap:8px;margin-bottom:20px;border-bottom:1px solid #d7ddd9;padding-bottom:12px}
+.api-tab{background:0;border:1px solid #d7ddd9;padding:10px 20px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s}
+.api-tab:hover{border-color:#113577}
+.api-tab.active{background:#113577;color:#fff;border-color:#113577}
+.api-content{}
+.api-panel{display:none}
+.api-panel.active{display:block}
+.api-method{display:inline-block;background:#27ca40;color:#fff;padding:4px 12px;border-radius:4px;font-size:0.75rem;font-weight:700;margin-right:12px}
+.api-endpoint{font-family:"SF Mono",Monaco,monospace;font-size:0.9rem;color:#333;margin-bottom:16px}
+.api-response{background:#f5f7f9;border-radius:8px;padding:16px}
+.response-label{font-size:0.75rem;color:#666;margin-bottom:8px;display:block}
+.api-response pre{margin:0;font-family:"SF Mono",Monaco,monospace;font-size:0.8rem;color:#333;white-space:pre-wrap}
 
 /* Storage Install */
 .storage-install{max-width:800px;margin-top:50px;background:#fff;border:1px solid #d7ddd9;border-radius:12px;padding:32px}
@@ -39,6 +74,9 @@
 .install-tab:hover{border-color:#113577}
 .install-tab.active{background:#113577;color:#fff;border-color:#113577}
 .install-content{}
-.install-panel{display:none}
+.install-panel{display:none;position:relative}
 .install-panel.active{display:block}
-.install-panel code{display:block;background:#f5f7f9;padding:20px;border-radius:8px;font-family:"SF Mono",Monaco,monospace;font-size:0.85rem;line-height:1.7;color:#333;white-space:pre-wrap}
+.install-panel code{display:block;background:#f5f7f9;padding:20px;padding-right:80px;border-radius:8px;font-family:"SF Mono",Monaco,monospace;font-size:0.85rem;line-height:1.7;color:#333;white-space:pre-wrap}
+.copy-btn{position:absolute;top:12px;right:12px;background:#113577;color:#fff;border:none;padding:8px 16px;border-radius:6px;font-size:0.8rem;cursor:pointer;transition:all 0.2s}
+.copy-btn:hover{background:#1a4a8a}
+.copy-btn.copied{background:#27ca40}

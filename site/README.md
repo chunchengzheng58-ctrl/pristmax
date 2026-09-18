@@ -36,3 +36,8 @@ Reference: user-supplied 59-second screen recording. The earlier git history pre
 Opening update: a native sticky 180svh brand section interpolates black to white with scroll, then reveals the normal white homepage. Back-scrolling reverses it. Arrow skips to the homepage. Reduced-motion users get a simple 100svh static opening. Header is inert only while hidden.
 
 Hero correction: removed the separate banner hero. One h1 now transitions from the centered dark opening into the light product introduction, with shared text/buttons revealed beneath it. No consecutive duplicated wordmarks.
+
+
+## Current handoff and deployment authority
+
+Read [HANDOFF-CLAUDE.md](../HANDOFF-CLAUDE.md) for the current single-hero architecture, exact Pages + Nginx publishing steps, validation and rollback. It supersedes earlier deployment/standalone-opening notes in this file.
