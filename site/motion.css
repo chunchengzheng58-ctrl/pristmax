@@ -149,9 +149,98 @@ html{scroll-behavior:smooth;scrollbar-gutter:stable;-webkit-font-smoothing:antia
   letter-spacing: 0.5px;
 }
 
-/* Contributor section wrapper */
-.section-contributor {
-  border-top: 1px solid oklch(0.35 0.03 245);
-  background: oklch(0.12 0.02 245);
-  padding: 32px 0;
+/* === Community section === */
+.section-community {
+  background: oklch(0.11 0.01 250);
+  padding: 80px 5% 60px;
+}
+.community-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.community-header {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto 50px;
+}
+.community-kicker {
+  font: 10px/1 Consolas, monospace;
+  letter-spacing: 3px;
+  color: oklch(0.60 0.08 220);
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+.community-title {
+  font: clamp(28px, 4vw, 46px) Georgia, serif;
+  color: oklch(0.92 0.01 250);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin-bottom: 20px;
+}
+.community-desc {
+  font: 14px/1.8 'Segoe UI', sans-serif;
+  color: oklch(0.75 0.02 250);
+  line-height: 1.8;
+}
+.community-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 24px;
+  margin-top: 28px;
+}
+.community-nav a {
+  font: 11px/1 Consolas, monospace;
+  letter-spacing: 1.5px;
+  color: oklch(0.60 0.08 220);
+  text-decoration: none;
+  padding: 8px 0;
+  transition: color 0.2s;
+}
+.community-nav a:hover {
+  color: oklch(0.75 0.08 220);
+}
+
+/* Contributor section inside community */
+.contributor-section {
+  margin-top: 50px;
+  padding-top: 40px;
+  border-top: 1px solid oklch(0.22 0.02 250);
+}
+.contributor-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+.contributor-label {
+  font: 10px/1 Consolas, monospace;
+  letter-spacing: 3px;
+  color: oklch(0.55 0.06 220);
+  text-transform: uppercase;
+}
+.contributor-track {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+}
+.contributor-row {
+  display: flex;
+  width: max-content;
+  animation: marquee-slide 38s linear infinite;
+  will-change: transform;
+}
+.contributor-item {
+  font: 13px/1 'Segoe UI', sans-serif;
+  color: oklch(0.70 0.02 250);
+  padding: 0 32px;
+  white-space: nowrap;
+  letter-spacing: 0.5px;
+}
+@keyframes marquee-slide {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.contributor-track:is(:hover, :focus-within) .contributor-row {
+  animation-play-state: paused;
 }
