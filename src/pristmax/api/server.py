@@ -12,6 +12,7 @@ M5 API Module: Flask REST API Server with Authentication
 """
 import os
 import sys
+import json
 from pathlib import Path
 from flask import Flask, request, jsonify, g
 from flask_cors import CORS
@@ -19,11 +20,11 @@ from flask_cors import CORS
 # 添加父目录到路径
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from unified.auth import require_auth, require_role, get_current_user, get_auth_manager, UserRole
-from unified.monitor import get_monitor
-from unified.scheduler import TaskScheduler, TaskPriority
-from unified.storage import StorageManager
-from unified.api.task_processor import register_all_handlers, TASK_HANDLERS
+from src.pristmax.auth import require_auth, require_role, get_current_user, get_auth_manager, UserRole
+from src.pristmax.monitor import get_monitor
+from src.pristmax.scheduler import TaskScheduler, TaskPriority
+from src.pristmax.storage import StorageManager
+from src.pristmax.api.task_processor import register_all_handlers, TASK_HANDLERS
 
 # 初始化任务调度器
 task_scheduler = TaskScheduler(db_path="./tasks.db", max_workers=4)
@@ -75,6 +76,14 @@ def get_stats():
         'failed': next((t['count'] for t in all_tasks if t['status'] == 'failed'), 0),
     }
 
+    # 真实策略数据
+    conn = _get_strategy_db()
+    try:
+        total_strat = conn.execute("SELECT COUNT(*) FROM strategies").fetchone()[0]
+        active_strat = conn.execute("SELECT COUNT(*) FROM strategies WHERE enabled = 1").fetchone()[0]
+    finally:
+        conn.close()
+
     return {
         'storage': {
             'total_gb': round(total_storage / 1024**3, 1),
@@ -90,8 +99,8 @@ def get_stats():
             'saved_gb': 0
         },
         'strategies': {
-            'total': 4,
-            'active': 2
+            'total': total_strat,
+            'active': active_strat
         }
     }
 
@@ -193,6 +202,50 @@ def me():
         'created_at': user.created_at,
         'last_login': user.last_login
     })
+
+
+@app.route('/api/auth/users', methods=['GET'])
+@require_role('admin')
+def list_users():
+    """列出所有用户 (仅管理员)"""
+    auth = get_auth_manager()
+    users = auth.db.list_users()
+    return jsonify({
+        'users': [{
+            'user_id': u.user_id,
+            'username': u.username,
+            'email': u.email,
+            'role': u.role.value,
+            'created_at': u.created_at,
+            'last_login': u.last_login,
+            'is_active': u.is_active
+        } for u in users]
+    })
+
+
+@app.route('/api/auth/users/<user_id>/role', methods=['PUT'])
+@require_role('admin')
+def update_user_role(user_id):
+    """更新用户角色 (仅管理员)"""
+    data = request.get_json() or {}
+    new_role = data.get('role')
+
+    if new_role not in ['admin', 'operator', 'viewer']:
+        return jsonify({'error': 'Invalid role'}), 400
+
+    auth = get_auth_manager()
+    user = auth.db.get_user(user_id)
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+
+    # 直接写数据库更新角色
+    auth.db.conn.execute(
+        "UPDATE users SET role = ? WHERE user_id = ?",
+        (new_role, user_id)
+    )
+    auth.db.conn.commit()
+
+    return jsonify({'status': 'updated', 'user_id': user_id, 'role': new_role})
 
 
 # ============== 统计 API ==============
@@ -381,42 +434,44 @@ def add_storage():
 
 # ============== 策略 API ==============
 
+def _get_strategy_db():
+    """获取策略数据库连接"""
+    import sqlite3
+    db_path = os.environ.get('PRISTMAX_DB', './tasks.db')
+    return sqlite3.connect(db_path, check_same_thread=False)
+
+
 @app.route('/api/strategies', methods=['GET'])
 @require_auth
 def get_strategies():
     """获取策略列表"""
-    return jsonify({
-        'strategies': [
-            {
-                'id': 'roi-blur-01',
-                'name': 'ROI + 背景模糊',
-                'type': 'roi_blur',
-                'enabled': True,
-                'crf': 28
-            },
-            {
-                'id': 'asvc-01',
-                'name': 'ASVC 背景差分',
-                'type': 'asvc',
-                'enabled': False,
-                'crf': 28
-            },
-            {
-                'id': 'blue-01',
-                'name': 'BLUE 背景冻结',
-                'type': 'blue',
-                'enabled': False,
-                'crf': 28
-            },
-            {
-                'id': 'baseline-h265',
-                'name': 'H.265 基线',
-                'type': 'baseline',
-                'enabled': True,
-                'crf': 28
-            }
-        ]
-    })
+    conn = _get_strategy_db()
+    try:
+        rows = conn.execute(
+            "SELECT id, name, type, crf, preset, enabled, config FROM strategies ORDER BY id"
+        ).fetchall()
+        strategies = []
+        active_count = 0
+        for row in rows:
+            enabled = bool(row[5])
+            if enabled:
+                active_count += 1
+            try:
+                config = json.loads(row[6]) if row[6] else {}
+            except Exception:
+                config = {}
+            strategies.append({
+                'id': row[0],
+                'name': row[1],
+                'type': row[2],
+                'crf': row[3],
+                'preset': row[4],
+                'enabled': enabled,
+                'config': config
+            })
+        return jsonify({'strategies': strategies, 'active': active_count, 'total': len(strategies)})
+    finally:
+        conn.close()
 
 
 @app.route('/api/strategies/<strategy_id>', methods=['PUT'])
@@ -424,11 +479,69 @@ def get_strategies():
 def update_strategy(strategy_id):
     """更新策略 (仅管理员)"""
     data = request.get_json() or {}
+    conn = _get_strategy_db()
+    try:
+        row = conn.execute("SELECT id FROM strategies WHERE id = ?", (strategy_id,)).fetchone()
+        if not row:
+            return jsonify({'error': 'Strategy not found'}), 404
 
-    return jsonify({
-        'status': 'updated',
-        'strategy_id': strategy_id
-    })
+        updates = []
+        params = []
+        for field in ('name', 'type', 'crf', 'preset', 'enabled', 'config'):
+            if field in data:
+                val = data[field]
+                if field == 'enabled':
+                    val = 1 if val else 0
+                elif field == 'crf' or field == 'preset':
+                    val = int(val) if val is not None else val
+                updates.append(f"{field} = ?")
+                params.append(val)
+
+        if updates:
+            from datetime import datetime
+            updates.append("updated_at = ?")
+            params.append(datetime.now().isoformat())
+            params.append(strategy_id)
+            conn.execute(f"UPDATE strategies SET {', '.join(updates)} WHERE id = ?", params)
+            conn.commit()
+
+        return jsonify({'status': 'updated', 'strategy_id': strategy_id})
+    finally:
+        conn.close()
+
+
+@app.route('/api/strategies', methods=['POST'])
+@require_role('admin')
+def create_strategy():
+    """创建策略 (仅管理员)"""
+    data = request.get_json() or {}
+    name = data.get('name')
+    strategy_type = data.get('type')
+    if not name or not strategy_type:
+        return jsonify({'error': 'name and type are required'}), 400
+
+    import uuid
+    strategy_id = data.get('id') or f"{strategy_type}-{uuid.uuid4().hex[:8]}"
+    crf = data.get('crf', 28)
+    preset = data.get('preset', 'medium')
+    enabled = 1 if data.get('enabled', True) else 0
+    config = json.dumps(data.get('config', {}))
+
+    conn = _get_strategy_db()
+    try:
+        existing = conn.execute("SELECT id FROM strategies WHERE id = ?", (strategy_id,)).fetchone()
+        if existing:
+            return jsonify({'error': 'Strategy ID already exists'}), 409
+
+        from datetime import datetime
+        conn.execute('''
+            INSERT INTO strategies (id,name,type,crf,preset,enabled,config,created_at,updated_at)
+            VALUES (?,?,?,?,?,?,?,?,?)
+        ''', (strategy_id, name, strategy_type, crf, preset, enabled, config, datetime.now().isoformat(), datetime.now().isoformat()))
+        conn.commit()
+        return jsonify({'status': 'created', 'strategy_id': strategy_id}), 201
+    finally:
+        conn.close()
 
 
 # ============== 告警 API ==============
@@ -450,6 +563,42 @@ def acknowledge_alert(alert_id):
     monitor = get_monitor()
     monitor.acknowledge_alert(alert_id)
     return jsonify({'status': 'ok'})
+
+
+@app.route('/api/alerts/thresholds', methods=['GET'])
+@require_role('admin')
+def get_alert_thresholds():
+    """获取告警阈值 (仅管理员)"""
+    monitor = get_monitor()
+    return jsonify({'thresholds': monitor.thresholds})
+
+
+@app.route('/api/alerts/thresholds', methods=['PUT'])
+@require_role('admin')
+def update_alert_thresholds():
+    """更新告警阈值 (仅管理员)"""
+    data = request.get_json() or {}
+    monitor = get_monitor()
+    updated = {}
+    for key in ('cpu_percent', 'memory_percent', 'disk_percent'):
+        if key in data:
+            val = float(data[key])
+            monitor.set_threshold(key, val)
+            updated[key] = val
+    return jsonify({'status': 'updated', 'thresholds': updated})
+
+
+@app.route('/api/alerts/trigger', methods=['POST'])
+@require_role('operator')
+def trigger_alert():
+    """手动触发一次指标收集和告警检查"""
+    monitor = get_monitor()
+    metrics = monitor.collect_metrics()
+    return jsonify({
+        'status': 'collected',
+        'metrics': metrics.to_dict() if metrics else {},
+        'active_alerts': len(monitor.get_active_alerts())
+    })
 
 
 # ============== 监控 API ==============

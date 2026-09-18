@@ -14,8 +14,8 @@ from datetime import datetime
 # 添加父目录到路径
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from unified.scheduler.task_scheduler import Task, TaskStatus, TaskPriority
-from unified.experiments.benchmark.encoder import H265EncoderSafe, EncodeMode
+from src.pristmax.scheduler.task_scheduler import Task, TaskStatus, TaskPriority
+from commercial.encoder.benchmark.encoder import H265EncoderSafe, EncodeMode
 
 
 def calculate_sha256(file_path: str) -> str:
@@ -99,13 +99,34 @@ def encode_task_handler(task: Task, progress_callback: Callable = None) -> Dict:
         output_size = os.path.getsize(output_path)
         input_size = os.path.getsize(input_path)
 
-        # 对于无损模式，验证解码后是否一致
+        # 无损模式：解码后逐字节比对原文件
         if encode_mode == EncodeMode.LOSSLESS:
-            output_hash = calculate_sha256(output_path)
-            integrity_verified = (original_hash == output_hash)
+            import tempfile
+            with tempfile.NamedTemporaryFile(suffix='.mp4', delete=False) as decoded_tmp:
+                decoded_path = decoded_tmp.name
+
+            try:
+                # 用 ffmpeg 解码（重新封装为无损格式）
+                import subprocess
+                subprocess.run([
+                    'ffmpeg', '-y', '-i', output_path,
+                    '-c:v', 'copy', decoded_path
+                ], capture_output=True, check=True)
+
+                decoded_hash = calculate_sha256(decoded_path)
+                integrity_verified = (original_hash == decoded_hash)
+                lossless_check_performed = True
+            except subprocess.CalledProcessError as e:
+                integrity_verified = False
+                lossless_check_performed = False
+                print(f"[encode_task] decode verify failed: {e.stderr.decode() if e.stderr else e}")
+            finally:
+                if os.path.exists(decoded_path):
+                    os.unlink(decoded_path)
         else:
             # 有损模式只验证文件存在
             integrity_verified = True
+            lossless_check_performed = False
 
         return {
             'status': 'success',
@@ -114,9 +135,10 @@ def encode_task_handler(task: Task, progress_callback: Callable = None) -> Dict:
             'output_path': output_path,
             'original_size': input_size,
             'output_size': output_size,
-            'compression_ratio': output_size / input_size if input_size > 0 else 1.0,
+            'compression_ratio': (input_size - output_size) / input_size if input_size > 0 else 0.0,
             'original_hash': original_hash,
             'integrity_verified': integrity_verified,
+            'lossless_check_performed': lossless_check_performed,
             'encode_mode': encode_mode.value,
             'encode_time_sec': result_dict.get('encode_time_sec', 0)
         }
@@ -135,16 +157,16 @@ def dedup_task_handler(task: Task, progress_callback: Callable = None) -> Dict:
     Returns:
         处理结果字典
     """
-    from experiments.dedup.index import DedupIndexSafe
+    from src.pristmax.dedup.index import DedupIndexSafe
 
     input_path = task.input_path
-    index_path = task.params.get('index_path', './dedup_index.db')
+    db_path = task.params.get('index_path', './dedup_safe.db')
 
     if not os.path.exists(input_path):
         raise FileNotFoundError(f"Input path not found: {input_path}")
 
     # 创建去重索引
-    index = DedupIndexSafe(index_path=index_path)
+    index = DedupIndexSafe(db_path=db_path)
 
     if progress_callback:
         progress_callback(10, "Scanning for duplicates...")
@@ -174,15 +196,15 @@ def dedup_task_handler(task: Task, progress_callback: Callable = None) -> Dict:
         file_size = os.path.getsize(file_path)
         total_size += file_size
 
-        # 添加到索引
-        chunk_id = index.add_chunk(
+        # 添加到索引，返回 True=新增唯一块，False=重复块
+        is_new = index.add_chunk(
             chunk_id=file_hash,
             content_hash=file_hash,
             size=file_size,
             storage_path=file_path
         )
 
-        if chunk_id == file_hash:
+        if is_new:
             # 新增唯一块
             unique_chunks += 1
         else:
@@ -191,9 +213,12 @@ def dedup_task_handler(task: Task, progress_callback: Callable = None) -> Dict:
             saved_size += file_size
 
     if progress_callback:
-        progress_callback(80, "Finalizing...")
+        progress_callback(95, "Finalizing...")
 
-    dedup_ratio = total_size / (saved_size + 1) if saved_size > 0 else 1.0
+    if progress_callback:
+        progress_callback(100, "Deduplication complete")
+
+    dedup_ratio = saved_size / total_size if total_size > 0 else 0.0
 
     return {
         'status': 'success',
@@ -260,10 +285,11 @@ def scan_task_handler(task: Task, progress_callback: Callable = None) -> Dict:
                 continue
 
             if progress_callback and i % 100 == 0:
-                progress_callback(
-                    min(90, 10 + int((i / 1000) * 50)),
-                    f"Scanned {total_files} files..."
-                )
+                pct = min(90, 10 + int((total_files / max(total_files, 1)) * 80))
+                progress_callback(pct, f"Scanned {total_files} files...")
+
+    if progress_callback:
+        progress_callback(100, "Scan complete")
 
     # 排序并取最大文件
     largest_files.sort(key=lambda x: x['size'], reverse=True)

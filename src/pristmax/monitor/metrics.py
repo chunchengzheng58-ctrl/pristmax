@@ -212,11 +212,79 @@ class SystemMonitor:
     def add_alert(self, alert: Alert):
         """添加告警"""
         self.alerts.append(alert)
+        self._persist_alert(alert)
         for callback in self.alert_callbacks:
             try:
                 callback(alert)
             except Exception as e:
                 print(f"[Monitor] Alert callback error: {e}")
+
+    def _persist_alert(self, alert: Alert):
+        """持久化告警到数据库"""
+        import sqlite3, os
+        try:
+            db_path = os.environ.get('PRISTMAX_DB') or os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 'tasks.db')
+            conn = sqlite3.connect(db_path, check_same_thread=False)
+            conn.execute('''
+                INSERT OR IGNORE INTO alert_history (alert_id,level,title,message,metric,value,threshold,timestamp)
+                VALUES (?,?,?,?,?,?,?,?)
+            ''', (alert.alert_id, alert.level.value, alert.title, alert.message,
+                  alert.metric, alert.value, alert.threshold, alert.timestamp))
+            conn.commit()
+            conn.close()
+        except Exception as e:
+            print(f"[Monitor] Failed to persist alert: {e}")
+
+    def acknowledge_alert(self, alert_id: str):
+        """确认告警"""
+        for alert in self.alerts:
+            if alert.alert_id == alert_id:
+                alert.acknowledged = True
+                self._persist_acknowledge(alert_id)
+
+    def _persist_acknowledge(self, alert_id: str):
+        """持久化告警确认"""
+        import sqlite3, os
+        try:
+            from datetime import datetime
+            db_path = os.environ.get('PRISTMAX_DB') or os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 'tasks.db')
+            conn = sqlite3.connect(db_path, check_same_thread=False)
+            conn.execute('''
+                UPDATE alert_history SET acknowledged=1, acknowledged_at=? WHERE alert_id=?
+            ''', (datetime.now().isoformat(), alert_id))
+            conn.commit()
+            conn.close()
+        except Exception as e:
+            print(f"[Monitor] Failed to persist ack: {e}")
+
+    def load_alert_history(self, limit: int = 100):
+        """从数据库加载历史告警"""
+        import sqlite3, os
+        try:
+            db_path = os.environ.get('PRISTMAX_DB') or os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), 'tasks.db')
+            conn = sqlite3.connect(db_path, check_same_thread=False)
+            rows = conn.execute('''
+                SELECT alert_id,level,title,message,metric,value,threshold,timestamp,acknowledged
+                FROM alert_history ORDER BY timestamp DESC LIMIT ?
+            ''', (limit,)).fetchall()
+            conn.close()
+            for row in rows:
+                alert = Alert(
+                    level=AlertLevel(row[1]),
+                    title=row[2],
+                    message=row[3] or '',
+                    metric=row[4] or '',
+                    value=row[5] or 0,
+                    threshold=row[6] or 0
+                )
+                alert.alert_id = row[0]
+                alert.timestamp = row[7]
+                alert.acknowledged = bool(row[8])
+                # 避免重复
+                if not any(a.alert_id == alert.alert_id for a in self.alerts):
+                    self.alerts.append(alert)
+        except Exception as e:
+            print(f"[Monitor] Failed to load alert history: {e}")
 
     def acknowledge_alert(self, alert_id: str):
         """确认告警"""
@@ -298,6 +366,7 @@ def get_monitor() -> SystemMonitor:
     global _monitor
     if _monitor is None:
         _monitor = SystemMonitor()
+        _monitor.load_alert_history()
     return _monitor
 
 

@@ -96,6 +96,12 @@ class StorageManager:
         # 加载已保存的配置
         self._load_config()
 
+        # 如果没有存储配置，自动检测本地磁盘
+        if not self._adapters:
+            self._auto_detect_storages()
+        else:
+            print(f"[Manager] Using {len(self._adapters)} storages from config")
+
     def _generate_task_id(self) -> str:
         """生成唯一任务 ID"""
         self._task_counter += 1
@@ -401,6 +407,83 @@ class StorageManager:
 
         except Exception as e:
             print(f"[Manager] Failed to load config: {e}")
+
+    def _auto_detect_storages(self):
+        """自动检测并添加本地存储（跳过已存在的 ID）"""
+        import os, shutil
+
+        if os.name == 'nt':
+            # Windows: 检测所有可用驱动器
+            for letter in range(ord('C'), ord('Z') + 1):
+                drive = f"{chr(letter)}:\\"
+                storage_id = f'local-{letter}'
+                # 跳过已存在的
+                if storage_id in self._adapters:
+                    continue
+                try:
+                    if os.path.exists(drive):
+                        usage = shutil.disk_usage(drive)
+                        sid = self.add_storage('local_disk', {
+                            'id': storage_id,
+                            'name': f'本地磁盘 ({chr(letter)}:)',
+                            'mount_points': [drive],
+                            'enabled': True
+                        })
+                        if sid:
+                            print(f"[Manager] Auto-detected {drive} ({usage.total / 1024**3:.0f} GB)")
+                except Exception:
+                    pass
+        else:
+            # Unix: 根目录
+            storage_id = 'local-root'
+            if storage_id in self._adapters:
+                return
+            try:
+                usage = shutil.disk_usage('/')
+                sid = self.add_storage('local_disk', {
+                    'id': storage_id,
+                    'name': '根目录 (/)',
+                    'mount_points': ['/'],
+                    'enabled': True
+                })
+                if sid:
+                    print(f"[Manager] Auto-detected / ({usage.total / 1024**3:.0f} GB)")
+            except Exception:
+                pass
+        """自动检测并添加本地存储"""
+        import os, shutil
+
+        if os.name == 'nt':
+            # Windows: 检测所有可用驱动器
+            for letter in range(ord('C'), ord('Z') + 1):
+                drive = f"{chr(letter)}:\\"
+                try:
+                    if os.path.exists(drive):
+                        usage = shutil.disk_usage(drive)
+                        storage_id = self.add_storage('local_disk', {
+                            'id': f'local-{letter}',
+                            'name': f'本地磁盘 ({chr(letter)}:)',
+                            'mount_points': [drive],
+                            'enabled': True
+                        })
+                        if storage_id:
+                            print(f"[Manager] Auto-detected {drive} ({usage.total / 1024**3:.0f} GB)")
+                except Exception:
+                    pass
+        else:
+            # Unix: 根目录
+            try:
+                usage = shutil.disk_usage('/')
+                storage_id = self.add_storage('local_disk', {
+                    'id': 'local-root',
+                    'name': '根目录 (/)',
+                    'mount_points': ['/'],
+                    'enabled': True
+                })
+                if storage_id:
+                    print(f"[Manager] Auto-detected / ({usage.total / 1024**3:.0f} GB)")
+            except Exception:
+                pass
 
     def _save_config(self):
         """保存配置到文件"""
