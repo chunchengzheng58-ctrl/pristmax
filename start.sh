@@ -1,37 +1,31 @@
 #!/bin/bash
-#==============================================================================
-# Pristmax 启动脚本（开发/测试用）
-# 生产环境建议使用 systemd 服务
-#==============================================================================
+# Pristmax Desktop Launcher for Linux/macOS
 
-# 获取脚本所在目录
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 cd "$SCRIPT_DIR"
 
-# 加载 .env 文件（如果存在）
-if [ -f .env ]; then
-    export $(grep -v '^#' .env | xargs)
-fi
+echo "============================================"
+echo "  Pristmax Desktop"
+echo "============================================"
+echo ""
 
-# 默认值
-export PRISTMAX_DB="${PRISTMAX_DB:-$SCRIPT_DIR/data/tasks.db}"
-export AUTH_DB="${AUTH_DB:-$SCRIPT_DIR/data/auth.db}"
-export PORT="${PORT:-5001}"
-export FLASK_ENV="${FLASK_ENV:-production}"
-
-echo "======================================"
-echo "  Pristmax API Server"
-echo "======================================"
-echo "数据库: $PRISTMAX_DB"
-echo "端口:   $PORT"
-echo "======================================"
-
-# 检查虚拟环境
-if [ ! -d "venv" ]; then
-    echo "错误: 未找到虚拟环境，请先运行 deploy.sh 或创建虚拟环境"
+# Check Python
+if ! command -v python3 &> /dev/null; then
+    echo "Error: Python 3 is not installed"
+    echo "Please install Python 3.10+ from https://python.org"
     exit 1
 fi
 
-# 激活虚拟环境并启动
-source venv/bin/activate
-python -m src.pristmax.api.server --port $PORT --host 0.0.0.0
+# Check dependencies
+if ! python3 -c "import flask" &> /dev/null; then
+    echo "Installing dependencies..."
+    pip3 install flask flask-cors pyyaml
+fi
+
+echo "Starting Pristmax Desktop..."
+echo ""
+echo "Open your browser and go to: http://localhost:5000"
+echo "Press Ctrl+C to stop the server"
+echo ""
+
+python3 main.py --host 0.0.0.0 --port 5000
