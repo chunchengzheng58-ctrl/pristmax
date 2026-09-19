@@ -17,6 +17,9 @@ build/
 *.swp
 *.swo
 
+# Node.js
+electron-app/node_modules/
+
 # Data & Database
 *.db
 *.db-journal
