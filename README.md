@@ -8,6 +8,24 @@ Built with Claude Code by Anthropic · [Website](https://jiangchenghehe.top) · 
 
 ---
 
+## Open Source Philosophy
+
+**Commercial parts are not open source.**
+
+Pristmax follows a clear boundary between open source and proprietary:
+
+| Category | Status |
+|----------|--------|
+| Open source core (Apache 2.0) | ✅ Public on GitHub |
+| Proprietary components | 🔒 Not public, separate license |
+
+This means:
+- Core storage optimization technology is open and transparent
+- Advanced features (video encoding, AI analysis) remain proprietary
+- You can inspect, modify, and use the open source parts freely
+
+---
+
 ## Project Structure
 
 ```
