@@ -1,3 +1,4 @@
+/** Pristmax - All Rights Reserved. Copyright © 2024-2026 */
 // GitHub stats fetcher for community section
 // Falls back gracefully when GitHub API is unreachable or rate-limited.
 

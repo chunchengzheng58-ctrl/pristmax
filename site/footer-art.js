@@ -1,3 +1,4 @@
+/** Pristmax - All Rights Reserved. Copyright © 2024-2026 */
 (()=>{
  const scene=document.querySelector('.footer-landscape'),footer=scene?.closest('footer');
  if(!footer)return;

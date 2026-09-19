@@ -1,3 +1,4 @@
+/** Pristmax - All Rights Reserved. Copyright © 2024-2026 */
 // Presentation interactions. No production mutations are simulated.
 document.querySelectorAll('.table').forEach(table=>{const wrap=document.createElement('div');wrap.className='table-scroll';table.before(wrap);wrap.append(table);});
 const statusBox=document.getElementById('ui-status');let statusTimer;

@@ -1,3 +1,4 @@
+/** Pristmax - All Rights Reserved. Copyright © 2024-2026 */
 // Bamboo shoot growth animation for feature card expansions.
 
 (function () {
