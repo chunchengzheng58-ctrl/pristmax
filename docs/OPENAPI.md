@@ -1,7 +1,7 @@
 # Pristmax OpenAPI 文档
 
 **版本**: 1.0.0
-**基础URL**: `https://api.jiangchenghehe.top` (生产) 或 `http://localhost:5000` (本地)
+**基础URL**: `https://api.jiangchenghehe.top` (生产) 或 `http://localhost:5001` (本地)
 
 ---
 

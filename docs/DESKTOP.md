@@ -131,7 +131,7 @@ pristmax/
 
 | 端口 | 说明 |
 |------|------|
-| 5000 | Web 控制台 |
+| 5001 | Web 控制台 + API |
 | 5002 | Storage Agent API |
 | 5003 | MCP Server (可选) |
 

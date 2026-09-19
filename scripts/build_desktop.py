@@ -34,17 +34,20 @@ def run(cmd, cwd=None, shell=False):
 
 def check_dependencies():
     """Check if required dependencies are installed"""
+    import shutil
     required = ["pyinstaller"]
     missing = []
 
     for pkg in required:
-        try:
-            __import__(pkg.replace("-", "_"))
-        except ImportError:
-            missing.append(pkg)
+        if not shutil.which(pkg):
+            # Not in PATH, try to import it
+            try:
+                __import__(pkg)
+            except ImportError:
+                missing.append(pkg)
 
     if missing:
-        print(f"❌ Missing dependencies: {', '.join(missing)}")
+        print(f"[FAIL] Missing dependencies: {', '.join(missing)}")
         print(f"   Install with: pip install {' '.join(missing)}")
         return False
     return True
@@ -52,7 +55,7 @@ def check_dependencies():
 
 def clean():
     """Clean build artifacts"""
-    print("\n🧹 Cleaning build artifacts...")
+    print("\n[Clean] Cleaning build artifacts...")
 
     dirs_to_remove = [DIST, BUILD]
     for d in dirs_to_remove:
@@ -65,15 +68,15 @@ def clean():
         f.unlink()
         print(f"   Removed: {f}")
 
-    print("✅ Clean complete")
+    print("[OK] Clean complete")
 
 
 def build_windows():
     """Build Windows executable"""
-    print("\n🪟 Building Windows executable...")
+    print("\n[Win] Building Windows executable...")
 
     if not (ROOT / "main.spec").exists():
-        print("❌ main.spec not found")
+        print("[FAIL] main.spec not found")
         return False
 
     # Create dist directory
@@ -88,17 +91,17 @@ def build_windows():
     exe_path = DIST / "Pristmax.exe"
     if exe_path.exists():
         size_mb = exe_path.stat().st_size / (1024 * 1024)
-        print(f"\n✅ Build complete: {exe_path}")
+        print(f"\n[OK] Build complete: {exe_path}")
         print(f"   Size: {size_mb:.1f} MB")
         return True
     else:
-        print(f"\n❌ Build failed: {exe_path} not found")
+        print(f"\n[FAIL] Build failed: {exe_path} not found")
         return False
 
 
 def build_unix():
     """Build Unix/Linux/macOS executable"""
-    print("\n🐧 Building Unix executable...")
+    print("\n[Unix] Building Unix executable...")
 
     # Create dist directory
     DIST.mkdir(exist_ok=True)
@@ -116,7 +119,7 @@ app.run(host='0.0.0.0', port=5000, debug=False)
 "
 """)
     launcher.chmod(0o755)
-    print(f"✅ Launcher created: {launcher}")
+    print(f"[OK] Launcher created: {launcher}")
     print("   Run with: ./pristmax")
     return True
 
@@ -155,10 +158,10 @@ def main():
 
     if success:
         print("\n" + "=" * 50)
-        print("🎉 Build successful!")
+        print("[Done] Build successful!")
         print("=" * 50)
     else:
-        print("\n❌ Build failed")
+        print("\n[FAIL] Build failed")
         sys.exit(1)
 
 
