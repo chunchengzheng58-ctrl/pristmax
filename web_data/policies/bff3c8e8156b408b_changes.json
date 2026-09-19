@@ -1,0 +1,14 @@
+[
+  {
+    "change_id": "93553bd4617242598354e96d4bfa7fdf",
+    "policy_id": "bff3c8e8156b408b",
+    "version_from": 1,
+    "version_to": 2,
+    "changed_at": "2026-09-15T14:02:56.116658Z",
+    "changed_by": "setup_demo",
+    "change_type": "update",
+    "reason": "Policy activated",
+    "approver": "setup_demo",
+    "approved_at": "2026-09-15T14:02:56.116658Z"
+  }
+]

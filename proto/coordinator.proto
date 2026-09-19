@@ -1,0 +1,326 @@
+/*
+Storage Atlas Coordinator Service
+
+gRPC API for PB-scale distributed storage optimization.
+*/
+
+syntax = "proto3";
+
+package storage_atlas;
+
+// ============ Common Types ============
+
+message BlobLocation {
+    string node = 1;
+    string path = 2;
+    string tier = 3;
+}
+
+message FingerprintRecord {
+    string fp = 1;
+    int64 size = 2;
+    int32 refcount = 3;
+    repeated BlobLocation locations = 4;
+    int64 compressed_size = 5;
+    string compression = 6;
+    string tier = 7;
+    string created_at = 8;
+    string last_accessed = 9;
+    int32 access_count = 10;
+}
+
+// ============ Node Management ============
+
+message RegisterRequest {
+    string node_id = 1;
+    string role = 2;           // "scan_node", "coordinator", "storage_node"
+    string host = 3;
+    int32 port = 4;
+    map<string, int64> capacity = 5;  // e.g., {"files_per_sec": 1000}
+    map<string, string> metadata = 6;
+}
+
+message RegisterResponse {
+    bool success = 1;
+    string message = 2;
+    string node_id = 3;
+    int64 cluster_size = 4;
+}
+
+message HeartbeatRequest {
+    string node_id = 1;
+    int32 current_load = 2;
+    string state = 3;          // "active", "idle", "busy"
+    map<string, string> stats = 4;
+}
+
+message HeartbeatResponse {
+    bool success = 1;
+    bool is_leader = 2;
+    repeated string failed_nodes = 3;  // Nodes that should be marked dead
+}
+
+message NodeInfoRequest {
+    string node_id = 1;
+}
+
+message NodeInfoResponse {
+    string node_id = 1;
+    string role = 2;
+    string host = 3;
+    int32 port = 4;
+    string state = 5;
+    int32 current_load = 6;
+    string registered_at = 7;
+    string last_heartbeat = 8;
+}
+
+message ListNodesRequest {
+    string role_filter = 1;    // Empty = all roles
+    bool healthy_only = 2;
+}
+
+message ListNodesResponse {
+    repeated NodeInfoResponse nodes = 1;
+}
+
+// ============ Job Management ============
+
+message ScanJobRequest {
+    string job_id = 1;
+    string source_type = 2;    // "local", "s3", "nfs", "hdfs", "ceph"
+    string source_path = 3;
+    string partition_strategy = 4;  // "directory", "hash_range", "time_window"
+    int32 partition_count = 5;
+    int32 priority = 6;        // 0-100, higher = more important
+    map<string, string> options = 7;
+}
+
+message ScanJobResponse {
+    string job_id = 1;
+    bool accepted = 2;
+    string message = 3;
+    int32 estimated_nodes_needed = 4;
+}
+
+message JobStatusRequest {
+    string job_id = 1;
+}
+
+message JobStatusResponse {
+    string job_id = 1;
+    string status = 2;         // "pending", "running", "completed", "failed", "cancelled"
+    float progress = 3;        // 0.0 to 1.0
+    string assigned_node = 4;
+    string error = 5;
+    map<string, string> stats = 6;
+}
+
+message CancelJobRequest {
+    string job_id = 1;
+}
+
+message CancelJobResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+// ============ Fingerprint Operations ============
+
+message FPLookupRequest {
+    repeated string fingerprints = 1;
+    bool include_locations = 2;
+    bool include_metadata = 3;
+}
+
+message FPLookupResponse {
+    message FPResult {
+        string fingerprint = 1;
+        bool found = 2;
+        FingerprintRecord record = 3;
+        bool may_exist = 4;    // From bloom filter (true but not in DB)
+    }
+    repeated FPResult results = 1;
+    int64 query_time_ms = 2;
+}
+
+message FPInsertRequest {
+    repeated FingerprintRecord records = 1;
+    bool increment_refcount = 2;  // If true, increment if exists
+}
+
+message FPInsertResponse {
+    message InsertResult {
+        string fingerprint = 1;
+        bool success = 2;
+        string error = 3;
+        int32 refcount = 4;
+    }
+    repeated InsertResult results = 1;
+    int64 insert_time_ms = 2;
+}
+
+message FPRefcountRequest {
+    repeated string fingerprints = 1;
+    int32 delta = 2;           // +1 for increment, -1 for decrement
+}
+
+message FPRefcountResponse {
+    message RefcountResult {
+        string fingerprint = 1;
+        int32 new_refcount = 2;
+    }
+    repeated RefcountResult results = 1;
+}
+
+// ============ Archive Operations ============
+
+message ArchiveRequest {
+    string archive_id = 1;
+    repeated string fingerprint_ids = 2;  // Fingerprints to include
+    string codec = 3;           // "gzip", "bzip2", "xz", "zstd"
+    string target_tier = 4;     // "hot", "warm", "cold"
+    map<string, string> options = 5;
+}
+
+message ArchiveResponse {
+    string archive_id = 1;
+    bool success = 2;
+    string message = 3;
+    int64 original_bytes = 4;
+    int64 compressed_bytes = 5;
+    float compression_ratio = 6;
+    int32 unique_chunks = 7;
+    int32 duplicate_chunks = 8;
+}
+
+message RestoreRequest {
+    string archive_id = 1;
+    string target_path = 2;
+    bool verify_checksums = 3;
+    bool overwrite_existing = 4;
+}
+
+message RestoreResponse {
+    bool success = 1;
+    string message = 2;
+    int32 files_restored = 3;
+    int32 files_failed = 4;
+    repeated string failed_files = 5;
+}
+
+// ============ Storage Tiering ============
+
+message TierMigrationRequest {
+    repeated string fingerprints = 1;
+    string from_tier = 2;
+    string to_tier = 3;
+}
+
+message TierMigrationResponse {
+    message MigrationResult {
+        string fingerprint = 1;
+        bool success = 2;
+        string error = 3;
+    }
+    repeated MigrationResult results = 1;
+    int32 success_count = 2;
+    int32 failure_count = 3;
+}
+
+message GetTierStatsRequest {
+    // Empty - gets stats for all tiers
+}
+
+message GetTierStatsResponse {
+    message TierStats {
+        string tier = 1;
+        int64 total_bytes = 2;
+        int64 compressed_bytes = 3;
+        int64 blob_count = 4;
+        int64 unique_chunks = 5;
+    }
+    repeated TierStats stats = 1;
+    int64 total_savings_bytes = 2;
+    float overall_dedup_ratio = 3;
+}
+
+// ============ Service Definition ============
+
+service Coordinator {
+    // Node management
+    rpc RegisterNode(RegisterRequest) returns (RegisterResponse);
+    rpc Heartbeat(HeartbeatRequest) returns (HeartbeatResponse);
+    rpc GetNodeInfo(NodeInfoRequest) returns (NodeInfoResponse);
+    rpc ListNodes(ListNodesRequest) returns (ListNodesResponse);
+
+    // Job management
+    rpc SubmitScanJob(ScanJobRequest) returns (ScanJobResponse);
+    rpc GetJobStatus(JobStatusRequest) returns (JobStatusResponse);
+    rpc CancelJob(CancelJobRequest) returns (CancelJobResponse);
+
+    // Fingerprint operations
+    rpc LookupFingerprints(FPLookupRequest) returns (FPLookupResponse);
+    rpc InsertFingerprints(FPInsertRequest) returns (FPInsertResponse);
+    rpc UpdateRefcount(FPRefcountRequest) returns (FPRefcountResponse);
+
+    // Archive operations
+    rpc CreateArchive(ArchiveRequest) returns (ArchiveResponse);
+    rpc RestoreArchive(RestoreRequest) returns (RestoreResponse);
+
+    // Storage tiering
+    rpc MigrateTier(TierMigrationRequest) returns (TierMigrationResponse);
+    rpc GetTierStats(GetTierStatsRequest) returns (GetTierStatsResponse);
+}
+
+// ============ Scan Node Service (for node-to-coordinator communication) ============
+
+service ScanNode {
+    rpc GetScanTask(ScanTaskRequest) returns (ScanTaskResponse);
+    rpc ReportScanProgress(ScanProgressRequest) returns (ScanProgressResponse);
+    rpc ReportScanComplete(ScanCompleteRequest) returns (ScanCompleteResponse);
+}
+
+message ScanTaskRequest {
+    string node_id = 1;
+    string task_id = 2;
+}
+
+message ScanTaskResponse {
+    bool has_task = 1;
+    string task_id = 2;
+    string source_type = 3;
+    string source_path = 4;
+    string partition_strategy = 5;
+    string partition_hint = 6;  // Which partition this node should process
+    map<string, string> options = 7;
+}
+
+message ScanProgressRequest {
+    string task_id = 1;
+    string node_id = 2;
+    int64 files_scanned = 3;
+    int64 bytes_scanned = 4;
+    int64 chunks_found = 5;
+    int64 unique_chunks = 6;
+    float progress = 7;         // 0.0 to 1.0
+}
+
+message ScanProgressResponse {
+    bool continue_scan = 1;     // false = cancel/stop
+    string message = 2;
+}
+
+message ScanCompleteRequest {
+    string task_id = 1;
+    string node_id = 2;
+    bool success = 3;
+    string error = 4;
+    map<string, int64> stats = 5;
+    repeated FPLookupRequest fingerprints = 6;  // All fingerprints found
+}
+
+message ScanCompleteResponse {
+    bool acknowledged = 1;
+    string message = 2;
+}

@@ -1,0 +1,132 @@
+- generic [active] [ref=f3e1]:
+  - banner [ref=f3e2]:
+    - link "存序首页" [ref=f3e3] [cursor=pointer]:
+      - /url: "#dashboard"
+      - generic [aria-hidden] [ref=f3e4]: ▱
+      - generic [ref=f3e5]:
+        - text: 存序
+        - generic [ref=f3e6]: STORAGE ATLAS
+    - navigation "主要导航" [ref=f3e7]:
+      - button "总览 Overview" [ref=f3e8] [cursor=pointer]
+      - button "语义降量" [ref=f3e9] [cursor=pointer]
+      - button "分布式存储" [ref=f3e10] [cursor=pointer]
+      - button "审计记录" [ref=f3e11] [cursor=pointer]
+    - generic [ref=f3e12]:
+      - generic [ref=f3e13]: 演示工作空间
+      - button "刷新页面" [ref=f3e15] [cursor=pointer]: ↻
+  - generic [ref=f3e16]:
+    - generic [ref=f3e17]: WORKSPACE / 企业数据控制台
+    - generic [ref=f3e18]: PRIVATE BY DESIGN · 本地部署
+  - main [ref=f3e19]:
+    - generic [ref=f3e20]:
+      - generic [ref=f3e21]:
+        - generic [ref=f3e22]:
+          - paragraph [ref=f3e23]: LESS STORAGE. MORE POSSIBILITY.
+          - heading "让数据的价值， 超越它的体积。" [level=1] [ref=f3e24]: 让数据的价值，超越它的体积。
+          - paragraph [ref=f3e25]: 从内容理解到分布式去重，让每一份企业数据，都有更合适的存储方式。
+          - generic [ref=f3e26]:
+            - button "探索存储引擎 ↗" [ref=f3e27] [cursor=pointer]:
+              - text: 探索存储引擎
+              - generic [ref=f3e28]: ↗
+            - button "了解语义降量 →" [ref=f3e29] [cursor=pointer]
+          - generic [ref=f3e30]:
+            - generic [ref=f3e31]: 01 / UNDERSTAND
+            - generic [ref=f3e32]: 02 / REDUCE
+            - generic [ref=f3e33]: 03 / VERIFY
+        - generic [aria-hidden] [ref=f3e34]:
+          - generic [ref=f3e43]: DATA / REIMAGINED
+          - generic [ref=f3e44]: "[ ATLAS.01 ]"
+      - generic [ref=f3e46]:
+        - generic [ref=f3e47]:
+          - paragraph [ref=f3e48]: YOUR STORAGE, AT A GLANCE
+          - heading "全局视野，清晰掌控。" [level=2] [ref=f3e49]
+        - generic [ref=f3e50]: 以下为演示数据 · 不代表实际节省
+      - generic [ref=f3e52]:
+        - generic [ref=f3e53]:
+          - generic [ref=f3e54]: 1.5 PB
+          - generic [ref=f3e55]: 累计节省 · 示例
+        - generic [ref=f3e56]:
+          - generic [ref=f3e57]: 73%
+          - generic [ref=f3e58]: 去重比例 · 示例
+        - generic [ref=f3e59]:
+          - generic [ref=f3e60]: 本地
+          - generic [ref=f3e61]: 部署方式
+      - generic [ref=f3e62]:
+        - generic [ref=f3e63]:
+          - generic [ref=f3e64]:
+            - text: 01 / SEMANTIC ENGINE
+            - generic [ref=f3e65]: ↗
+          - generic [ref=f3e66]: 读懂内容，保留价值。
+          - generic [ref=f3e67]: 语义降量 · 面向视频与日志的内容理解
+          - generic [ref=f3e68]:
+            - generic [ref=f3e69]:
+              - generic [ref=f3e70]: 68%
+              - generic [ref=f3e71]: 视频降量比例
+            - generic [ref=f3e72]:
+              - generic [ref=f3e73]: "156"
+              - generic [ref=f3e74]: 接入摄像头
+            - generic [ref=f3e75]:
+              - generic [ref=f3e76]: 892 TB
+              - generic [ref=f3e77]: 节省空间
+            - generic [ref=f3e78]:
+              - generic [ref=f3e79]: "3"
+              - generic [ref=f3e80]: 运行策略
+          - button "进入引擎工作台 →" [ref=f3e81] [cursor=pointer]
+        - generic [ref=f3e82]:
+          - generic [ref=f3e83]:
+            - text: 02 / STORAGE ENGINE
+            - generic [ref=f3e84]: ↗
+          - generic [ref=f3e85]: 折叠冗余，释放空间。
+          - generic [ref=f3e86]: 分布式存储 · 内容分块与指纹去重
+          - generic [ref=f3e87]:
+            - generic [ref=f3e88]:
+              - generic [ref=f3e89]: 73%
+              - generic [ref=f3e90]: 去重比例
+            - generic [ref=f3e91]:
+              - generic [ref=f3e92]: "5"
+              - generic [ref=f3e93]: 节点管理
+            - generic [ref=f3e94]:
+              - generic [ref=f3e95]: 648 TB
+              - generic [ref=f3e96]: 存储占用
+            - generic [ref=f3e97]:
+              - generic [ref=f3e98]: 2.4 PB
+              - generic [ref=f3e99]: 原始数据
+          - button "进入引擎工作台 →" [ref=f3e100] [cursor=pointer]
+      - generic [ref=f3e101]:
+        - generic [ref=f3e102]: 最近处理活动
+        - table [ref=f3e105]:
+          - rowgroup [ref=f3e106]:
+            - row [ref=f3e107]:
+              - columnheader "时间" [ref=f3e108]
+              - columnheader "处理模块" [ref=f3e109]
+              - columnheader "数据来源" [ref=f3e110]
+              - columnheader "原始体积" [ref=f3e111]
+              - columnheader "处理后" [ref=f3e112]
+              - columnheader "缩减比例" [ref=f3e113]
+          - rowgroup [ref=f3e114]:
+            - row [ref=f3e115]:
+              - cell "10:30:45" [ref=f3e116]
+              - cell "Semantic" [ref=f3e117]
+              - cell "CAM-001 Lobby" [ref=f3e119]
+              - cell "100 MB" [ref=f3e120]
+              - cell "12 MB" [ref=f3e121]
+              - cell "88%" [ref=f3e122]
+            - row [ref=f3e124]:
+              - cell "10:28:12" [ref=f3e125]
+              - cell "Distributed" [ref=f3e126]
+              - cell "backup-2024" [ref=f3e128]
+              - cell "200 GB" [ref=f3e129]
+              - cell "54 GB" [ref=f3e130]
+              - cell "73%" [ref=f3e131]
+            - row [ref=f3e133]:
+              - cell "10:25:33" [ref=f3e134]
+              - cell "Distributed" [ref=f3e135]
+              - cell "/data/logs" [ref=f3e137]
+              - cell "50 GB" [ref=f3e138]
+              - cell "8 GB" [ref=f3e139]
+              - cell "84%" [ref=f3e140]
+  - contentinfo [ref=f3e142]:
+    - link "存序 Storage, thoughtfully." [ref=f3e143] [cursor=pointer]:
+      - /url: "#dashboard"
+    - generic [ref=f3e144]: 企业数据，始终由企业掌控。
+    - generic [ref=f3e145]: PRODUCT PREVIEW / 2026

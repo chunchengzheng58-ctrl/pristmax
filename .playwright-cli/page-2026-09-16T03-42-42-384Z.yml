@@ -1,0 +1,113 @@
+- generic [ref=e1]:
+  - banner [ref=e4]:
+    - link "Pristine首页" [ref=e5] [cursor=pointer]:
+      - /url: "#dashboard"
+      - generic [ref=e6]:
+        - text: Pristine
+        - generic [ref=e7]: ENTERPRISE DATA SYSTEM
+    - navigation "主要导航" [ref=e8]:
+      - button "Overview" [ref=e9] [cursor=pointer]
+      - button "Intelligence" [ref=e10] [cursor=pointer]
+      - button "Storage" [ref=e11] [cursor=pointer]
+      - button "Audit" [ref=e12] [cursor=pointer]
+      - button "Value" [active] [ref=e13] [cursor=pointer]
+    - generic [ref=e14]:
+      - generic [ref=e15]: 演示工作空间
+      - button "刷新页面" [ref=e17] [cursor=pointer]: ↻
+  - generic [ref=e18]:
+    - generic [ref=e19]: WORKSPACE / Pristine 企业数据控制台
+    - generic [ref=e20]: PRISTINE · 本地部署
+  - main [ref=e21]:
+    - generic [ref=e206]:
+      - generic [ref=e209]:
+        - generic [ref=e210]: ROI 效益估算
+        - generic [ref=e211]: 基于您的数据规模，预测两大引擎的存储节省与回本周期。
+      - generic [ref=e212]:
+        - generic [ref=e213]:
+          - generic [ref=e214]:
+            - text: 01 / SEMANTIC ROI
+            - generic [ref=e215]: ↗
+          - generic [ref=e216]: 语义降量引擎
+          - generic [ref=e217]: 视频监控 · 日志保留 · 智能降采样
+          - generic [ref=e218]:
+            - generic [ref=e219]:
+              - generic [ref=e220]: 摄像头数量
+              - spinbutton [ref=e221]: "100"
+            - generic [ref=e222]:
+              - generic [ref=e223]: 单路码率 (Mbps)
+              - spinbutton [ref=e224]: "4"
+            - generic [ref=e225]:
+              - generic [ref=e226]: 存储单价 (元/TB/月)
+              - spinbutton [ref=e227]: "50"
+            - generic [ref=e228]:
+              - generic [ref=e229]: 保留天数
+              - spinbutton [ref=e230]: "30"
+          - generic [ref=e231]:
+            - generic [ref=e232]:
+              - generic [ref=e233]: 原始存储需求
+              - generic [ref=e234]: 129.6 PB
+            - generic [ref=e235]:
+              - generic [ref=e236]: 降量后存储
+              - generic [ref=e237]: 47.7 PB
+            - generic [ref=e238]:
+              - generic [ref=e239]: 月度节省
+              - generic [ref=e240]: 409.5 万
+            - generic [ref=e241]:
+              - generic [ref=e242]: 年度节省
+              - generic [ref=e243]: 4914.4 万
+          - generic [ref=e244]: 按平均降量率 68% 计算 · 含 15% 策略余量
+        - generic [ref=e245]:
+          - generic [ref=e246]:
+            - text: 02 / DEDUP ROI
+            - generic [ref=e247]: ↗
+          - generic [ref=e248]: 分布式存储引擎
+          - generic [ref=e249]: 内容分块 · 指纹去重 · 一致性哈希
+          - generic [ref=e250]:
+            - generic [ref=e251]:
+              - generic [ref=e252]: 原始数据量 (TB)
+              - spinbutton [ref=e253]: "500"
+            - generic [ref=e254]:
+              - generic [ref=e255]: 预估去重率
+              - spinbutton [ref=e256]: "70"
+            - generic [ref=e257]:
+              - generic [ref=e258]: 存储单价 (元/TB/月)
+              - spinbutton [ref=e259]: "50"
+            - generic [ref=e260]:
+              - generic [ref=e261]: 年数据增长率
+              - spinbutton [ref=e262]: "30"
+          - generic [ref=e263]:
+            - generic [ref=e264]:
+              - generic [ref=e265]: 去重后存储
+              - generic [ref=e266]: 150.0 TB
+            - generic [ref=e267]:
+              - generic [ref=e268]: 月度节省
+              - generic [ref=e269]: 1.8 万
+            - generic [ref=e270]:
+              - generic [ref=e271]: 年度节省
+              - generic [ref=e272]: 21.0 万
+            - generic [ref=e273]:
+              - generic [ref=e274]: 5年累计节省
+              - generic [ref=e275]: 189.9 万
+          - generic [ref=e276]: 去重率按内容特征浮动 · 实际结果取决于数据类型
+      - generic [ref=e277]:
+        - generic [ref=e278]: 综合效益汇总
+        - generic [ref=e280]:
+          - generic [ref=e281]:
+            - generic [ref=e282]: 411.3 万
+            - generic [ref=e283]: 月度节省
+          - generic [ref=e284]:
+            - generic [ref=e285]: 4935.4 万
+            - generic [ref=e286]: 年度节省
+          - generic [ref=e287]:
+            - generic [ref=e288]: 63%
+            - generic [ref=e289]: 综合降量率
+          - generic [ref=e290]:
+            - generic [ref=e291]: 82.3 PB
+            - generic [ref=e292]: 总节省空间
+        - generic [ref=e293]: "* 本估算基于行业典型参数，实际效果因数据类型、场景特征而异。联系我们的解决方案架构师获取精确评估。"
+    - text: PRISTINE
+  - contentinfo [ref=e135]:
+    - link "Pristine Less, but essential." [ref=e136] [cursor=pointer]:
+      - /url: "#dashboard"
+    - generic [ref=e137]: 数据纯净，存储明智。
+    - generic [ref=e138]: PRODUCT PREVIEW / 2026

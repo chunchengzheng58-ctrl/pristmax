@@ -1,0 +1,90 @@
+- generic [active] [ref=f1e1]:
+  - complementary [ref=f1e2]:
+    - link "▥ 存序 STORAGE ATLAS" [ref=f1e3] [cursor=pointer]:
+      - /url: /
+      - text: ▥
+      - generic [ref=f1e4]:
+        - text: 存序
+        - generic [ref=f1e5]: STORAGE ATLAS
+    - generic [ref=f1e6]: 企业工作空间 本地试点
+    - navigation [ref=f1e7]:
+      - button "◫ 存储总览" [ref=f1e8] [cursor=pointer]
+      - button "▤ 资料清单" [ref=f1e9] [cursor=pointer]
+      - button "◇ 优化与验证" [ref=f1e10] [cursor=pointer]
+      - button "▧ 图片信息提取" [ref=f1e11] [cursor=pointer]
+      - button "↺ 操作记录" [ref=f1e12] [cursor=pointer]
+    - generic [ref=f1e13]:
+      - text: 单机工作台
+      - generic [ref=f1e15]: 数据处理在本机运行云端连接仅进行元数据盘点
+  - main [ref=f1e16]:
+    - generic [ref=f1e17]:
+      - generic [ref=f1e18]: 工作空间 / 存储总览
+      - generic [ref=f1e19]: ENTERPRISE PILOT · v0.1
+    - generic [ref=f1e20]:
+      - generic [ref=f1e21]:
+        - paragraph [ref=f1e22]: MAKE ROOM FOR WHAT MATTERS
+        - heading "让每一份存储，更有价值。" [level=1] [ref=f1e23]
+        - paragraph [ref=f1e24]: 看清数据占用，识别优化机会，以可验证的结果推动降本。
+      - button "体验示例资料 ↗" [ref=f1e25] [cursor=pointer]
+    - generic [ref=f1e26]:
+      - generic [ref=f1e27]:
+        - article [ref=f1e28]:
+          - text: 已盘点数据
+          - strong [ref=f1e29]: —
+          - text: 连接资料库开始盘点
+        - article [ref=f1e30]:
+          - text: 重复内容可释放
+          - strong [ref=f1e31]: —
+          - text: 本地 SHA-256 校验 · 尚未删除
+        - article [ref=f1e32]:
+          - text: 文本与日志
+          - strong [ref=f1e33]: —
+          - text: 可测试无损归档的候选容量
+        - article [ref=f1e34]:
+          - text: 实际已释放
+          - strong [ref=f1e35]: 0 B
+          - text: 试点保留原件，先验证再决策
+      - generic [ref=f1e36]:
+        - article [ref=f1e37]:
+          - generic [ref=f1e38]:
+            - heading "连接资料库" [level=2] [ref=f1e39]
+            - generic [ref=f1e40]: 只读扫描
+          - generic [ref=f1e41]:
+            - button "本地 / 已挂载 NAS" [ref=f1e42] [cursor=pointer]
+            - button "S3 兼容云存储" [ref=f1e43] [cursor=pointer]
+          - generic [ref=f1e44]:
+            - generic [ref=f1e45]:
+              - generic [ref=f1e46]: 资料目录
+              - textbox "资料目录" [ref=f1e47]:
+                - /placeholder: 例如 D:\企业资料\培训文档
+              - paragraph [ref=f1e48]: 读取文件内容进行校验。跳过符号链接、目录联接和应用输出目录。
+            - button "开始盘点 →" [ref=f1e49] [cursor=pointer]:
+              - text: 开始盘点
+              - generic [ref=f1e50]: →
+        - article [ref=f1e51]:
+          - generic [ref=f1e52]:
+            - heading "数据构成" [level=2] [ref=f1e53]
+            - generic [ref=f1e54]: 等待盘点
+          - generic [ref=f1e55]:
+            - text: ▤
+            - paragraph [ref=f1e56]: 从一个资料目录开始
+            - text: 扫描后查看容量分布与处理机会
+          - generic [ref=f1e57]: 图片可在「图片信息提取」中单独运行 OCR，结果需审核。云端 ETag 不视为内容校验。
+      - article [ref=f1e58]:
+        - generic [ref=f1e59]:
+          - heading "最近盘点" [level=2] [ref=f1e60]
+          - button "刷新 ↻" [ref=f1e61] [cursor=pointer]
+        - generic [ref=f1e62]:
+          - generic [ref=f1e63]:
+            - generic [ref=f1e64]:
+              - generic [ref=f1e65]: C:\Users\zcc36\Documents\ChatGPT\存储项目\data\demo\642030c9cbf7496a937bed4bb18106fa
+              - text: 本地目录 · 986.07 KB · 2026/9/14 22:55:11
+            - button "查看报告 →" [ref=f1e66] [cursor=pointer]
+          - generic [ref=f1e67]:
+            - generic [ref=f1e68]:
+              - generic [ref=f1e69]: C:\Users\zcc36\Documents\ChatGPT\存储项目\data\demo\e7d72d2852cc40c9b84776d6014755c7
+              - text: 本地目录 · 986.07 KB · 2026/9/14 22:54:54
+            - button "查看报告 →" [ref=f1e70] [cursor=pointer]
+    - generic [ref=f1e71]:
+      - text: 存序 STORAGE ATLAS
+      - generic [ref=f1e72]: 先理解数据，再验证收益。

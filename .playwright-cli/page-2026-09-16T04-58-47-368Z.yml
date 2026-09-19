@@ -1,0 +1,149 @@
+- generic [active] [ref=f5e1]:
+  - banner [ref=f5e4]:
+    - link "Pristine首页" [ref=f5e5] [cursor=pointer]:
+      - /url: "#dashboard"
+      - generic [ref=f5e6]:
+        - text: Pristine
+        - generic [ref=f5e7]: ENTERPRISE DATA SYSTEM
+    - navigation "主要导航" [ref=f5e8]:
+      - button "Overview" [ref=f5e9] [cursor=pointer]
+      - button "Intelligence" [ref=f5e10] [cursor=pointer]
+      - button "Storage" [ref=f5e11] [cursor=pointer]
+      - button "Audit" [ref=f5e12] [cursor=pointer]
+      - button "Value" [ref=f5e13] [cursor=pointer]
+    - generic [ref=f5e14]:
+      - generic [ref=f5e15]: 演示工作空间
+      - button "刷新页面" [ref=f5e17] [cursor=pointer]: ↻
+  - generic [ref=f5e18]:
+    - generic [ref=f5e19]: WORKSPACE / Pristine 企业数据控制台
+    - generic [ref=f5e20]: PRISTINE · 本地部署
+  - main [ref=f5e21]:
+    - generic [ref=f5e22]:
+      - generic [ref=f5e23]:
+        - generic [ref=f5e24]:
+          - paragraph [ref=f5e25]: A CLEARER FUTURE FOR YOUR DATA
+          - heading "PRISTINE" [level=1] [ref=f5e26]
+          - heading [level=2] [ref=f5e27]:
+            - text: Keep the meaning.
+            - emphasis [ref=f5e28]: Reduce the weight.
+          - paragraph [ref=f5e29]: 让数据更轻，让价值清晰。Semantic intelligence. Thoughtful storage.
+          - generic [ref=f5e30]:
+            - button "Explore storage ↗" [ref=f5e31] [cursor=pointer]:
+              - text: Explore storage
+              - generic [ref=f5e32]: ↗
+            - button "Discover the intelligence →" [ref=f5e33] [cursor=pointer]
+          - generic [ref=f5e34]:
+            - generic [ref=f5e35]: 01 / UNDERSTAND
+            - generic [ref=f5e36]: 02 / REDUCE
+            - generic [ref=f5e37]: 03 / VERIFY
+        - generic [ref=f5e38]: DESIGNED TO PRESERVE / BUILT TO SIMPLIFY
+      - region [ref=f5e39]:
+        - generic [ref=f5e40]:
+          - paragraph [ref=f5e41]: THE ART OF LESS / 01
+          - heading [level=2] [ref=f5e42]:
+            - text: Less noise.
+            - emphasis [ref=f5e43]: Room to bloom.
+          - paragraph [ref=f5e44]: 让繁杂归于有序，为真正重要的信息留出空间。
+          - generic [ref=f5e45]: A STUDY IN CLARITY — PRISTINE
+        - group [ref=f5e46]:
+          - generic "01 Clarity takes flight. 轻盈有序，自在舒展 · 点击展开" [ref=f5e47] [cursor=pointer]:
+            - generic [ref=f5e48]: "01"
+            - generic [ref=f5e49]:
+              - text: Clarity takes flight.
+              - generic [ref=f5e50]: 轻盈有序，自在舒展 · 点击展开
+            - generic [aria-hidden] [ref=f5e51]: ＋
+      - generic [ref=f5e52]:
+        - generic [ref=f5e53]:
+          - paragraph [ref=f5e54]: YOUR STORAGE, AT A GLANCE
+          - heading "Clarity at a glance." [level=2] [ref=f5e55]
+        - generic [ref=f5e56]: 以下为演示数据 · 不代表实际节省
+      - generic [ref=f5e58]:
+        - generic [ref=f5e59]:
+          - generic [ref=f5e60]: 1.5 PB
+          - generic [ref=f5e61]: 累计节省 · 示例
+        - generic [ref=f5e62]:
+          - generic [ref=f5e63]: 73%
+          - generic [ref=f5e64]: 去重比例 · 示例
+        - generic [ref=f5e65]:
+          - generic [ref=f5e66]: 本地
+          - generic [ref=f5e67]: 部署方式
+      - generic [ref=f5e68]:
+        - generic [ref=f5e69]:
+          - generic [ref=f5e70]:
+            - text: 01 / SEMANTIC ENGINE
+            - generic [ref=f5e71]: ↗
+          - generic [ref=f5e72]: Meaning, distilled.
+          - generic [ref=f5e73]: 语义降量 · 面向视频与日志的内容理解
+          - generic [ref=f5e74]:
+            - generic [ref=f5e75]:
+              - generic [ref=f5e76]: 68%
+              - generic [ref=f5e77]: 视频降量比例
+            - generic [ref=f5e78]:
+              - generic [ref=f5e79]: "156"
+              - generic [ref=f5e80]: 接入摄像头
+            - generic [ref=f5e81]:
+              - generic [ref=f5e82]: 892 TB
+              - generic [ref=f5e83]: 节省空间
+            - generic [ref=f5e84]:
+              - generic [ref=f5e85]: "3"
+              - generic [ref=f5e86]: 运行策略
+          - button "Explore the engine →" [ref=f5e87] [cursor=pointer]
+        - generic [ref=f5e88]:
+          - generic [ref=f5e89]:
+            - text: 02 / STORAGE ENGINE
+            - generic [ref=f5e90]: ↗
+          - generic [ref=f5e91]: Space, reimagined.
+          - generic [ref=f5e92]: 分布式存储 · 内容分块与指纹去重
+          - generic [ref=f5e93]:
+            - generic [ref=f5e94]:
+              - generic [ref=f5e95]: 73%
+              - generic [ref=f5e96]: 去重比例
+            - generic [ref=f5e97]:
+              - generic [ref=f5e98]: "5"
+              - generic [ref=f5e99]: 节点管理
+            - generic [ref=f5e100]:
+              - generic [ref=f5e101]: 648 TB
+              - generic [ref=f5e102]: 存储占用
+            - generic [ref=f5e103]:
+              - generic [ref=f5e104]: 2.4 PB
+              - generic [ref=f5e105]: 原始数据
+          - button "Explore the engine →" [ref=f5e106] [cursor=pointer]
+      - generic [ref=f5e107]:
+        - generic [ref=f5e108]: 最近处理活动
+        - table [ref=f5e111]:
+          - rowgroup [ref=f5e112]:
+            - row [ref=f5e113]:
+              - columnheader "时间" [ref=f5e114]
+              - columnheader "处理模块" [ref=f5e115]
+              - columnheader "数据来源" [ref=f5e116]
+              - columnheader "原始体积" [ref=f5e117]
+              - columnheader "处理后" [ref=f5e118]
+              - columnheader "缩减比例" [ref=f5e119]
+          - rowgroup [ref=f5e120]:
+            - row [ref=f5e121]:
+              - cell "10:30:45" [ref=f5e122]
+              - cell "语义" [ref=f5e123]
+              - cell "CAM-001 大堂" [ref=f5e125]
+              - cell "100 MB" [ref=f5e126]
+              - cell "12 MB" [ref=f5e127]
+              - cell "88%" [ref=f5e128]
+            - row [ref=f5e130]:
+              - cell "10:28:12" [ref=f5e131]
+              - cell "分布式" [ref=f5e132]
+              - cell "backup-2024" [ref=f5e134]
+              - cell "200 GB" [ref=f5e135]
+              - cell "54 GB" [ref=f5e136]
+              - cell "73%" [ref=f5e137]
+            - row [ref=f5e139]:
+              - cell "10:25:33" [ref=f5e140]
+              - cell "分布式" [ref=f5e141]
+              - cell "/data/logs" [ref=f5e143]
+              - cell "50 GB" [ref=f5e144]
+              - cell "8 GB" [ref=f5e145]
+              - cell "84%" [ref=f5e146]
+    - text: PRISTINE
+  - contentinfo [ref=f5e148]:
+    - link "Pristine Less, but essential." [ref=f5e149] [cursor=pointer]:
+      - /url: "#dashboard"
+    - generic [ref=f5e150]: 数据纯净，存储明智。
+    - generic [ref=f5e151]: PRODUCT PREVIEW / 2026

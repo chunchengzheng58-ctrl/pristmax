@@ -1,0 +1,194 @@
+- generic [active] [ref=e1]:
+  - link "跳到正文" [ref=e2] [cursor=pointer]:
+    - /url: "#main"
+  - banner [ref=e3]:
+    - link "Pristmax 首页" [ref=e4] [cursor=pointer]:
+      - /url: index.html
+      - text: pristmax
+    - navigation [ref=e5]:
+      - link "Features 功能" [ref=e6] [cursor=pointer]:
+        - /url: "#features"
+      - link "Product 产品" [ref=e7] [cursor=pointer]:
+        - /url: "#architecture"
+      - link "Docs 文档" [ref=e8] [cursor=pointer]:
+        - /url: docs.html
+      - link "Open source ↗" [ref=e9] [cursor=pointer]:
+        - /url: "#opensource"
+      - link "Download ↓" [ref=e10] [cursor=pointer]:
+        - /url: "#download"
+  - main [ref=e11]:
+    - generic [ref=e12]:
+      - generic [ref=e13]: ENTERPRISE STORAGE / YOUR ENVIRONMENT
+      - heading "PRISTMAX" [level=1] [ref=e14]
+      - heading [level=2] [ref=e15]:
+        - text: Less storage.
+        - emphasis [ref=e16]: More clarity.
+      - paragraph [ref=e17]: 让企业数据，更轻盈、更有序。在你的环境运行，为原文件还原与视频降量选择各自的路径。
+      - generic [ref=e18]:
+        - link "Get Pristmax ↓" [ref=e19] [cursor=pointer]:
+          - /url: "#download"
+        - link "Explore the product ↗" [ref=e20] [cursor=pointer]:
+          - /url: "#features"
+      - generic [ref=e21]:
+        - generic [ref=e22]: 01 — GATHERED FLOW
+        - link "向下查看功能" [ref=e23] [cursor=pointer]:
+          - /url: "#features"
+          - text: ↓
+        - generic [ref=e24]: LOCAL FIRST. PURPOSE BUILT.
+    - generic [ref=e25]:
+      - generic [ref=e26]:
+        - text: 01 / CAPABILITIES
+        - heading [level=2] [ref=e27]:
+          - text: Make roomfor what
+          - emphasis [ref=e28]: matters.
+        - paragraph [ref=e29]: 信息不断增长，存储不必只是不断扩容。从识别重复开始，让每一份空间有据可循。
+        - text: 实际节省取决于数据类型、重复率与所选策略。
+      - generic [ref=e30]:
+        - group [ref=e31]:
+          - generic "01 Reduce repetition. 分块与去重 ＋" [ref=e32] [cursor=pointer]:
+            - generic [ref=e33]: "01"
+            - generic [ref=e34]:
+              - text: Reduce repetition.
+              - generic [ref=e35]: 分块与去重
+            - generic [ref=e36]: ＋
+          - generic [ref=e37]:
+            - paragraph [ref=e38]: 识别重复内容块，减少重复存储。适合先对备份、归档等重复度较高的数据开展试点。
+            - text: LESS REDUNDANCY / MORE ROOM
+        - group [ref=e39]:
+          - generic "02 Preserve with intent. 按需选择保真策略 ＋" [ref=e40] [cursor=pointer]:
+            - generic [ref=e41]: "02"
+            - generic [ref=e42]:
+              - text: Preserve with intent.
+              - generic [ref=e43]: 按需选择保真策略
+            - generic [ref=e44]: ＋
+        - group [ref=e45]:
+          - generic "03 Stay in control. 在企业自己的环境运行 ＋" [ref=e46] [cursor=pointer]:
+            - generic [ref=e47]: "03"
+            - generic [ref=e48]:
+              - text: Stay in control.
+              - generic [ref=e49]: 在企业自己的环境运行
+            - generic [ref=e50]: ＋
+    - generic [ref=e51]:
+      - generic [ref=e52]:
+        - text: THE PRISTMAX PRINCIPLE
+        - heading "Less, but essential." [level=2] [ref=e53]: Less, butessential.
+        - paragraph [ref=e54]: 收拢冗余，释放空间。为真正重要的信息，留下余地。
+      - generic [ref=e55]: THREE SURFACES / ONE CLEAR CENTER
+    - generic [ref=e56]:
+      - generic [ref=e57]:
+        - generic [ref=e58]:
+          - text: 02 / PRODUCT EXPERIENCE
+          - heading [level=2] [ref=e59]:
+            - text: A clear view.
+            - emphasis [ref=e60]: A lighter footprint.
+        - paragraph [ref=e61]: 官网了解产品，控制台管理数据。下载后在自己的环境部署，由本地控制台查看存储、任务与策略。
+      - generic "本地控制台布局示意，不代表实时数据" [ref=e62]:
+        - generic [ref=e63]:
+          - generic [ref=e64]: pristmax
+          - generic [ref=e65]: LOCAL CONSOLE · 界面示意
+        - generic [ref=e66]:
+          - complementary [ref=e67]:
+            - text: Workspace
+            - strong [ref=e68]: Overview
+            - generic [ref=e69]: Storage volumes
+            - generic [ref=e70]: Processing tasks
+            - generic [ref=e71]: Policies
+            - generic [ref=e72]: Activity
+          - generic [ref=e73]:
+            - generic [ref=e74]:
+              - heading "Storage, at a glance." [level=3] [ref=e75]
+              - generic [ref=e76]: 准备接入
+            - generic [ref=e77]:
+              - generic [ref=e78]:
+                - generic [ref=e79]: 原始数据
+                - strong [ref=e80]: — GB
+                - generic [ref=e81]: 等待接入存储
+              - generic [ref=e82]:
+                - generic [ref=e83]: 存储占用
+                - strong [ref=e84]: — GB
+                - generic [ref=e85]: 处理后统计
+              - generic [ref=e86]:
+                - generic [ref=e87]: 已释放空间
+                - strong [ref=e88]: — GB
+                - generic [ref=e89]: 以实际结果为准
+            - generic [ref=e90]:
+              - generic [ref=e91]: Storage volumes
+              - generic [ref=e92]: YOUR INFRASTRUCTURE
+            - generic [ref=e93]:
+              - generic [ref=e94]: 01 Local storage
+              - generic [ref=e95]: 未连接
+            - generic [ref=e96]:
+              - generic [ref=e97]: 02 Network storage
+              - generic [ref=e98]: 未连接
+            - paragraph [ref=e99]: 从小规模样本开始，验证节省率与恢复结果。
+    - generic [ref=e100]:
+      - text: 03 / A MEASURED APPROACH
+      - heading [level=2] [ref=e101]:
+        - text: Observe. Reduce.
+        - emphasis [ref=e102]: Verify.
+      - generic [ref=e103]:
+        - article [ref=e104]:
+          - text: STEP / 01
+          - heading "Know your data." [level=3] [ref=e105]
+          - paragraph [ref=e106]: 选择代表性样本，建立容量、重复率和访问频率基线。
+        - article [ref=e107]:
+          - text: STEP / 02
+          - heading "Choose your path." [level=3] [ref=e108]
+          - paragraph [ref=e109]: 分别配置无损归档与视频降量，先测量，再决定适用范围。
+        - article [ref=e110]:
+          - text: STEP / 03
+          - heading "Verify the result." [level=3] [ref=e111]
+          - paragraph [ref=e112]: 无损路径核对文件哈希；视频路径评估质量与业务任务效果。
+    - generic [ref=e113]:
+      - generic [ref=e114]:
+        - generic [ref=e115]:
+          - text: 04 / DOWNLOAD & DEPLOY
+          - heading [level=2] [ref=e116]:
+            - text: Run it.
+            - emphasis [ref=e117]: On your terms.
+        - paragraph [ref=e118]: Pristmax 正在准备首个公开发行版。当前未提供正式安装包，请先阅读部署与试点评估说明。
+      - generic [ref=e119]:
+        - article [ref=e120]:
+          - text: 01 / SELF-HOSTED
+          - heading "部署指南" [level=3] [ref=e121]
+          - paragraph [ref=e122]: 了解本地控制台、部署边界及试点准备工作。
+          - link "Read the guide →" [ref=e123] [cursor=pointer]:
+            - /url: docs.html
+        - article [ref=e124]:
+          - text: 02 / RELEASE
+          - heading "安装包" [level=3] [ref=e125]
+          - paragraph [ref=e126]: 发布后在此提供版本、平台要求、校验值和更新说明。
+          - generic [ref=e127]: Preparing release · 尚未发布
+        - article [ref=e128]:
+          - text: 03 / OPEN SOURCE
+          - heading "开放，共建。" [level=3] [ref=e129]
+          - paragraph [ref=e130]: 计划开放源码；公开仓库地址与开源许可证尚待确认。
+          - generic [ref=e131]: Repository coming soon
+    - generic [ref=e132]:
+      - text: QUESTIONS / ANSWERS
+      - heading "Before you begin." [level=2] [ref=e133]
+      - group [ref=e134]:
+        - generic "能保证节省多少存储空间？ ＋" [ref=e135] [cursor=pointer]:
+          - text: 能保证节省多少存储空间？
+          - generic [ref=e136]: ＋
+      - group [ref=e137]:
+        - generic "取回的文件和原文件一样吗？ ＋" [ref=e138] [cursor=pointer]:
+          - text: 取回的文件和原文件一样吗？
+          - generic [ref=e139]: ＋
+      - group [ref=e140]:
+        - generic "这个网站会保存我们的文件吗？ ＋" [ref=e141] [cursor=pointer]:
+          - text: 这个网站会保存我们的文件吗？
+          - generic [ref=e142]: ＋
+  - contentinfo [ref=e143]:
+    - generic [ref=e144]:
+      - link "pristmax" [ref=e145] [cursor=pointer]:
+        - /url: index.html
+      - generic [ref=e146]: Make room for what matters.
+      - link "Back to top ↑" [ref=e147] [cursor=pointer]:
+        - /url: "#main"
+    - generic [ref=e148]: PRISTMAX
+    - generic [ref=e149]:
+      - generic [ref=e150]: © 2026 PRISTMAX
+      - generic [ref=e151]: ENTERPRISE STORAGE / BUILT FOR CLARITY
+      - link "Documentation ↗" [ref=e152] [cursor=pointer]:
+        - /url: docs.html

@@ -1,0 +1,49 @@
+- generic [ref=e1]:
+  - complementary [ref=e2]:
+    - link "▥ 存序 STORAGE ATLAS" [ref=e3] [cursor=pointer]:
+      - /url: /
+      - text: ▥
+      - generic [ref=e4]:
+        - text: 存序
+        - generic [ref=e5]: STORAGE ATLAS
+    - generic [ref=e6]: 企业工作空间 本地试点
+    - navigation [ref=e7]:
+      - button "◫ 存储总览" [ref=e8] [cursor=pointer]
+      - button "▤ 资料清单" [ref=e9] [cursor=pointer]
+      - button "◇ 优化与验证" [ref=e10] [cursor=pointer]
+      - button "▧ 图片信息提取" [ref=e11] [cursor=pointer]
+      - button "↺ 操作记录" [ref=e12] [cursor=pointer]
+      - button "▣ 企业无损保管" [active] [ref=e13] [cursor=pointer]
+    - generic [ref=e14]:
+      - text: 单机工作台
+      - generic [ref=e16]: 数据处理在本机运行云端连接仅进行元数据盘点
+  - main [ref=e17]:
+    - generic [ref=e18]:
+      - generic [ref=e19]: 工作空间 / 企业无损保管
+      - generic [ref=e20]: ENTERPRISE PILOT · v0.2
+    - generic [ref=e21]:
+      - generic [ref=e22]:
+        - paragraph [ref=e23]: MAKE ROOM FOR WHAT MATTERS
+        - heading "让每一份存储，更有价值。" [level=1] [ref=e24]
+        - paragraph [ref=e25]: 看清数据占用，识别优化机会，以可验证的结果推动降本。
+      - button "体验示例资料 ↗" [ref=e26] [cursor=pointer]
+    - article [ref=e107]:
+      - generic [ref=e108]:
+        - heading "企业无损保管" [level=2] [ref=e109]
+        - generic [ref=e110]: 本机处理 · 不上传内容
+      - paragraph [ref=e111]: 折叠存入 → 独立还原 → 确认收妥 → 清理保管归档。恢复时逐文件校验内容，原始目录始终由企业自行管理。
+      - paragraph [ref=e112]: 保证文件字节和相对路径一致；暂不保留 ACL、时间戳、空目录及备用数据流。当前未加密，不提供远程托管。系统快照、外部备份和已有旧版任务不在本次清理范围内。
+      - generic [ref=e113]:
+        - generic [ref=e114]: 企业资料目录
+        - textbox "企业资料目录" [ref=e115]:
+          - /placeholder: 输入独立的待折叠目录
+        - button "无损折叠并验证" [ref=e116] [cursor=pointer]
+      - generic [ref=e117]: 取出到企业指定目录
+      - textbox "取出到企业指定目录" [ref=e118]:
+        - /placeholder: 输入已经存在的交付目录
+      - paragraph [ref=e119]: 将在此目录内新建独立子目录，不覆盖已有文件。存入后原件仍保留，因此暂不计实际释放空间。
+      - button "刷新保管清单" [ref=e120] [cursor=pointer]
+      - paragraph [ref=e122]: 暂无保管任务
+    - generic [ref=e104]:
+      - text: 存序 STORAGE ATLAS
+      - generic [ref=e105]: 先理解数据，再验证收益。

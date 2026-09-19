@@ -1,0 +1,206 @@
+- generic [active] [ref=f3e1]:
+  - region "Pristmax 企业存储" [ref=f3e2]:
+    - generic [ref=f3e3]:
+      - heading "PRISTMAX" [level=1] [ref=f3e4]
+      - generic [ref=f3e5]:
+        - paragraph [ref=f3e6]:
+          - text: Less storage.
+          - emphasis [ref=f3e7]: More clarity.
+        - paragraph [ref=f3e8]: 让企业数据，更轻盈、更有序。在你的环境运行，为原文件还原与视频降量选择各自的路径。
+        - generic [ref=f3e9]:
+          - link "Get Started" [ref=f3e10] [cursor=pointer]:
+            - /url: "#features"
+          - link "Explore ↗" [ref=f3e11] [cursor=pointer]:
+            - /url: "#architecture"
+  - banner [ref=f3e12]:
+    - link "pristmax" [ref=f3e13] [cursor=pointer]:
+      - /url: "#"
+    - button "Menu ＋" [ref=f3e14]
+    - generic [ref=f3e15]:
+      - link "在新标签页打开 Pristmax GitHub 仓库" [ref=f3e16] [cursor=pointer]:
+        - /url: https://github.com/chunchengzheng58-ctrl/pristmax
+        - text: GitHub ↗
+      - link "Install 安装" [ref=f3e17] [cursor=pointer]:
+        - /url: docs.html#install
+  - main [ref=f3e18]:
+    - generic [ref=f3e19]:
+      - generic [ref=f3e20]:
+        - generic [ref=f3e21]: 01 / CAPABILITIES
+        - heading [level=2] [ref=f3e22]:
+          - text: Make roomfor what
+          - emphasis [ref=f3e23]: matters.
+        - paragraph [ref=f3e24]: 信息不断增长，存储不必只是不断扩容。从识别重复开始，让每一份空间有据可循。
+        - text: 实际节省取决于数据类型、重复率与所选策略。
+      - generic [ref=f3e25]:
+        - group [ref=f3e26]:
+          - generic "01 Reduce repetition. 分块与去重" [ref=f3e27] [cursor=pointer]:
+            - generic [ref=f3e28]: "01"
+            - generic [ref=f3e29]:
+              - text: Reduce repetition.
+              - generic [ref=f3e30]: 分块与去重
+            - generic [aria-hidden] [ref=f3e31]: ＋
+        - group [ref=f3e32]:
+          - generic "02 Preserve with intent. 按需选择保真策略" [ref=f3e33] [cursor=pointer]:
+            - generic [ref=f3e34]: "02"
+            - generic [ref=f3e35]:
+              - text: Preserve with intent.
+              - generic [ref=f3e36]: 按需选择保真策略
+            - generic [aria-hidden] [ref=f3e37]: ＋
+        - group [ref=f3e38]:
+          - generic "03 Stay in control. 在企业自己的环境运行" [ref=f3e39] [cursor=pointer]:
+            - generic [ref=f3e40]: "03"
+            - generic [ref=f3e41]:
+              - text: Stay in control.
+              - generic [ref=f3e42]: 在企业自己的环境运行
+            - generic [aria-hidden] [ref=f3e43]: ＋
+    - group [ref=f3e45]:
+      - generic "01 Clarity takes flight. 轻盈有序，自在舒展 · 点击展开" [ref=f3e46] [cursor=pointer]:
+        - generic [ref=f3e47]: "01"
+        - generic [ref=f3e48]:
+          - text: Clarity takes flight.
+          - generic [ref=f3e49]: 轻盈有序，自在舒展 · 点击展开
+        - generic [aria-hidden] [ref=f3e50]: ＋
+    - generic [ref=f3e52]:
+      - text: THE PRISTMAX PRINCIPLE
+      - heading "Less, but essential." [level=2] [ref=f3e53]: Less, butessential.
+      - paragraph [ref=f3e54]: 收拢冗余，释放空间。为真正重要的信息，留下余地。
+    - generic [ref=f3e56]:
+      - generic [ref=f3e57]:
+        - generic [ref=f3e58]: 02 / PRODUCT EXPERIENCE
+        - heading [level=2] [ref=f3e59]:
+          - text: A clear view.
+          - emphasis [ref=f3e60]: A lighter footprint.
+        - paragraph [ref=f3e61]: 官网了解产品，控制台管理数据。下载后在自己的环境部署，由本地控制台查看存储、任务与策略。
+      - generic [ref=f3e62]:
+        - generic [ref=f3e63]: pristmax — Local Console · 界面示意
+        - generic [ref=f3e69]:
+          - generic [ref=f3e70]:
+            - heading "Storage, at a glance." [level=3] [ref=f3e71]
+            - generic [ref=f3e72]: 准备接入
+          - generic [ref=f3e73]:
+            - generic [ref=f3e74]:
+              - generic [ref=f3e75]: 原始数据
+              - strong [ref=f3e76]: — GB
+              - generic [ref=f3e77]: 等待接入存储
+            - generic [ref=f3e78]:
+              - generic [ref=f3e79]: 存储占用
+              - strong [ref=f3e80]: — GB
+              - generic [ref=f3e81]: 处理后统计
+            - generic [ref=f3e82]:
+              - generic [ref=f3e83]: 已释放空间
+              - strong [ref=f3e84]: — GB
+              - generic [ref=f3e85]: 以实际结果为准
+          - generic [ref=f3e86]: Storage volumes — YOUR INFRASTRUCTURE
+          - generic [ref=f3e87]:
+            - generic [ref=f3e88]: 01 Local storage
+            - generic [ref=f3e89]: 未连接
+          - generic [ref=f3e90]:
+            - generic [ref=f3e91]: 02 Network storage
+            - generic [ref=f3e92]: 未连接
+          - paragraph [ref=f3e93]: 从小规模样本开始，验证节省率与恢复结果。
+    - generic [ref=f3e94]:
+      - generic [ref=f3e95]:
+        - generic [ref=f3e96]: 03 / A MEASURED APPROACH
+        - heading [level=2] [ref=f3e97]:
+          - text: Observe. Reduce.
+          - emphasis [ref=f3e98]: Verify.
+      - generic [ref=f3e99]:
+        - generic [ref=f3e100]:
+          - text: "01"
+          - heading "Know your data." [level=3] [ref=f3e101]
+          - paragraph [ref=f3e102]: 选择代表性样本，建立容量、重复率和访问频率基线。
+        - generic [ref=f3e103]:
+          - text: "02"
+          - heading "Choose your path." [level=3] [ref=f3e104]
+          - paragraph [ref=f3e105]: 分别配置无损归档与视频降量，先测量，再决定适用范围。
+        - generic [ref=f3e106]:
+          - text: "03"
+          - heading "Verify the result." [level=3] [ref=f3e107]
+          - paragraph [ref=f3e108]: 无损路径核对文件哈希；视频路径评估质量与业务任务效果。
+    - generic [ref=f3e109]:
+      - generic [ref=f3e110]:
+        - generic [ref=f3e111]: 04 / DOWNLOAD & DEPLOY
+        - heading [level=2] [ref=f3e112]:
+          - text: Run it.
+          - emphasis [ref=f3e113]: On your terms.
+        - paragraph [ref=f3e114]: Pristmax 正在准备首个公开发行版。当前未提供正式安装包，请先阅读部署与试点评估说明。
+      - generic [ref=f3e115]:
+        - generic [ref=f3e116]:
+          - text: 01 / SELF-HOSTED
+          - heading "部署指南" [level=3] [ref=f3e117]
+          - paragraph [ref=f3e118]: 了解本地控制台、部署边界及试点准备工作。
+          - link "Read the guide →" [ref=f3e119] [cursor=pointer]:
+            - /url: docs.html
+        - generic [ref=f3e120]:
+          - text: 02 / RELEASE
+          - heading "安装包" [level=3] [ref=f3e121]
+          - paragraph [ref=f3e122]: 发布后在此提供版本、平台要求、校验值和更新说明。
+          - generic [ref=f3e123]: Preparing release · 尚未发布
+        - generic [ref=f3e124]:
+          - text: 03 / SOURCE CODE
+          - heading "开放，共建。" [level=3] [ref=f3e125]
+          - paragraph [ref=f3e126]: 源码仓库已公开。使用与贡献前，请阅读仓库各组件的许可证。
+          - link "Explore on GitHub ↗" [ref=f3e127] [cursor=pointer]:
+            - /url: https://github.com/chunchengzheng58-ctrl/pristmax
+    - generic [ref=f3e128]:
+      - generic [ref=f3e129]:
+        - generic [ref=f3e130]: QUESTIONS / ANSWERS
+        - heading "Before you begin." [level=2] [ref=f3e131]
+      - generic [ref=f3e132]:
+        - group [ref=f3e133]:
+          - generic "能保证节省多少存储空间？ ＋" [ref=f3e134] [cursor=pointer]:
+            - text: 能保证节省多少存储空间？
+            - generic [ref=f3e135]: ＋
+        - group [ref=f3e136]:
+          - generic "取回的文件和原文件一样吗？ ＋" [ref=f3e137] [cursor=pointer]:
+            - text: 取回的文件和原文件一样吗？
+            - generic [ref=f3e138]: ＋
+        - group [ref=f3e139]:
+          - generic "这个网站会保存我们的文件吗？ ＋" [ref=f3e140] [cursor=pointer]:
+            - text: 这个网站会保存我们的文件吗？
+            - generic [ref=f3e141]: ＋
+    - generic [ref=f3e143]:
+      - generic [ref=f3e144]:
+        - paragraph [ref=f3e145]: Community · 社区
+        - heading "所有贡献，都应留下可复核的路径。" [level=2] [ref=f3e146]
+        - paragraph [ref=f3e147]: Pristmax 在 GitHub 公开开发。每个 Issue、PR 与验证结果，都应留下可检查的输入、方法和结论。
+        - navigation "社区参与入口" [ref=f3e148]:
+          - link "验证方法 ↗" [ref=f3e149] [cursor=pointer]:
+            - /url: https://github.com/chunchengzheng58-ctrl/pristmax/blob/main/docs/QUICKSTART.md
+          - link "技术讨论 ↗" [ref=f3e150] [cursor=pointer]:
+            - /url: https://github.com/chunchengzheng58-ctrl/pristmax/issues
+          - link "安全边界 ↗" [ref=f3e151] [cursor=pointer]:
+            - /url: https://github.com/chunchengzheng58-ctrl/pristmax/blob/main/docs/SECURITY.md
+          - link "贡献指南 ↗" [ref=f3e152] [cursor=pointer]:
+            - /url: https://github.com/chunchengzheng58-ctrl/pristmax/blob/main/CONTRIBUTING.md
+      - generic [ref=f3e153]:
+        - paragraph [ref=f3e154]: Contributors · 贡献者
+        - generic "Contributors" [ref=f3e155]:
+          - generic [ref=f3e156]:
+            - generic [ref=f3e157]: "@chunchengzheng58"
+            - generic [ref=f3e158]: "@pristmax-contributor"
+            - generic [ref=f3e159]: "@open-source-helper"
+            - generic [ref=f3e160]: "@storage-researcher"
+            - generic [ref=f3e161]: "@dedup-engineer"
+            - generic [ref=f3e162]: "@chunchengzheng58"
+            - generic [ref=f3e163]: "@pristmax-contributor"
+            - generic [ref=f3e164]: "@open-source-helper"
+            - generic [ref=f3e165]: "@storage-researcher"
+            - generic [ref=f3e166]: "@dedup-engineer"
+  - contentinfo [ref=f3e167]:
+    - generic [ref=f3e168]:
+      - link "pristmax" [ref=f3e169] [cursor=pointer]:
+        - /url: "#"
+      - generic [ref=f3e170]: Make room for what matters.
+      - link "Back to top ↑" [ref=f3e171] [cursor=pointer]:
+        - /url: "#"
+    - generic [ref=f3e172]: PRISTMAX
+    - generic [ref=f3e173]:
+      - generic [ref=f3e174]: LESS STORAGE. MORE CLARITY.
+      - link "EXPLORE THE REPOSITORY ↗" [ref=f3e175] [cursor=pointer]:
+        - /url: https://github.com/chunchengzheng58-ctrl/pristmax
+    - generic [ref=f3e176]:
+      - generic [ref=f3e177]: © 2026 PRISTMAX
+      - generic [ref=f3e178]: ENTERPRISE STORAGE / BUILT FOR CLARITY
+      - link "Documentation ↗" [ref=f3e179] [cursor=pointer]:
+        - /url: docs.html

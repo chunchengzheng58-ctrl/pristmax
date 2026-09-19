@@ -1,0 +1,21 @@
+{
+  "version_id": "b3a10ccb4ffa4fab9873df9e79d76f8a",
+  "policy_id": "2583fb66890e4533",
+  "version_number": 2,
+  "created_at": "2026-09-15T14:02:56.114118Z",
+  "created_by": "setup_demo",
+  "config": {
+    "name": "Parking Lot Policy",
+    "type": "surveillance",
+    "preserve_with_faces": true,
+    "preserve_with_people": true,
+    "preserve_with_vehicles": true,
+    "low_value_downsample_ratio": 0.05,
+    "retain_days_critical": 365,
+    "retain_days_high": 90,
+    "retain_days_medium": 30,
+    "retain_days_low": 7
+  },
+  "change_summary": "Policy activated",
+  "status": "active"
+}

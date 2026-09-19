@@ -1,0 +1,14 @@
+{
+  "record_id": "op-20260918193700-48f7a679",
+  "operation_type": "encode",
+  "input_path": "C:/Users/zcc36/Documents/ChatGPT/存储项目/test_input.mp4",
+  "output_path": "C:/Users/zcc36/Documents/ChatGPT/存储项目/test_out3.mp4",
+  "original_sha256": "71d1241b9093e30f987feaf7245af8fa19677bb3e187d631f7119df8adad563e",
+  "user_authorized": true,
+  "user_id": "5cfbd7d8-5dfc-4612-851d-205fceb37be7",
+  "authorization_time": "2026-09-18T19:37:00.254032",
+  "status": "completed",
+  "completed_at": "2026-09-18T19:37:00.471575",
+  "can_rollback": true,
+  "rollback_steps": []
+}

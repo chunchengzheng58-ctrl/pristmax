@@ -1,0 +1,72 @@
+- generic [ref=e1]:
+  - complementary [ref=e2]:
+    - link "▥ 存序 STORAGE ATLAS" [ref=e3] [cursor=pointer]:
+      - /url: /
+      - text: ▥
+      - generic [ref=e4]:
+        - text: 存序
+        - generic [ref=e5]: STORAGE ATLAS
+    - generic [ref=e6]: 企业工作空间 本地试点
+    - navigation [ref=e7]:
+      - button "◫ 存储总览" [ref=e8] [cursor=pointer]
+      - button "▤ 资料清单" [ref=e9] [cursor=pointer]
+      - button "◇ 优化与验证" [active] [ref=e10] [cursor=pointer]
+      - button "▧ 图片信息提取" [ref=e11] [cursor=pointer]
+      - button "↺ 操作记录" [ref=e12] [cursor=pointer]
+    - generic [ref=e13]:
+      - text: 单机工作台
+      - generic [ref=e15]: 数据处理在本机运行云端连接仅进行元数据盘点
+  - main [ref=e16]:
+    - generic [ref=e17]:
+      - generic [ref=e18]: 工作空间 / 优化与验证
+      - generic [ref=e19]: ENTERPRISE PILOT · v0.2
+    - generic [ref=e20]:
+      - generic [ref=e21]:
+        - paragraph [ref=e22]: MAKE ROOM FOR WHAT MATTERS
+        - heading "让每一份存储，更有价值。" [level=1] [ref=e23]
+        - paragraph [ref=e24]: 看清数据占用，识别优化机会，以可验证的结果推动降本。
+      - button "体验示例资料 ↗" [ref=e25] [cursor=pointer]
+    - status [ref=e105]: 资料库盘点完成：140 个文件 / 对象，0 项异常。原始文件未修改。
+    - generic [ref=e152]:
+      - article [ref=e153]:
+        - generic [ref=e154]:
+          - generic [ref=e155]:
+            - paragraph [ref=e156]: DEEP COMPACTION
+            - heading "整批深度归档" [level=2] [ref=e157]
+          - generic [ref=e158]: v0.2 · 三算法实测择优
+        - paragraph [ref=e159]: 跨文件去重 + 整批压缩，适合大量小文件、相似文档与重复资料。支持所有普通文件类型，逐一验证内容；实测 GZIP / BZIP2 / XZ 后仅保留最小方案。
+        - paragraph [ref=e160]: 当前报告前 2000 个非硬链接文件，单批最多 20GB。比逐文件压缩更耗时；原件保留，未自动释放空间。同批内容再次归档会复用结果，不继续堆积副本。
+        - button "生成更小的整批归档 →" [ref=e161] [cursor=pointer]
+      - generic [ref=e162]:
+        - article [ref=e163]:
+          - generic [ref=e164]:
+            - heading "生成可验证归档" [level=2] [ref=e165]
+            - generic [ref=e166]: 保留原件
+          - paragraph [ref=e167]: 对非重复的文本与日志生成 GZIP 归档，解压后比对 SHA-256。没有缩减收益的结果自动舍弃。
+          - list [ref=e168]:
+            - listitem [ref=e169]:
+              - generic [ref=e170]: 选择候选
+              - text: 当前报告中最多 500 个非重复文本文件
+            - listitem [ref=e171]:
+              - generic [ref=e172]: 归档与验证
+              - text: 标准 GZIP 格式，可用常见工具独立恢复
+            - listitem [ref=e173]:
+              - generic [ref=e174]: 审核结果
+              - text: 显示实测大小与恢复结果，不修改原文件
+          - button "生成归档并验证 →" [ref=e175] [cursor=pointer]
+        - article [ref=e176]:
+          - generic [ref=e177]:
+            - heading "成本情景测算" [level=2] [ref=e178]
+            - generic [ref=e179]: 自定义单价
+          - paragraph [ref=e180]: 填写实际可避免的成本；初始为 0，不内置市场报价。容量采用十进制 GB。
+          - generic [ref=e181]:
+            - generic [ref=e182]: 本地成本（元 / GB / 月）
+            - spinbutton "本地成本（元 / GB / 月）" [ref=e183]: "0"
+            - generic [ref=e184]: 云端成本（元 / GB / 月）
+            - spinbutton "云端成本（元 / GB / 月）" [ref=e185]: "0"
+            - generic [ref=e186]: 首年新增处理与运维费用（元）
+            - spinbutton "首年新增处理与运维费用（元）" [ref=e187]: "0"
+            - button "计算两种独立情景" [ref=e188] [cursor=pointer]
+    - generic [ref=e103]:
+      - text: 存序 STORAGE ATLAS
+      - generic [ref=e104]: 先理解数据，再验证收益。

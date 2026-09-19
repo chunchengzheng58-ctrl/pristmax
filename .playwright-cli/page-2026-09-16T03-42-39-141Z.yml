@@ -1,0 +1,82 @@
+- generic [ref=e1]:
+  - banner [ref=e4]:
+    - link "Pristine首页" [ref=e5] [cursor=pointer]:
+      - /url: "#dashboard"
+      - generic [ref=e6]:
+        - text: Pristine
+        - generic [ref=e7]: ENTERPRISE DATA SYSTEM
+    - navigation "主要导航" [ref=e8]:
+      - button "Overview" [ref=e9] [cursor=pointer]
+      - button "Intelligence" [ref=e10] [cursor=pointer]
+      - button "Storage" [ref=e11] [cursor=pointer]
+      - button "Audit" [active] [ref=e12] [cursor=pointer]
+      - button "Value" [ref=e13] [cursor=pointer]
+    - generic [ref=e14]:
+      - generic [ref=e15]: 演示工作空间
+      - button "刷新页面" [ref=e17] [cursor=pointer]: ↻
+  - generic [ref=e18]:
+    - generic [ref=e19]: WORKSPACE / Pristine 企业数据控制台
+    - generic [ref=e20]: PRISTINE · 本地部署
+  - main [ref=e21]:
+    - generic [ref=e148]:
+      - generic [ref=e149]:
+        - generic [ref=e150]:
+          - paragraph [ref=e151]: TRACEABLE BY DESIGN
+          - heading "Trust, in every detail." [level=2] [ref=e152]
+          - paragraph [ref=e153]: 每一次处理，都留下清晰可查的记录。
+        - text: PRISTINE
+      - generic [ref=e154]:
+        - generic [ref=e155]:
+          - generic [ref=e156]: 操作审计
+          - generic [ref=e157]:
+            - combobox "筛选审计模块" [ref=e158]:
+              - option "全部模块" [selected]
+              - option "语义降量"
+              - option "分布式存储"
+            - button "导出记录" [ref=e159] [cursor=pointer]
+        - table [ref=e161]:
+          - rowgroup [ref=e162]:
+            - row [ref=e163]:
+              - columnheader "时间" [ref=e164]
+              - columnheader "事件" [ref=e165]
+              - columnheader "处理模块" [ref=e166]
+              - columnheader "数据来源" [ref=e167]
+              - columnheader "原始体积" [ref=e168]
+              - columnheader "处理后" [ref=e169]
+          - rowgroup [ref=e170]:
+            - row [ref=e171]:
+              - cell "10:30:45" [ref=e172]
+              - cell "SEMANTIC_REDUCED" [ref=e173]
+              - cell "语义" [ref=e174]
+              - cell "CAM-001" [ref=e176]
+              - cell "100 MB" [ref=e177]
+              - cell "10 MB" [ref=e178]
+            - row [ref=e179]:
+              - cell "10:28:12" [ref=e180]
+              - cell "DEDUP_STORED" [ref=e181]
+              - cell "分布式" [ref=e182]
+              - cell "backup-2024" [ref=e184]
+              - cell "200 GB" [ref=e185]
+              - cell "54 GB" [ref=e186]
+            - row [ref=e187]:
+              - cell "10:25:33" [ref=e188]
+              - cell "CDC_CHUNKED" [ref=e189]
+              - cell "分布式" [ref=e190]
+              - cell "/data/logs" [ref=e192]
+              - cell "50 GB" [ref=e193]
+              - cell "8 GB" [ref=e194]
+            - row [ref=e195]:
+              - cell "10:20:00" [ref=e196]
+              - cell "NODE_REGISTERED" [ref=e197]
+              - cell "分布式" [ref=e198]
+              - cell "node-4" [ref=e200]
+              - cell "-" [ref=e201]
+              - cell "-" [ref=e202]
+        - generic [ref=e203]:
+          - generic [ref=e204]: 演示审计链 · 尚未执行实际校验
+          - generic [ref=e205]: 本页为合并系统的功能演示，记录与完整性状态均为样例。
+  - contentinfo [ref=e135]:
+    - link "Pristine Less, but essential." [ref=e136] [cursor=pointer]:
+      - /url: "#dashboard"
+    - generic [ref=e137]: 数据纯净，存储明智。
+    - generic [ref=e138]: PRODUCT PREVIEW / 2026

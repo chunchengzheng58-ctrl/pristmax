@@ -402,6 +402,9 @@ class H265EncoderSafe:
         # 执行编码
         result.status = "running"
 
+        import time
+        encode_start = time.time()
+
         try:
             params = self.mode_params.get(mode, self.mode_params[EncodeMode.COMPRESSED])
 
@@ -429,6 +432,8 @@ class H265EncoderSafe:
             )
 
             stdout, stderr = process.communicate()
+
+            result.encode_time_sec = time.time() - encode_start
 
             if process.returncode != 0:
                 result.error = stderr[-500:] if stderr else "Encoding failed"

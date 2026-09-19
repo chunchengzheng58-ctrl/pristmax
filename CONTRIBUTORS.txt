@@ -1,1 +1,13 @@
-Claude contributor
+# Contributors
+
+## Core Team
+- Claude (Built with Claude Code by Anthropic)
+
+## Contributors
+- Huaichuns (Claude bot account)
+
+## Technology Stack
+- Built with Claude Code
+- Python / Flask
+- SQLite
+- JavaScript / HTML / CSS

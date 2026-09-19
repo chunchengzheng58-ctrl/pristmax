@@ -17,5 +17,5 @@ os.chdir(BASE_DIR)  # 切换到 exe 所在目录，确保相对路径正确
 
 if __name__ == '__main__':
     # 直接运行 server
-    from unified.api import server
+    from src.pristmax.api import server
     server.main()

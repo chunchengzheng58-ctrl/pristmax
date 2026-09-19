@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pristmax · 语义数据降量系统</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-800);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            border-bottom: 1px solid var(--gray-200);
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--primary), #8b5cf6);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 32px;
+        }
+
+        .header-stat {
+            text-align: center;
+        }
+
+        .header-stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .header-stat-label {
+            font-size: 12px;
+            color: var(--gray-500);
+            text-transform: uppercase;
+        }
+
+        /* Nav */
+        .nav {
+            background: white;
+            padding: 0 32px;
+            display: flex;
+            gap: 8px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .nav-item {
+            padding: 16px 24px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--gray-500);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover {
+            color: var(--primary);
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        /* Main */
+        .main {
+            padding: 32px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+
+        .stat-icon.blue { background: #dbeafe; color: var(--primary); }
+        .stat-icon.green { background: #d1fae5; color: var(--success); }
+        .stat-icon.purple { background: #ede9fe; color: #8b5cf6; }
+        .stat-icon.orange { background: #fef3c7; color: var(--warning); }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--gray-500);
+        }
+
+        /* Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+        }
+
+        /* Table */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th {
+            text-align: left;
+            padding: 12px 16px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .table td {
+            padding: 16px;
+            font-size: 14px;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .table tr:hover td {
+            background: var(--gray-50);
+        }
+
+        /* Badge */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .badge-success { background: #d1fae5; color: #059669; }
+        .badge-warning { background: #fef3c7; color: #d97706; }
+        .badge-danger { background: #fee2e2; color: #dc2626; }
+        .badge-info { background: #dbeafe; color: #2563eb; }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: var(--gray-100);
+            color: var(--gray-700);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-200);
+        }
+
+        /* Progress */
+        .progress-bar {
+            height: 8px;
+            background: var(--gray-200);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), #8b5cf6);
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--gray-700);
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--gray-300);
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        /* Toggle */
+        .toggle {
+            position: relative;
+            width: 48px;
+            height: 26px;
+        }
+
+        .toggle input { opacity: 0; width: 0; height: 0; }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            inset: 0;
+            background: var(--gray-300);
+            border-radius: 26px;
+            transition: 0.3s;
+        }
+
+        .toggle-slider::before {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            left: 3px;
+            bottom: 3px;
+            background: white;
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+
+        .toggle input:checked + .toggle-slider { background: var(--primary); }
+        .toggle input:checked + .toggle-slider::before { transform: translateX(22px); }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-overlay.active { display: flex; }
+
+        .modal {
+            background: white;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow: auto;
+        }
+
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--gray-400);
+        }
+
+        .modal-body { padding: 24px; }
+
+        .modal-footer {
+            padding: 20px 24px;
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        /* Section */
+        .section { display: none; }
+        .section.active { display: block; }
+
+        /* Chart placeholder */
+        .chart-area {
+            height: 280px;
+            background: var(--gray-50);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-400);
+        }
+
+        /* Alert */
+        .alert-item {
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .alert-item.warning {
+            background: #fef3c7;
+            border-left: 4px solid var(--warning);
+        }
+
+        .alert-item.danger {
+            background: #fee2e2;
+            border-left: 4px solid var(--danger);
+        }
+
+        /* Policy card */
+        .policy-card {
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .policy-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .policy-name {
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .policy-tags {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .policy-tag {
+            padding: 4px 10px;
+            background: var(--gray-100);
+            border-radius: 6px;
+            font-size: 12px;
+            color: var(--gray-600);
+        }
+
+        /* Loading */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--gray-200);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .content-grid { grid-template-columns: 1fr; }
+            .header-stats { display: none; }
+        }
+
+        @media (max-width: 640px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .main { padding: 16px; }
+            .nav { padding: 0 16px; overflow-x: auto; }
+        }
+    </style>
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20120%20120%22%20style%3D%22color%3A%23173D58%22%3E%3Cpath%20fill%3D%22currentColor%22%20d%3D%22M60%2012C84%2012%20104%2029%20108%2051C94%2040%2081%2036%2066%2040L47%2045C38%2047%2031%2042%2032%2034C34%2023%2047%2012%2060%2012Z%22%20transform%3D%22rotate%280%2060%2060%29%22/%3E%3Cpath%20fill%3D%22currentColor%22%20d%3D%22M60%2012C84%2012%20104%2029%20108%2051C94%2040%2081%2036%2066%2040L47%2045C38%2047%2031%2042%2032%2034C34%2023%2047%2012%2060%2012Z%22%20transform%3D%22rotate%28120%2060%2060%29%22/%3E%3Cpath%20fill%3D%22currentColor%22%20d%3D%22M60%2012C84%2012%20104%2029%20108%2051C94%2040%2081%2036%2066%2040L47%2045C38%2047%2031%2042%2032%2034C34%2023%2047%2012%2060%2012Z%22%20transform%3D%22rotate%28240%2060%2060%29%22/%3E%3C/svg%3E"><style>/* Pristmax shared identity */
+:root{--primary:#285775;--primary-dark:#173d58;--gray-50:#f4f9fc;--gray-100:#eaf2f8;--gray-200:#cfdee8;--gray-500:#627b8e;--gray-600:#4b697e;--gray-800:#173d58;--gray-900:#112f44}
+.logo-icon{background:none;border-radius:0;flex-shrink:0}.logo{color:#173d58}.header-stat-value,.stat-value{font-variant-numeric:lining-nums tabular-nums;line-height:1.3}.card{border-radius:5px;box-shadow:none}button:focus-visible,a:focus-visible{outline:2px solid #477f9f;outline-offset:3px}
+</style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <svg class="logo-icon" width="36" height="36" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" style="color:#173D58"><path fill="currentColor" d="M60 12C84 12 104 29 108 51C94 40 81 36 66 40L47 45C38 47 31 42 32 34C34 23 47 12 60 12Z" transform="rotate(0 60 60)"/><path fill="currentColor" d="M60 12C84 12 104 29 108 51C94 40 81 36 66 40L47 45C38 47 31 42 32 34C34 23 47 12 60 12Z" transform="rotate(120 60 60)"/><path fill="currentColor" d="M60 12C84 12 104 29 108 51C94 40 81 36 66 40L47 45C38 47 31 42 32 34C34 23 47 12 60 12Z" transform="rotate(240 60 60)"/></svg>
+            <span>pristmax <small>Semantic</small></span>
+        </div>
+        <div class="header-stats">
+            <div class="header-stat">
+                <div class="header-stat-value" id="totalCameras">0</div>
+                <div class="header-stat-label">摄像头</div>
+            </div>
+            <div class="header-stat">
+                <div class="header-stat-value" id="totalSaved">0 TB</div>
+                <div class="header-stat-label">已节省</div>
+            </div>
+            <div class="header-stat">
+                <div class="header-stat-value" id="reductionRate">0%</div>
+                <div class="header-stat-label">节省率</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Nav -->
+    <nav class="nav">
+        <div class="nav-item active" data-tab="dashboard">概览</div>
+        <div class="nav-item" data-tab="policies">策略</div>
+        <div class="nav-item" data-tab="cameras">摄像头</div>
+        <div class="nav-item" data-tab="audit">审计</div>
+        <div class="nav-item" data-tab="compliance">合规</div>
+    </nav>
+
+    <!-- Main -->
+    <main class="main">
+        <!-- Dashboard -->
+        <section id="dashboard" class="section active">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon blue">📊</div>
+                    <div class="stat-value" id="statReduction">68%</div>
+                    <div class="stat-label">存储节省率</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon green">💾</div>
+                    <div class="stat-value" id="statSaved">892 TB</div>
+                    <div class="stat-label">已节省空间</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon purple">📹</div>
+                    <div class="stat-value" id="statCameras">156</div>
+                    <div class="stat-label">在线摄像头</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon orange">⚡</div>
+                    <div class="stat-value" id="statProcessed">1.2 TB</div>
+                    <div class="stat-label">今日处理</div>
+                </div>
+            </div>
+
+            <div class="content-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">存储节省趋势</div>
+                        <select class="form-input" style="width: auto; padding: 8px 12px;">
+                            <option>最近7天</option>
+                            <option>最近30天</option>
+                        </select>
+                    </div>
+                    <div class="chart-area">
+                        图表加载中...
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">最近告警</div>
+                    </div>
+                    <div class="alert-item warning">
+                        <span>⚠️</span>
+                        <div>
+                            <strong>存储告警</strong>
+                            <p style="font-size: 12px; color: var(--gray-500);">CAM-05 存储低于 20%</p>
+                        </div>
+                    </div>
+                    <div class="alert-item danger">
+                        <span>🚨</span>
+                        <div>
+                            <strong>检测异常</strong>
+                            <p style="font-size: 12px; color: var(--gray-500);">CAM-12 视频流中断</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top: 24px;">
+                <div class="card-header">
+                    <div class="card-title">处理记录</div>
+                    <button class="btn btn-secondary" onclick="refreshActivity()">
+                        <span>🔄</span> 刷新
+                    </button>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>时间</th>
+                            <th>摄像头</th>
+                            <th>操作</th>
+                            <th>原始</th>
+                            <th>处理后</th>
+                            <th>节省</th>
+                        </tr>
+                    </thead>
+                    <tbody id="activityTable">
+                        <tr>
+                            <td>10:30:45</td>
+                            <td>CAM-001</td>
+                            <td><span class="badge badge-info">降采样</span></td>
+                            <td>100 MB</td>
+                            <td>10 MB</td>
+                            <td><span class="badge badge-success">90%</span></td>
+                        </tr>
+                        <tr>
+                            <td>10:28:12</td>
+                            <td>CAM-003</td>
+                            <td><span class="badge badge-success">保留</span></td>
+                            <td>100 MB</td>
+                            <td>100 MB</td>
+                            <td><span class="badge badge-warning">0%</span></td>
+                        </tr>
+                        <tr>
+                            <td>10:25:33</td>
+                            <td>CAM-002</td>
+                            <td><span class="badge badge-info">降采样</span></td>
+                            <td>100 MB</td>
+                            <td>15 MB</td>
+                            <td><span class="badge badge-success">85%</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Policies -->
+        <section id="policies" class="section">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">策略管理</div>
+                    <button class="btn btn-primary" onclick="showCreatePolicy()">
+                        <span>+</span> 新建策略
+                    </button>
+                </div>
+
+                <div class="policy-card">
+                    <div class="policy-header">
+                        <div>
+                            <div class="policy-name">办公楼3层策略</div>
+                            <div style="font-size: 12px; color: var(--gray-500);">版本 3 | 激活中</div>
+                        </div>
+                        <div class="badge badge-success">激活</div>
+                    </div>
+                    <div class="policy-tags">
+                        <span class="policy-tag">人脸保留 ✓</span>
+                        <span class="policy-tag">人员保留 ✓</span>
+                        <span class="policy-tag">低价值10%</span>
+                        <span class="policy-tag">保留365天</span>
+                    </div>
+                </div>
+
+                <div class="policy-card">
+                    <div class="policy-header">
+                        <div>
+                            <div class="policy-name">停车场策略</div>
+                            <div style="font-size: 12px; color: var(--gray-500);">版本 1 | 激活中</div>
+                        </div>
+                        <div class="badge badge-success">激活</div>
+                    </div>
+                    <div class="policy-tags">
+                        <span class="policy-tag">车辆保留 ✓</span>
+                        <span class="policy-tag">人员保留 ✓</span>
+                        <span class="policy-tag">低价值5%</span>
+                    </div>
+                </div>
+
+                <div class="policy-card">
+                    <div class="policy-header">
+                        <div>
+                            <div class="policy-name">日志保留策略</div>
+                            <div style="font-size: 12px; color: var(--gray-500);">版本 2 | 草稿</div>
+                        </div>
+                        <div class="badge badge-warning">草稿</div>
+                    </div>
+                    <div class="policy-tags">
+                        <span class="policy-tag">ERROR保留</span>
+                        <span class="policy-tag">WARN保留</span>
+                        <span class="policy-tag">采样10%</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cameras -->
+        <section id="cameras" class="section">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">摄像头列表</div>
+                    <div style="display: flex; gap: 12px;">
+                        <input type="text" class="form-input" placeholder="搜索摄像头..." style="width: 200px;">
+                        <button class="btn btn-primary">
+                            <span>+</span> 添加
+                        </button>
+                    </div>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>位置</th>
+                            <th>类型</th>
+                            <th>策略</th>
+                            <th>存储使用</th>
+                            <th>节省率</th>
+                            <th>状态</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>CAM-001</td>
+                            <td>大堂入口</td>
+                            <td>室内</td>
+                            <td>办公楼3层策略</td>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <div class="progress-bar" style="width: 80px;">
+                                        <div class="progress-fill" style="width: 65%;"></div>
+                                    </div>
+                                    <span style="font-size: 12px;">65%</span>
+                                </div>
+                            </td>
+                            <td><span class="badge badge-success">42%</span></td>
+                            <td><span class="badge badge-success">在线</span></td>
+                        </tr>
+                        <tr>
+                            <td>CAM-002</td>
+                            <td>停车场A区</td>
+                            <td>室外</td>
+                            <td>停车场策略</td>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <div class="progress-bar" style="width: 80px;">
+                                        <div class="progress-fill" style="width: 45%;"></div>
+                                    </div>
+                                    <span style="font-size: 12px;">45%</span>
+                                </div>
+                            </td>
+                            <td><span class="badge badge-success">58%</span></td>
+                            <td><span class="badge badge-success">在线</span></td>
+                        </tr>
+                        <tr>
+                            <td>CAM-003</td>
+                            <td>3层办公区</td>
+                            <td>室内</td>
+                            <td>办公楼3层策略</td>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <div class="progress-bar" style="width: 80px;">
+                                        <div class="progress-fill" style="width: 72%;"></div>
+                                    </div>
+                                    <span style="font-size: 12px;">72%</span>
+                                </div>
+                            </td>
+                            <td><span class="badge badge-success">38%</span></td>
+                            <td><span class="badge badge-success">在线</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Audit -->
+        <section id="audit" class="section">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">审计日志</div>
+                    <div style="display: flex; gap: 12px;">
+                        <select class="form-input" style="width: auto;">
+                            <option>全部事件</option>
+                            <option>数据摄入</option>
+                            <option>数据处理</option>
+                            <option>异常检测</option>
+                        </select>
+                        <button class="btn btn-secondary">导出</button>
+                    </div>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>时间</th>
+                            <th>事件</th>
+                            <th>数据ID</th>
+                            <th>操作</th>
+                            <th>原始大小</th>
+                            <th>处理后</th>
+                            <th>策略</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2024-01-15 10:30:45</td>
+                            <td>DATA_REDUCED</td>
+                            <td>video_001</td>
+                            <td>降采样</td>
+                            <td>100 MB</td>
+                            <td>10 MB</td>
+                            <td>policy_001</td>
+                        </tr>
+                        <tr>
+                            <td>2024-01-15 10:28:12</td>
+                            <td>DATA_INGEST</td>
+                            <td>video_002</td>
+                            <td>摄入</td>
+                            <td>100 MB</td>
+                            <td>100 MB</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>2024-01-15 10:25:33</td>
+                            <td>ANOMALY_DETECTED</td>
+                            <td>video_003</td>
+                            <td>异常</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div style="margin-top: 24px; padding: 20px; background: var(--gray-50); border-radius: 12px;">
+                    <div style="display: flex; align-items: center; gap: 16px;">
+                        <div style="font-size: 32px;">✓</div>
+                        <div>
+                            <div style="font-weight: 600; font-size: 16px;">审计链完整性验证</div>
+                            <div style="font-size: 14px; color: var(--gray-500);">
+                                总条目: <span id="auditTotal">625</span> |
+                                首个条目: <span id="auditFirst">2024-01-01 00:00:00</span> |
+                                最后条目: <span id="auditLast">2024-01-15 10:30:45</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Compliance -->
+        <section id="compliance" class="section">
+            <div class="stats-grid" style="grid-template-columns: repeat(3, 1fr);">
+                <div class="stat-card">
+                    <div class="stat-icon green">✓</div>
+                    <div class="stat-value" style="font-size: 24px;">合规</div>
+                    <div class="stat-label">GDPR 状态</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon green">✓</div>
+                    <div class="stat-value" style="font-size: 24px;">合规</div>
+                    <div class="stat-label">SOC2 状态</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon orange">2</div>
+                    <div class="stat-value" style="font-size: 24px;">2</div>
+                    <div class="stat-label">待处理问题</div>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top: 24px;">
+                <div class="card-header">
+                    <div class="card-title">合规报告</div>
+                    <button class="btn btn-primary">生成报告</button>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>报告ID</th>
+                            <th>标准</th>
+                            <th>周期</th>
+                            <th>生成时间</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>rpt_001</td>
+                            <td>GDPR</td>
+                            <td>2024-01-01 至 2024-01-31</td>
+                            <td>2024-01-15 10:00</td>
+                            <td><span class="badge badge-success">通过</span></td>
+                            <td>
+                                <button class="btn btn-secondary" style="padding: 6px 12px;">查看</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>rpt_002</td>
+                            <td>SOC2</td>
+                            <td>2024-01-01 至 2024-01-31</td>
+                            <td>2024-01-15 11:00</td>
+                            <td><span class="badge badge-warning">2问题</span></td>
+                            <td>
+                                <button class="btn btn-secondary" style="padding: 6px 12px;">查看</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Create Policy Modal -->
+    <div class="modal-overlay" id="policyModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">新建策略</div>
+                <button class="modal-close" onclick="closePolicyModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">策略名称</label>
+                    <input type="text" class="form-input" placeholder="例如：办公楼策略">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">策略类型</label>
+                    <select class="form-input">
+                        <option>监控视频</option>
+                        <option>服务器日志</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">基础模板</label>
+                    <select class="form-input">
+                        <option>室内摄像头</option>
+                        <option>停车场</option>
+                        <option>日志应用</option>
+                    </select>
+                </div>
+                <hr style="margin: 20px 0; border: none; border-top: 1px solid var(--gray-200);">
+                <div class="form-group" style="display: flex; justify-content: space-between; align-items: center;">
+                    <label class="form-label" style="margin: 0;">检测到人脸保留</label>
+                    <label class="toggle">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="form-group" style="display: flex; justify-content: space-between; align-items: center;">
+                    <label class="form-label" style="margin: 0;">检测到人员保留</label>
+                    <label class="toggle">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="form-group" style="display: flex; justify-content: space-between; align-items: center;">
+                    <label class="form-label" style="margin: 0;">检测到车辆保留</label>
+                    <label class="toggle">
+                        <input type="checkbox">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closePolicyModal()">取消</button>
+                <button class="btn btn-primary">创建策略</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab navigation
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.nav-item').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                item.classList.add('active');
+                document.getElementById(item.dataset.tab).classList.add('active');
+            });
+        });
+
+        // Modal
+        function showCreatePolicy() {
+            document.getElementById('policyModal').classList.add('active');
+        }
+
+        function closePolicyModal() {
+            document.getElementById('policyModal').classList.remove('active');
+        }
+
+        // Refresh
+        function refreshActivity() {
+            const btn = event.target.closest('button');
+            btn.innerHTML = '<span class="spinner"></span> 刷新中...';
+            setTimeout(() => {
+                btn.innerHTML = '<span>🔄</span> 刷新';
+            }, 1000);
+        }
+
+        // Load data from API
+        async function loadDashboard() {
+            try {
+                const resp = await fetch('/api/dashboard/stats');
+                const data = await resp.json();
+
+                document.getElementById('totalCameras').textContent = data.total_cameras || 0;
+                document.getElementById('totalSaved').textContent = (data.total_storage_saved_tb || 0) + ' TB';
+                document.getElementById('reductionRate').textContent = (data.reduction_percent || 0) + '%';
+            } catch (e) {
+                console.log('API not available, using demo data');
+            }
+        }
+
+        // Init
+        loadDashboard();
+    </script>
+</body>
+</html>

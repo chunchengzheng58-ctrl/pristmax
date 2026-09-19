@@ -1,0 +1,1448 @@
+- generic [ref=e2]:
+  - generic [ref=e4]:
+    - link [ref=e6]:
+      - /url: /
+    - generic [ref=e16]:
+      - paragraph [ref=e17]:
+        - generic [aria-hidden] [ref=e18]:
+          - generic [aria-hidden] [ref=e19]: C
+          - generic [aria-hidden] [ref=e20]: o
+          - generic [aria-hidden] [ref=e21]: m
+          - generic [aria-hidden] [ref=e22]: p
+          - generic [aria-hidden] [ref=e23]: o
+          - generic [aria-hidden] [ref=e24]: s
+          - generic [aria-hidden] [ref=e25]: e
+          - generic [aria-hidden] [ref=e26]: d
+        - generic [aria-hidden] [ref=e27]:
+          - generic [aria-hidden] [ref=e28]: r
+          - generic [aria-hidden] [ref=e29]: e
+          - generic [aria-hidden] [ref=e30]: s
+          - generic [aria-hidden] [ref=e31]: i
+          - generic [aria-hidden] [ref=e32]: d
+          - generic [aria-hidden] [ref=e33]: e
+          - generic [aria-hidden] [ref=e34]: "n"
+          - generic [aria-hidden] [ref=e35]: t
+          - generic [aria-hidden] [ref=e36]: i
+          - generic [aria-hidden] [ref=e37]: a
+          - generic [aria-hidden] [ref=e38]: l
+        - generic [aria-hidden] [ref=e39]:
+          - generic [aria-hidden] [ref=e40]: i
+          - generic [aria-hidden] [ref=e41]: "n"
+          - generic [aria-hidden] [ref=e42]: t
+          - generic [aria-hidden] [ref=e43]: e
+          - generic [aria-hidden] [ref=e44]: r
+          - generic [aria-hidden] [ref=e45]: i
+          - generic [aria-hidden] [ref=e46]: o
+          - generic [aria-hidden] [ref=e47]: r
+          - generic [aria-hidden] [ref=e48]: s
+          - generic [aria-hidden] [ref=e49]: .
+      - paragraph [ref=e50]:
+        - generic [aria-hidden] [ref=e51]: Interiors
+        - generic [aria-hidden] [ref=e52]: designed
+        - generic [aria-hidden] [ref=e53]: as
+        - generic [aria-hidden] [ref=e54]: one
+        - generic [aria-hidden] [ref=e55]: complete
+        - generic [aria-hidden] [ref=e56]: whole.
+  - banner [ref=e76]:
+    - button [ref=e79] [cursor=pointer]:
+      - button "menu menu" [ref=e80]:
+        - generic [ref=e81]:
+          - generic [ref=e82]: menu
+          - generic [ref=e83]: menu
+    - link [ref=e89]:
+      - /url: /
+    - button "Request a call" [ref=e100]
+  - generic [ref=e102]:
+    - generic [ref=e110]:
+      - heading "A group of lines forming a unit within a poem." [level=1] [ref=e116]:
+        - generic [aria-hidden] [ref=e118]: A
+        - generic [aria-hidden] [ref=e119]:
+          - generic [aria-hidden] [ref=e120]: g
+          - generic [aria-hidden] [ref=e121]: r
+          - generic [aria-hidden] [ref=e122]: o
+          - generic [aria-hidden] [ref=e123]: u
+          - generic [aria-hidden] [ref=e124]: p
+        - generic [aria-hidden] [ref=e125]:
+          - generic [aria-hidden] [ref=e126]: o
+          - generic [aria-hidden] [ref=e127]: f
+        - generic [aria-hidden] [ref=e128]:
+          - generic [aria-hidden] [ref=e129]: l
+          - generic [aria-hidden] [ref=e130]: i
+          - generic [aria-hidden] [ref=e131]: "n"
+          - generic [aria-hidden] [ref=e132]: e
+          - generic [aria-hidden] [ref=e133]: s
+        - generic [aria-hidden] [ref=e134]:
+          - generic [aria-hidden] [ref=e135]: f
+          - generic [aria-hidden] [ref=e136]: o
+          - generic [aria-hidden] [ref=e137]: r
+          - generic [aria-hidden] [ref=e138]: m
+          - generic [aria-hidden] [ref=e139]: i
+          - generic [aria-hidden] [ref=e140]: "n"
+          - generic [aria-hidden] [ref=e141]: g
+        - generic [aria-hidden] [ref=e143]: a
+        - generic [aria-hidden] [ref=e144]:
+          - generic [aria-hidden] [ref=e145]: u
+          - generic [aria-hidden] [ref=e146]: "n"
+          - generic [aria-hidden] [ref=e147]: i
+          - generic [aria-hidden] [ref=e148]: t
+        - generic [aria-hidden] [ref=e149]:
+          - generic [aria-hidden] [ref=e150]: w
+          - generic [aria-hidden] [ref=e151]: i
+          - generic [aria-hidden] [ref=e152]: t
+          - generic [aria-hidden] [ref=e153]: h
+          - generic [aria-hidden] [ref=e154]: i
+          - generic [aria-hidden] [ref=e155]: "n"
+        - generic [aria-hidden] [ref=e157]: a
+        - generic [aria-hidden] [ref=e158]:
+          - generic [aria-hidden] [ref=e159]: p
+          - generic [aria-hidden] [ref=e160]: o
+          - generic [aria-hidden] [ref=e161]: e
+          - generic [aria-hidden] [ref=e162]: m
+          - generic [aria-hidden] [ref=e163]: .
+      - paragraph [ref=e166]:
+        - generic [aria-hidden] [ref=e167]: Interiors
+        - generic [aria-hidden] [ref=e168]: designed
+        - generic [aria-hidden] [ref=e169]: as
+        - generic [aria-hidden] [ref=e170]: one
+        - generic [aria-hidden] [ref=e171]: complete
+        - generic [aria-hidden] [ref=e172]: whole.
+    - generic [ref=e176]:
+      - generic:
+        - generic:
+          - generic "COMPOSED":
+            - paragraph:
+              - generic [aria-hidden]: C
+              - generic [aria-hidden]: O
+              - generic [aria-hidden]: M
+              - generic [aria-hidden]: P
+              - generic [aria-hidden]: O
+              - generic [aria-hidden]: S
+              - generic [aria-hidden]: E
+              - generic [aria-hidden]: D
+        - generic:
+          - heading "A home" [level=2]:
+            - generic [aria-hidden]:
+              - generic [aria-hidden]: A
+            - generic [aria-hidden]:
+              - generic [aria-hidden]: h
+              - generic [aria-hidden]: o
+              - generic [aria-hidden]: m
+              - generic [aria-hidden]: e
+          - heading "is a composition." [level=2]:
+            - generic [aria-hidden]:
+              - generic [aria-hidden]: i
+              - generic [aria-hidden]: s
+            - generic [aria-hidden]:
+              - generic [aria-hidden]: a
+            - generic [aria-hidden]:
+              - generic [aria-hidden]: c
+              - generic [aria-hidden]: o
+              - generic [aria-hidden]: m
+              - generic [aria-hidden]: p
+              - generic [aria-hidden]: o
+              - generic [aria-hidden]: s
+              - generic [aria-hidden]: i
+              - generic [aria-hidden]: t
+              - generic [aria-hidden]: i
+              - generic [aria-hidden]: o
+              - generic [aria-hidden]: "n"
+              - generic [aria-hidden]: .
+      - generic:
+        - generic:
+          - paragraph:
+            - generic [aria-hidden]: In
+            - generic [aria-hidden]: a
+            - generic [aria-hidden]: well-composed
+            - generic [aria-hidden]: interior,
+            - generic [aria-hidden]: nothing
+            - generic [aria-hidden]: is
+            - generic [aria-hidden]: accidental.
+            - generic [aria-hidden]: Proportion
+            - generic [aria-hidden]: sets
+            - generic [aria-hidden]: the
+            - generic [aria-hidden]: structure,
+            - generic [aria-hidden]: material
+            - generic [aria-hidden]: sets
+            - generic [aria-hidden]: the
+            - generic [aria-hidden]: tone,
+            - generic [aria-hidden]: and
+            - generic [aria-hidden]: light
+            - generic [aria-hidden]: shapes
+            - generic [aria-hidden]: the
+            - generic [aria-hidden]: space.
+      - generic:
+        - generic:
+          - paragraph:
+            - generic [aria-hidden]: We
+            - generic [aria-hidden]: begin
+            - generic [aria-hidden]: with
+            - generic [aria-hidden]: how
+            - generic [aria-hidden]: the
+            - generic [aria-hidden]: home
+            - generic [aria-hidden]: should
+            - generic [aria-hidden]: work,
+            - generic [aria-hidden]: refine
+            - generic [aria-hidden]: how
+            - generic [aria-hidden]: it
+            - generic [aria-hidden]: should
+            - generic [aria-hidden]: feel,
+            - generic [aria-hidden]: and
+            - generic [aria-hidden]: guide
+            - generic [aria-hidden]: every
+            - generic [aria-hidden]: decision
+            - generic [aria-hidden]: through
+            - generic [aria-hidden]: the
+            - generic [aria-hidden]: build.
+            - generic [aria-hidden]: This
+            - generic [aria-hidden]: is
+            - generic [aria-hidden]: how
+            - generic [aria-hidden]: an
+            - generic [aria-hidden]: interior
+            - generic [aria-hidden]: stays
+            - generic [aria-hidden]: coherent
+            - generic [aria-hidden]: from
+            - generic [aria-hidden]: concept
+            - generic [aria-hidden]: to
+            - generic [aria-hidden]: handover.
+      - generic:
+        - list:
+          - listitem [ref=e177]:
+            - link [ref=e178]:
+              - /url: /projects/pau-claris-apartment-main
+              - button "view" [ref=e181]
+          - listitem [ref=e187]:
+            - link [ref=e188]:
+              - /url: /projects/apartement-in-valencinia
+              - button "view" [ref=e191]
+          - listitem [ref=e197]:
+            - link [ref=e198]:
+              - /url: /projects/chok
+              - button "view" [ref=e201]
+          - listitem [ref=e207]:
+            - link [ref=e208]:
+              - /url: /projects/jazean-coffee-house
+              - button "view" [ref=e211]
+          - listitem [ref=e217]:
+            - link [ref=e218]:
+              - /url: /projects/dose-coffee-house
+              - button "view" [ref=e221]
+    - generic [ref=e227]:
+      - generic [ref=e232]:
+        - button [ref=e234]
+        - button [ref=e239]
+      - list [ref=e245]:
+        - listitem [ref=e246]:
+          - generic [ref=e249]:
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - heading "Pau Claris Apartment" [level=2]
+                - generic:
+                  - generic:
+                    - generic:
+                      - paragraph:
+                        - generic [aria-hidden]: P
+                        - generic [aria-hidden]: r
+                        - generic [aria-hidden]: o
+                        - generic [aria-hidden]: j
+                        - generic [aria-hidden]: e
+                        - generic [aria-hidden]: c
+                        - generic [aria-hidden]: t
+                        - generic [aria-hidden]: e
+                        - generic [aria-hidden]: x
+                        - generic [aria-hidden]: e
+                        - generic [aria-hidden]: c
+                        - generic [aria-hidden]: u
+                        - generic [aria-hidden]: t
+                        - generic [aria-hidden]: e
+                        - generic [aria-hidden]: d
+                    - generic:
+                      - paragraph:
+                        - generic [aria-hidden]: In
+                      - paragraph:
+                        - generic [aria-hidden]: "62"
+                      - paragraph:
+                        - generic [aria-hidden]: days
+                  - generic:
+                    - generic:
+                      - paragraph:
+                        - generic [aria-hidden]: A
+                        - generic [aria-hidden]: r
+                        - generic [aria-hidden]: e
+                        - generic [aria-hidden]: a
+                    - generic:
+                      - paragraph:
+                        - generic [aria-hidden]: "62"
+                      - paragraph:
+                        - generic [aria-hidden]: m
+                        - superscript
+                  - generic:
+                    - generic:
+                      - paragraph:
+                        - generic [aria-hidden]: C
+                        - generic [aria-hidden]: i
+                        - generic [aria-hidden]: t
+                        - generic [aria-hidden]: "y"
+                        - generic [aria-hidden]: "&"
+                        - generic [aria-hidden]: c
+                        - generic [aria-hidden]: o
+                        - generic [aria-hidden]: u
+                        - generic [aria-hidden]: "n"
+                        - generic [aria-hidden]: t
+                        - generic [aria-hidden]: r
+                        - generic [aria-hidden]: "y"
+                    - generic:
+                      - generic:
+                        - paragraph:
+                          - generic [aria-hidden]: Barcelona
+                        - paragraph:
+                          - generic [aria-hidden]: ","
+                      - paragraph:
+                        - generic [aria-hidden]: Spain
+              - generic [ref=e251]:
+                - generic [ref=e252]:
+                  - link "View Project" [disabled] [ref=e253]:
+                    - /url: /projects/pau-claris-apartment-main
+                  - link "View all projects" [disabled] [ref=e254]:
+                    - /url: /projects
+                - generic [ref=e255]:
+                  - link "View Project" [disabled] [ref=e256]:
+                    - /url: /projects/pau-claris-apartment-main
+                  - link "View all projects" [disabled] [ref=e257]:
+                    - /url: /projects
+            - generic [ref=e258]:
+              - generic:
+                - generic:
+                  - generic:
+                    - paragraph: "0"
+                    - paragraph: "1"
+                    - paragraph: /
+                    - paragraph: "05"
+        - listitem [ref=e262]:
+          - generic [ref=e265]:
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - heading "Valencia apartment" [level=2]
+                - generic:
+                  - generic:
+                    - generic:
+                      - paragraph:
+                        - generic [aria-hidden]: P
+                        - generic [aria-hidden]: r
+                        - generic [aria-hidden]: o
+                        - generic [aria-hidden]: j
+                        - generic [aria-hidden]: e
+                        - generic [aria-hidden]: c
+                        - generic [aria-hidden]: t
+                        - generic [aria-hidden]: e
+                        - generic [aria-hidden]: x
+                        - generic [aria-hidden]: e
+                        - generic [aria-hidden]: c
+                        - generic [aria-hidden]: u
+                        - generic [aria-hidden]: t
+                        - generic [aria-hidden]: e
+                        - generic [aria-hidden]: d
+                    - generic:
+                      - paragraph:
+                        - generic [aria-hidden]: In
+                      - paragraph:
+                        - generic [aria-hidden]: "78"
+                      - paragraph:
+                        - generic [aria-hidden]: days
+                  - generic:
+                    - generic:
+                      - paragraph:
+                        - generic [aria-hidden]: A
+                        - generic [aria-hidden]: r
+                        - generic [aria-hidden]: e
+                        - generic [aria-hidden]: a
+                    - generic:
+                      - paragraph:
+                        - generic [aria-hidden]: "78"
+                      - paragraph:
+                        - generic [aria-hidden]: m
+                        - superscript
+                  - generic:
+                    - generic:
+                      - paragraph:
+                        - generic [aria-hidden]: C
+                        - generic [aria-hidden]: i
+                        - generic [aria-hidden]: t
+                        - generic [aria-hidden]: "y"
+                        - generic [aria-hidden]: "&"
+                        - generic [aria-hidden]: c
+                        - generic [aria-hidden]: o
+                        - generic [aria-hidden]: u
+                        - generic [aria-hidden]: "n"
+                        - generic [aria-hidden]: t
+                        - generic [aria-hidden]: r
+                        - generic [aria-hidden]: "y"
+                    - generic:
+                      - generic:
+                        - paragraph:
+                          - generic [aria-hidden]: Barcelona
+                        - paragraph:
+                          - generic [aria-hidden]: ","
+                      - paragraph:
+                        - generic [aria-hidden]: Spain
+              - generic [ref=e267]:
+                - generic [ref=e268]:
+                  - link "View Project" [disabled] [ref=e269]:
+                    - /url: /projects/apartement-in-valencinia
+                  - link "View all projects" [disabled] [ref=e270]:
+                    - /url: /projects
+                - generic [ref=e271]:
+                  - link "View Project" [disabled] [ref=e272]:
+                    - /url: /projects/apartement-in-valencinia
+                  - link "View all projects" [disabled] [ref=e273]:
+                    - /url: /projects
+            - generic [ref=e274]:
+              - generic:
+                - generic:
+                  - generic:
+                    - paragraph: "0"
+                    - paragraph: "2"
+                    - paragraph: /
+                    - paragraph: "05"
+        - listitem [ref=e278]:
+          - generic [ref=e281]:
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - heading "Jazean coffee house" [level=2]
+                - generic:
+                  - generic:
+                    - generic:
+                      - paragraph:
+                        - generic [aria-hidden]: P
+                        - generic [aria-hidden]: r
+                        - generic [aria-hidden]: o
+                        - generic [aria-hidden]: j
+                        - generic [aria-hidden]: e
+                        - generic [aria-hidden]: c
+                        - generic [aria-hidden]: t
+                        - generic [aria-hidden]: e
+                        - generic [aria-hidden]: x
+                        - generic [aria-hidden]: e
+                        - generic [aria-hidden]: c
+                        - generic [aria-hidden]: u
+                        - generic [aria-hidden]: t
+                        - generic [aria-hidden]: e
+                        - generic [aria-hidden]: d
+                    - generic:
+                      - paragraph:
+                        - generic [aria-hidden]: In
+                      - paragraph:
+                        - generic [aria-hidden]: "65"
+                      - paragraph:
+                        - generic [aria-hidden]: days
+                  - generic:
+                    - generic:
+                      - paragraph:
+                        - generic [aria-hidden]: A
+                        - generic [aria-hidden]: r
+                        - generic [aria-hidden]: e
+                        - generic [aria-hidden]: a
+                    - generic:
+                      - paragraph:
+                        - generic [aria-hidden]: "65"
+                      - paragraph:
+                        - generic [aria-hidden]: m
+                        - superscript
+                  - generic:
+                    - generic:
+                      - paragraph:
+                        - generic [aria-hidden]: C
+                        - generic [aria-hidden]: i
+                        - generic [aria-hidden]: t
+                        - generic [aria-hidden]: "y"
+                        - generic [aria-hidden]: "&"
+                        - generic [aria-hidden]: c
+                        - generic [aria-hidden]: o
+                        - generic [aria-hidden]: u
+                        - generic [aria-hidden]: "n"
+                        - generic [aria-hidden]: t
+                        - generic [aria-hidden]: r
+                        - generic [aria-hidden]: "y"
+                    - generic:
+                      - generic:
+                        - paragraph:
+                          - generic [aria-hidden]: Riyadh
+                        - paragraph:
+                          - generic [aria-hidden]: ","
+                      - paragraph:
+                        - generic [aria-hidden]: Saudi
+                        - generic [aria-hidden]: Arabia
+              - generic [ref=e283]:
+                - generic [ref=e284]:
+                  - link "View Project" [disabled] [ref=e285]:
+                    - /url: /projects/jazean-coffee-house
+                  - link "View all projects" [disabled] [ref=e286]:
+                    - /url: /projects
+                - generic [ref=e287]:
+                  - link "View Project" [disabled] [ref=e288]:
+                    - /url: /projects/jazean-coffee-house
+                  - link "View all projects" [disabled] [ref=e289]:
+                    - /url: /projects
+            - generic [ref=e290]:
+              - generic:
+                - generic:
+                  - generic:
+                    - paragraph: "0"
+                    - paragraph: "3"
+                    - paragraph: /
+                    - paragraph: "05"
+        - listitem [ref=e294]:
+          - generic [ref=e297]:
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - heading "Dose coffee house" [level=2]
+                - generic:
+                  - generic:
+                    - generic:
+                      - paragraph:
+                        - generic [aria-hidden]: P
+                        - generic [aria-hidden]: r
+                        - generic [aria-hidden]: o
+                        - generic [aria-hidden]: j
+                        - generic [aria-hidden]: e
+                        - generic [aria-hidden]: c
+                        - generic [aria-hidden]: t
+                        - generic [aria-hidden]: e
+                        - generic [aria-hidden]: x
+                        - generic [aria-hidden]: e
+                        - generic [aria-hidden]: c
+                        - generic [aria-hidden]: u
+                        - generic [aria-hidden]: t
+                        - generic [aria-hidden]: e
+                        - generic [aria-hidden]: d
+                    - generic:
+                      - paragraph:
+                        - generic [aria-hidden]: In
+                      - paragraph:
+                        - generic [aria-hidden]: "82"
+                      - paragraph:
+                        - generic [aria-hidden]: days
+                  - generic:
+                    - generic:
+                      - paragraph:
+                        - generic [aria-hidden]: A
+                        - generic [aria-hidden]: r
+                        - generic [aria-hidden]: e
+                        - generic [aria-hidden]: a
+                    - generic:
+                      - paragraph:
+                        - generic [aria-hidden]: "82"
+                      - paragraph:
+                        - generic [aria-hidden]: m
+                        - superscript
+                  - generic:
+                    - generic:
+                      - paragraph:
+                        - generic [aria-hidden]: C
+                        - generic [aria-hidden]: i
+                        - generic [aria-hidden]: t
+                        - generic [aria-hidden]: "y"
+                        - generic [aria-hidden]: "&"
+                        - generic [aria-hidden]: c
+                        - generic [aria-hidden]: o
+                        - generic [aria-hidden]: u
+                        - generic [aria-hidden]: "n"
+                        - generic [aria-hidden]: t
+                        - generic [aria-hidden]: r
+                        - generic [aria-hidden]: "y"
+                    - generic:
+                      - generic:
+                        - paragraph:
+                          - generic [aria-hidden]: Riyadh
+                        - paragraph:
+                          - generic [aria-hidden]: ","
+                      - paragraph:
+                        - generic [aria-hidden]: Saudi
+                        - generic [aria-hidden]: Arabia
+              - generic [ref=e299]:
+                - generic [ref=e300]:
+                  - link "View Project" [disabled] [ref=e301]:
+                    - /url: /projects/dose-coffee-house
+                  - link "View all projects" [disabled] [ref=e302]:
+                    - /url: /projects
+                - generic [ref=e303]:
+                  - link "View Project" [disabled] [ref=e304]:
+                    - /url: /projects/dose-coffee-house
+                  - link "View all projects" [disabled] [ref=e305]:
+                    - /url: /projects
+            - generic [ref=e306]:
+              - generic:
+                - generic:
+                  - generic:
+                    - paragraph: "0"
+                    - paragraph: "4"
+                    - paragraph: /
+                    - paragraph: "05"
+        - listitem [ref=e310]:
+          - generic [ref=e313]:
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - heading "Cafe Chok" [level=2]
+                - generic:
+                  - generic:
+                    - generic:
+                      - paragraph:
+                        - generic [aria-hidden]: P
+                        - generic [aria-hidden]: r
+                        - generic [aria-hidden]: o
+                        - generic [aria-hidden]: j
+                        - generic [aria-hidden]: e
+                        - generic [aria-hidden]: c
+                        - generic [aria-hidden]: t
+                        - generic [aria-hidden]: e
+                        - generic [aria-hidden]: x
+                        - generic [aria-hidden]: e
+                        - generic [aria-hidden]: c
+                        - generic [aria-hidden]: u
+                        - generic [aria-hidden]: t
+                        - generic [aria-hidden]: e
+                        - generic [aria-hidden]: d
+                    - generic:
+                      - paragraph:
+                        - generic [aria-hidden]: In
+                      - paragraph:
+                        - generic [aria-hidden]: "32"
+                      - paragraph:
+                        - generic [aria-hidden]: days
+                  - generic:
+                    - generic:
+                      - paragraph:
+                        - generic [aria-hidden]: A
+                        - generic [aria-hidden]: r
+                        - generic [aria-hidden]: e
+                        - generic [aria-hidden]: a
+                    - generic:
+                      - paragraph:
+                        - generic [aria-hidden]: "32"
+                      - paragraph:
+                        - generic [aria-hidden]: m
+                        - superscript
+                  - generic:
+                    - generic:
+                      - paragraph:
+                        - generic [aria-hidden]: C
+                        - generic [aria-hidden]: i
+                        - generic [aria-hidden]: t
+                        - generic [aria-hidden]: "y"
+                        - generic [aria-hidden]: "&"
+                        - generic [aria-hidden]: c
+                        - generic [aria-hidden]: o
+                        - generic [aria-hidden]: u
+                        - generic [aria-hidden]: "n"
+                        - generic [aria-hidden]: t
+                        - generic [aria-hidden]: r
+                        - generic [aria-hidden]: "y"
+                    - generic:
+                      - generic:
+                        - paragraph:
+                          - generic [aria-hidden]: Riyadh
+                        - paragraph:
+                          - generic [aria-hidden]: ","
+                      - paragraph:
+                        - generic [aria-hidden]: Saudi
+                        - generic [aria-hidden]: Arabia
+              - generic [ref=e315]:
+                - generic [ref=e316]:
+                  - link "View Project" [disabled] [ref=e317]:
+                    - /url: /projects/chok
+                  - link "View all projects" [disabled] [ref=e318]:
+                    - /url: /projects
+                - generic [ref=e319]:
+                  - link "View Project" [disabled] [ref=e320]:
+                    - /url: /projects/chok
+                  - link "View all projects" [disabled] [ref=e321]:
+                    - /url: /projects
+            - generic [ref=e322]:
+              - generic:
+                - generic:
+                  - generic:
+                    - paragraph: "0"
+                    - paragraph: "5"
+                    - paragraph: /
+                    - paragraph: "05"
+    - generic [ref=e329]:
+      - generic [ref=e330]:
+        - paragraph [ref=e332]:
+          - generic [aria-hidden] [ref=e333]: You
+          - generic [aria-hidden] [ref=e334]: always
+          - generic [aria-hidden] [ref=e335]: know
+          - generic [aria-hidden] [ref=e336]: what's
+          - generic [aria-hidden] [ref=e337]: happening,
+          - generic [aria-hidden] [ref=e338]: when,
+          - generic [aria-hidden] [ref=e339]: and
+          - generic [aria-hidden] [ref=e340]: what
+          - generic [aria-hidden] [ref=e341]: it
+          - generic [aria-hidden] [ref=e342]: costs.
+          - generic [aria-hidden] [ref=e343]: That's
+          - generic [aria-hidden] [ref=e344]: how
+          - generic [aria-hidden] [ref=e345]: we
+          - generic [aria-hidden] [ref=e346]: protect
+          - generic [aria-hidden] [ref=e347]: your
+          - generic [aria-hidden] [ref=e348]: budget,
+          - generic [aria-hidden] [ref=e349]: timing,
+          - generic [aria-hidden] [ref=e350]: and
+          - generic [aria-hidden] [ref=e351]: peace
+          - generic [aria-hidden] [ref=e352]: of
+          - generic [aria-hidden] [ref=e353]: mind.
+        - generic [ref=e354]:
+          - generic "COMPOSED" [ref=e355]:
+            - paragraph [ref=e359]:
+              - generic [aria-hidden] [ref=e360]: C
+              - generic [aria-hidden] [ref=e361]: O
+              - generic [aria-hidden] [ref=e362]: M
+              - generic [aria-hidden] [ref=e363]: P
+              - generic [aria-hidden] [ref=e364]: O
+              - generic [aria-hidden] [ref=e365]: S
+              - generic [aria-hidden] [ref=e366]: E
+              - generic [aria-hidden] [ref=e367]: D
+          - generic [ref=e371]:
+            - heading "Controlled delivery." [level=2] [ref=e372]:
+              - generic [aria-hidden] [ref=e373]:
+                - generic [aria-hidden] [ref=e374]: C
+                - generic [aria-hidden] [ref=e375]: o
+                - generic [aria-hidden] [ref=e376]: "n"
+                - generic [aria-hidden] [ref=e377]: t
+                - generic [aria-hidden] [ref=e378]: r
+                - generic [aria-hidden] [ref=e379]: o
+                - generic [aria-hidden] [ref=e380]: l
+                - generic [aria-hidden] [ref=e381]: l
+                - generic [aria-hidden] [ref=e382]: e
+                - generic [aria-hidden] [ref=e383]: d
+              - generic [aria-hidden] [ref=e384]:
+                - generic [aria-hidden] [ref=e385]: d
+                - generic [aria-hidden] [ref=e386]: e
+                - generic [aria-hidden] [ref=e387]: l
+                - generic [aria-hidden] [ref=e388]: i
+                - generic [aria-hidden] [ref=e389]: v
+                - generic [aria-hidden] [ref=e390]: e
+                - generic [aria-hidden] [ref=e391]: r
+                - generic [aria-hidden] [ref=e392]: "y"
+                - generic [aria-hidden] [ref=e393]: .
+            - heading "Calm by design." [level=2] [ref=e394]:
+              - generic [aria-hidden] [ref=e395]:
+                - generic [aria-hidden] [ref=e396]: C
+                - generic [aria-hidden] [ref=e397]: a
+                - generic [aria-hidden] [ref=e398]: l
+                - generic [aria-hidden] [ref=e399]: m
+              - generic [aria-hidden] [ref=e400]:
+                - generic [aria-hidden] [ref=e401]: b
+                - generic [aria-hidden] [ref=e402]: "y"
+              - generic [aria-hidden] [ref=e403]:
+                - generic [aria-hidden] [ref=e404]: d
+                - generic [aria-hidden] [ref=e405]: e
+                - generic [aria-hidden] [ref=e406]: s
+                - generic [aria-hidden] [ref=e407]: i
+                - generic [aria-hidden] [ref=e408]: g
+                - generic [aria-hidden] [ref=e409]: "n"
+                - generic [aria-hidden] [ref=e410]: .
+      - generic [ref=e411]:
+        - generic [ref=e415]:
+          - generic "01" [ref=e417]:
+            - paragraph [ref=e421]:
+              - generic [aria-hidden] [ref=e422]: "0"
+              - generic [aria-hidden] [ref=e423]: "1"
+          - generic [ref=e427]:
+            - heading "One responsible lead" [level=3] [ref=e428]
+            - paragraph [ref=e429]:
+              - generic [aria-hidden] [ref=e430]: A
+              - generic [aria-hidden] [ref=e431]: single
+              - generic [aria-hidden] [ref=e432]: point
+              - generic [aria-hidden] [ref=e433]: of
+              - generic [aria-hidden] [ref=e434]: contact
+              - generic [aria-hidden] [ref=e435]: from
+              - generic [aria-hidden] [ref=e436]: brief
+              - generic [aria-hidden] [ref=e437]: to
+              - generic [aria-hidden] [ref=e438]: handover
+              - generic [aria-hidden] [ref=e439]: —
+              - generic [aria-hidden] [ref=e440]: full
+              - generic [aria-hidden] [ref=e441]: accountability,
+              - generic [aria-hidden] [ref=e442]: "no"
+              - generic [aria-hidden] [ref=e443]: handoffs.
+        - generic [ref=e448]:
+          - generic "02" [ref=e450]:
+            - paragraph [ref=e454]:
+              - generic [aria-hidden] [ref=e455]: "0"
+              - generic [aria-hidden] [ref=e456]: "2"
+          - generic [ref=e460]:
+            - heading "Structured process" [level=3] [ref=e461]
+            - paragraph [ref=e462]:
+              - generic [aria-hidden] [ref=e463]: Each
+              - generic [aria-hidden] [ref=e464]: phase
+              - generic [aria-hidden] [ref=e465]: has
+              - generic [aria-hidden] [ref=e466]: defined
+              - generic [aria-hidden] [ref=e467]: stages,
+              - generic [aria-hidden] [ref=e468]: milestones,
+              - generic [aria-hidden] [ref=e469]: and
+              - generic [aria-hidden] [ref=e470]: sign-offs.
+              - generic [aria-hidden] [ref=e471]: Nothing
+              - generic [aria-hidden] [ref=e472]: moves
+              - generic [aria-hidden] [ref=e473]: forward
+              - generic [aria-hidden] [ref=e474]: without
+              - generic [aria-hidden] [ref=e475]: your
+              - generic [aria-hidden] [ref=e476]: approval.
+        - generic [ref=e481]:
+          - generic "03" [ref=e483]:
+            - paragraph [ref=e487]:
+              - generic [aria-hidden] [ref=e488]: "0"
+              - generic [aria-hidden] [ref=e489]: "3"
+          - generic [ref=e493]:
+            - heading "Changes and costs — always visible" [level=3] [ref=e494]
+            - paragraph [ref=e495]:
+              - generic [aria-hidden] [ref=e496]: Every
+              - generic [aria-hidden] [ref=e497]: revision
+              - generic [aria-hidden] [ref=e498]: is
+              - generic [aria-hidden] [ref=e499]: documented,
+              - generic [aria-hidden] [ref=e500]: priced,
+              - generic [aria-hidden] [ref=e501]: and
+              - generic [aria-hidden] [ref=e502]: agreed
+              - generic [aria-hidden] [ref=e503]: before
+              - generic [aria-hidden] [ref=e504]: execution.
+              - generic [aria-hidden] [ref=e505]: "No"
+              - generic [aria-hidden] [ref=e506]: surprises
+              - generic [aria-hidden] [ref=e507]: "on"
+              - generic [aria-hidden] [ref=e508]: the
+              - generic [aria-hidden] [ref=e509]: invoice.
+        - generic [ref=e514]:
+          - generic "04" [ref=e516]:
+            - paragraph [ref=e520]:
+              - generic [aria-hidden] [ref=e521]: "0"
+              - generic [aria-hidden] [ref=e522]: "4"
+          - generic [ref=e526]:
+            - heading "Quality on site" [level=3] [ref=e527]
+            - paragraph [ref=e528]:
+              - generic [aria-hidden] [ref=e529]: Author
+              - generic [aria-hidden] [ref=e530]: supervision
+              - generic [aria-hidden] [ref=e531]: throughout
+              - generic [aria-hidden] [ref=e532]: construction
+              - generic [aria-hidden] [ref=e533]: —
+              - generic [aria-hidden] [ref=e534]: your
+              - generic [aria-hidden] [ref=e535]: vision
+              - generic [aria-hidden] [ref=e536]: doesn't
+              - generic [aria-hidden] [ref=e537]: get
+              - generic [aria-hidden] [ref=e538]: lost
+              - generic [aria-hidden] [ref=e539]: in
+              - generic [aria-hidden] [ref=e540]: translation.
+    - generic [ref=e541]:
+      - generic [ref=e545]:
+        - generic [ref=e547]:
+          - generic "in years" [ref=e548]:
+            - paragraph [ref=e552]:
+              - generic [aria-hidden] [ref=e553]: i
+              - generic [aria-hidden] [ref=e554]: "n"
+              - generic [aria-hidden] [ref=e555]: "y"
+              - generic [aria-hidden] [ref=e556]: e
+              - generic [aria-hidden] [ref=e557]: a
+              - generic [aria-hidden] [ref=e558]: r
+              - generic [aria-hidden] [ref=e559]: s
+          - generic [ref=e563]:
+            - heading "Architectural thinking." [level=2] [ref=e564]:
+              - generic [aria-hidden] [ref=e565]:
+                - generic [aria-hidden] [ref=e566]: A
+                - generic [aria-hidden] [ref=e567]: r
+                - generic [aria-hidden] [ref=e568]: c
+                - generic [aria-hidden] [ref=e569]: h
+                - generic [aria-hidden] [ref=e570]: i
+                - generic [aria-hidden] [ref=e571]: t
+                - generic [aria-hidden] [ref=e572]: e
+                - generic [aria-hidden] [ref=e573]: c
+                - generic [aria-hidden] [ref=e574]: t
+                - generic [aria-hidden] [ref=e575]: u
+                - generic [aria-hidden] [ref=e576]: r
+                - generic [aria-hidden] [ref=e577]: a
+                - generic [aria-hidden] [ref=e578]: l
+              - generic [aria-hidden] [ref=e579]:
+                - generic [aria-hidden] [ref=e580]: t
+                - generic [aria-hidden] [ref=e581]: h
+                - generic [aria-hidden] [ref=e582]: i
+                - generic [aria-hidden] [ref=e583]: "n"
+                - generic [aria-hidden] [ref=e584]: k
+                - generic [aria-hidden] [ref=e585]: i
+                - generic [aria-hidden] [ref=e586]: "n"
+                - generic [aria-hidden] [ref=e587]: g
+                - generic [aria-hidden] [ref=e588]: .
+            - heading "Design sensibility." [level=2] [ref=e589]:
+              - generic [aria-hidden] [ref=e590]:
+                - generic [aria-hidden] [ref=e591]: D
+                - generic [aria-hidden] [ref=e592]: e
+                - generic [aria-hidden] [ref=e593]: s
+                - generic [aria-hidden] [ref=e594]: i
+                - generic [aria-hidden] [ref=e595]: g
+                - generic [aria-hidden] [ref=e596]: "n"
+              - generic [aria-hidden] [ref=e597]:
+                - generic [aria-hidden] [ref=e598]: s
+                - generic [aria-hidden] [ref=e599]: e
+                - generic [aria-hidden] [ref=e600]: "n"
+                - generic [aria-hidden] [ref=e601]: s
+                - generic [aria-hidden] [ref=e602]: i
+                - generic [aria-hidden] [ref=e603]: b
+                - generic [aria-hidden] [ref=e604]: i
+                - generic [aria-hidden] [ref=e605]: l
+                - generic [aria-hidden] [ref=e606]: i
+                - generic [aria-hidden] [ref=e607]: t
+                - generic [aria-hidden] [ref=e608]: "y"
+                - generic [aria-hidden] [ref=e609]: .
+            - heading "Premium delivery." [level=2] [ref=e610]:
+              - generic [aria-hidden] [ref=e611]:
+                - generic [aria-hidden] [ref=e612]: P
+                - generic [aria-hidden] [ref=e613]: r
+                - generic [aria-hidden] [ref=e614]: e
+                - generic [aria-hidden] [ref=e615]: m
+                - generic [aria-hidden] [ref=e616]: i
+                - generic [aria-hidden] [ref=e617]: u
+                - generic [aria-hidden] [ref=e618]: m
+              - generic [aria-hidden] [ref=e619]:
+                - generic [aria-hidden] [ref=e620]: d
+                - generic [aria-hidden] [ref=e621]: e
+                - generic [aria-hidden] [ref=e622]: l
+                - generic [aria-hidden] [ref=e623]: i
+                - generic [aria-hidden] [ref=e624]: v
+                - generic [aria-hidden] [ref=e625]: e
+                - generic [aria-hidden] [ref=e626]: r
+                - generic [aria-hidden] [ref=e627]: "y"
+                - generic [aria-hidden] [ref=e628]: .
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - paragraph: "01"
+                - heading "Architecture" [level=2]
+            - generic:
+              - generic:
+                - paragraph
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - paragraph: "02"
+                - heading "Design" [level=2]
+            - generic:
+              - generic:
+                - paragraph
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - paragraph: "03"
+                - heading "Delivery" [level=2]
+            - generic:
+              - generic:
+                - paragraph
+      - generic [ref=e633]:
+        - generic [ref=e635]:
+          - generic "in years" [ref=e636]:
+            - paragraph [ref=e640]:
+              - generic [aria-hidden] [ref=e641]: i
+              - generic [aria-hidden] [ref=e642]: "n"
+              - generic [aria-hidden] [ref=e643]: "y"
+              - generic [aria-hidden] [ref=e644]: e
+              - generic [aria-hidden] [ref=e645]: a
+              - generic [aria-hidden] [ref=e646]: r
+              - generic [aria-hidden] [ref=e647]: s
+          - heading "About us." [level=2] [ref=e651]:
+            - generic [aria-hidden] [ref=e652]:
+              - generic [aria-hidden] [ref=e653]: A
+              - generic [aria-hidden] [ref=e654]: b
+              - generic [aria-hidden] [ref=e655]: o
+              - generic [aria-hidden] [ref=e656]: u
+              - generic [aria-hidden] [ref=e657]: t
+            - generic [aria-hidden] [ref=e658]:
+              - generic [aria-hidden] [ref=e659]: u
+              - generic [aria-hidden] [ref=e660]: s
+              - generic [aria-hidden] [ref=e661]: .
+        - generic [ref=e663]:
+          - generic [ref=e665]:
+            - paragraph [ref=e666]:
+              - generic [aria-hidden] [ref=e667]: Years
+              - generic [aria-hidden] [ref=e668]: in
+              - generic [aria-hidden] [ref=e669]: Spain
+            - paragraph [ref=e670]:
+              - generic [aria-hidden] [ref=e671]: "0"
+          - generic [ref=e675]:
+            - paragraph [ref=e676]:
+              - generic [aria-hidden] [ref=e677]: Years
+              - generic [aria-hidden] [ref=e678]: in
+              - generic [aria-hidden] [ref=e679]: practice
+            - paragraph [ref=e680]:
+              - generic [aria-hidden] [ref=e681]: "0"
+          - generic [ref=e685]:
+            - paragraph [ref=e686]:
+              - generic [aria-hidden] [ref=e687]: Projects
+              - generic [aria-hidden] [ref=e688]: in
+              - generic [aria-hidden] [ref=e689]: Spain
+            - paragraph [ref=e690]:
+              - generic [aria-hidden] [ref=e691]: "0"
+          - generic [ref=e695]:
+            - paragraph [ref=e696]:
+              - generic [aria-hidden] [ref=e697]: Projects
+              - generic [aria-hidden] [ref=e698]: worldwide
+            - paragraph [ref=e699]:
+              - generic [aria-hidden] [ref=e700]: "0"
+        - generic [ref=e705]:
+          - paragraph [ref=e706]:
+            - generic [aria-hidden] [ref=e707]: In
+            - generic [aria-hidden] [ref=e708]: a
+            - generic [aria-hidden] [ref=e709]: well-composed
+            - generic [aria-hidden] [ref=e710]: interior,
+            - generic [aria-hidden] [ref=e711]: nothing
+            - generic [aria-hidden] [ref=e712]: is
+            - generic [aria-hidden] [ref=e713]: accidental.
+            - generic [aria-hidden] [ref=e714]: Proportion
+            - generic [aria-hidden] [ref=e715]: sets
+            - generic [aria-hidden] [ref=e716]: the
+            - generic [aria-hidden] [ref=e717]: structure,
+            - generic [aria-hidden] [ref=e718]: material
+            - generic [aria-hidden] [ref=e719]: sets
+            - generic [aria-hidden] [ref=e720]: the
+            - generic [aria-hidden] [ref=e721]: tone,
+            - generic [aria-hidden] [ref=e722]: and
+            - generic [aria-hidden] [ref=e723]: light
+            - generic [aria-hidden] [ref=e724]: shapes
+            - generic [aria-hidden] [ref=e725]: the
+            - generic [aria-hidden] [ref=e726]: space.
+          - paragraph [ref=e727]:
+            - generic [aria-hidden] [ref=e728]: We
+            - generic [aria-hidden] [ref=e729]: begin
+            - generic [aria-hidden] [ref=e730]: with
+            - generic [aria-hidden] [ref=e731]: how
+            - generic [aria-hidden] [ref=e732]: the
+            - generic [aria-hidden] [ref=e733]: home
+            - generic [aria-hidden] [ref=e734]: should
+            - generic [aria-hidden] [ref=e735]: work,
+            - generic [aria-hidden] [ref=e736]: refine
+            - generic [aria-hidden] [ref=e737]: how
+            - generic [aria-hidden] [ref=e738]: it
+            - generic [aria-hidden] [ref=e739]: should
+            - generic [aria-hidden] [ref=e740]: feel,
+            - generic [aria-hidden] [ref=e741]: and
+            - generic [aria-hidden] [ref=e742]: guide
+            - generic [aria-hidden] [ref=e743]: every
+            - generic [aria-hidden] [ref=e744]: decision
+            - generic [aria-hidden] [ref=e745]: through
+            - generic [aria-hidden] [ref=e746]: the
+            - generic [aria-hidden] [ref=e747]: build.
+            - generic [aria-hidden] [ref=e748]: This
+            - generic [aria-hidden] [ref=e749]: is
+            - generic [aria-hidden] [ref=e750]: how
+            - generic [aria-hidden] [ref=e751]: an
+            - generic [aria-hidden] [ref=e752]: interior
+            - generic [aria-hidden] [ref=e753]: stays
+            - generic [aria-hidden] [ref=e754]: coherent
+            - generic [aria-hidden] [ref=e755]: from
+            - generic [aria-hidden] [ref=e756]: concept
+            - generic [aria-hidden] [ref=e757]: to
+            - generic [aria-hidden] [ref=e758]: handover.
+          - link "view projects" [ref=e760]:
+            - /url: /projects
+    - generic [ref=e765]:
+      - generic "Trusted by" [ref=e766]:
+        - paragraph [ref=e770]:
+          - generic [aria-hidden] [ref=e771]: T
+          - generic [aria-hidden] [ref=e772]: r
+          - generic [aria-hidden] [ref=e773]: u
+          - generic [aria-hidden] [ref=e774]: s
+          - generic [aria-hidden] [ref=e775]: t
+          - generic [aria-hidden] [ref=e776]: e
+          - generic [aria-hidden] [ref=e777]: d
+          - generic [aria-hidden] [ref=e778]: b
+          - generic [aria-hidden] [ref=e779]: "y"
+      - heading "Built together with." [level=2] [ref=e783]:
+        - generic [aria-hidden] [ref=e784]:
+          - generic [aria-hidden] [ref=e785]: B
+          - generic [aria-hidden] [ref=e786]: u
+          - generic [aria-hidden] [ref=e787]: i
+          - generic [aria-hidden] [ref=e788]: l
+          - generic [aria-hidden] [ref=e789]: t
+        - generic [aria-hidden] [ref=e790]:
+          - generic [aria-hidden] [ref=e791]: t
+          - generic [aria-hidden] [ref=e792]: o
+          - generic [aria-hidden] [ref=e793]: g
+          - generic [aria-hidden] [ref=e794]: e
+          - generic [aria-hidden] [ref=e795]: t
+          - generic [aria-hidden] [ref=e796]: h
+          - generic [aria-hidden] [ref=e797]: e
+          - generic [aria-hidden] [ref=e798]: r
+        - generic [aria-hidden] [ref=e799]:
+          - generic [aria-hidden] [ref=e800]: w
+          - generic [aria-hidden] [ref=e801]: i
+          - generic [aria-hidden] [ref=e802]: t
+          - generic [aria-hidden] [ref=e803]: h
+          - generic [aria-hidden] [ref=e804]: .
+    - generic [ref=e849]:
+      - generic [ref=e850]:
+        - generic "From the studio" [ref=e851]:
+          - paragraph [ref=e855]:
+            - generic [aria-hidden] [ref=e856]: F
+            - generic [aria-hidden] [ref=e857]: r
+            - generic [aria-hidden] [ref=e858]: o
+            - generic [aria-hidden] [ref=e859]: m
+            - generic [aria-hidden] [ref=e860]: t
+            - generic [aria-hidden] [ref=e861]: h
+            - generic [aria-hidden] [ref=e862]: e
+            - generic [aria-hidden] [ref=e863]: s
+            - generic [aria-hidden] [ref=e864]: t
+            - generic [aria-hidden] [ref=e865]: u
+            - generic [aria-hidden] [ref=e866]: d
+            - generic [aria-hidden] [ref=e867]: i
+            - generic [aria-hidden] [ref=e868]: o
+        - heading "Blog." [level=2] [ref=e872]:
+          - generic [aria-hidden] [ref=e873]:
+            - generic [aria-hidden] [ref=e874]: B
+            - generic [aria-hidden] [ref=e875]: l
+            - generic [aria-hidden] [ref=e876]: o
+            - generic [aria-hidden] [ref=e877]: g
+            - generic [aria-hidden] [ref=e878]: .
+      - list [ref=e880]:
+        - listitem [ref=e881]:
+          - 'link "L''Atelier Barcelona: a pastry shop where dessert is the main character and the interior is his stage view all article" [ref=e882]':
+            - /url: /blog/latelier-barcelona-a-pastry-shop-where-dessert-is-the-main-character-and-the-interior-is-his-stage
+            - generic [ref=e884]:
+              - paragraph [ref=e885]:
+                - generic [aria-hidden] [ref=e886]: L'Atelier
+                - generic [aria-hidden] [ref=e887]: "Barcelona:"
+                - generic [aria-hidden] [ref=e888]: a
+                - generic [aria-hidden] [ref=e889]: pastry
+                - generic [aria-hidden] [ref=e890]: shop
+                - generic [aria-hidden] [ref=e891]: where
+                - generic [aria-hidden] [ref=e892]: dessert
+                - generic [aria-hidden] [ref=e893]: is
+                - generic [aria-hidden] [ref=e894]: the
+                - generic [aria-hidden] [ref=e895]: main
+                - generic [aria-hidden] [ref=e896]: character
+                - generic [aria-hidden] [ref=e897]: and
+                - generic [aria-hidden] [ref=e898]: the
+                - generic [aria-hidden] [ref=e899]: interior
+                - generic [aria-hidden] [ref=e900]: is
+                - generic [aria-hidden] [ref=e901]: his
+                - generic [aria-hidden] [ref=e902]: stage
+              - generic [ref=e903] [cursor=pointer]: view all article
+        - listitem [ref=e905]:
+          - 'link "Barcelona Pavilion: the building that made minimalism luxurious view all article" [ref=e906]':
+            - /url: /blog/barcelona-pavilion-the-building-that-made-minimalism-luxurious
+            - generic [ref=e908]:
+              - paragraph [ref=e909]:
+                - generic [aria-hidden] [ref=e910]: Barcelona
+                - generic [aria-hidden] [ref=e911]: "Pavilion:"
+                - generic [aria-hidden] [ref=e912]: the
+                - generic [aria-hidden] [ref=e913]: building
+                - generic [aria-hidden] [ref=e914]: that
+                - generic [aria-hidden] [ref=e915]: made
+                - generic [aria-hidden] [ref=e916]: minimalism
+                - generic [aria-hidden] [ref=e917]: luxurious
+              - generic [ref=e918] [cursor=pointer]: view all article
+        - listitem [ref=e920]:
+          - 'link "Cotton House: a quiet Barcelona place you only share with your own view all article" [ref=e921]':
+            - /url: /blog/cotton-house-a-quiet-barcelona-place-you-only-share-with-your-own
+            - generic [ref=e923]:
+              - paragraph [ref=e924]:
+                - generic [aria-hidden] [ref=e925]: Cotton
+                - generic [aria-hidden] [ref=e926]: "House:"
+                - generic [aria-hidden] [ref=e927]: a
+                - generic [aria-hidden] [ref=e928]: quiet
+                - generic [aria-hidden] [ref=e929]: Barcelona
+                - generic [aria-hidden] [ref=e930]: place
+                - generic [aria-hidden] [ref=e931]: you
+                - generic [aria-hidden] [ref=e932]: only
+                - generic [aria-hidden] [ref=e933]: share
+                - generic [aria-hidden] [ref=e934]: with
+                - generic [aria-hidden] [ref=e935]: your
+                - generic [aria-hidden] [ref=e936]: own
+              - generic [ref=e937] [cursor=pointer]: view all article
+      - link "All journal" [ref=e940]:
+        - /url: /blog
+    - generic [ref=e945]:
+      - generic [ref=e948]:
+        - generic [ref=e949]:
+          - heading "\"Good design feels inevitable. Nothing extra, nothing missing\"" [level=2] [ref=e950]
+          - heading "\"Good design feels inevitable. Nothing extra, nothing missing\"" [level=2] [ref=e951]
+        - generic [ref=e952]:
+          - paragraph [ref=e953]:
+            - generic [aria-hidden] [ref=e954]: Kirill
+          - paragraph [ref=e955]:
+            - generic [aria-hidden] [ref=e956]: C
+            - generic [aria-hidden] [ref=e957]: E
+            - generic [aria-hidden] [ref=e958]: O
+            - generic [aria-hidden] [ref=e959]: "&"
+            - generic [aria-hidden] [ref=e960]: F
+            - generic [aria-hidden] [ref=e961]: O
+            - generic [aria-hidden] [ref=e962]: U
+            - generic [aria-hidden] [ref=e963]: "N"
+            - generic [aria-hidden] [ref=e964]: D
+            - generic [aria-hidden] [ref=e965]: E
+            - generic [aria-hidden] [ref=e966]: R
+      - generic [ref=e967]:
+        - paragraph [ref=e969]:
+          - generic [aria-hidden] [ref=e970]: Kirill
+          - generic [aria-hidden] [ref=e971]: works
+          - generic [aria-hidden] [ref=e972]: like
+          - generic [aria-hidden] [ref=e973]: an
+          - generic [aria-hidden] [ref=e974]: architect
+          - generic [aria-hidden] [ref=e975]: inside
+          - generic [aria-hidden] [ref=e976]: the
+          - generic [aria-hidden] [ref=e977]: interior.
+          - generic [aria-hidden] [ref=e978]: Proportion
+          - generic [aria-hidden] [ref=e979]: first,
+          - generic [aria-hidden] [ref=e980]: then
+          - generic [aria-hidden] [ref=e981]: material
+          - generic [aria-hidden] [ref=e982]: and
+          - generic [aria-hidden] [ref=e983]: light.
+          - generic [aria-hidden] [ref=e984]: Calm,
+          - generic [aria-hidden] [ref=e985]: precise,
+          - generic [aria-hidden] [ref=e986]: finished
+          - generic [aria-hidden] [ref=e987]: spaces.
+        - generic [ref=e988]:
+          - generic [ref=e989]:
+            - paragraph [ref=e990]:
+              - generic [aria-hidden] [ref=e991]: e
+              - generic [aria-hidden] [ref=e992]: m
+              - generic [aria-hidden] [ref=e993]: a
+              - generic [aria-hidden] [ref=e994]: i
+              - generic [aria-hidden] [ref=e995]: l
+            - link "kirill@stanzza.design" [ref=e996]:
+              - /url: mailto:kirill@stanzza.design?subject=Stanzza
+          - generic [ref=e997]:
+            - paragraph [ref=e998]:
+              - generic [aria-hidden] [ref=e999]: l
+              - generic [aria-hidden] [ref=e1000]: o
+              - generic [aria-hidden] [ref=e1001]: c
+              - generic [aria-hidden] [ref=e1002]: a
+              - generic [aria-hidden] [ref=e1003]: t
+              - generic [aria-hidden] [ref=e1004]: i
+              - generic [aria-hidden] [ref=e1005]: o
+              - generic [aria-hidden] [ref=e1006]: "n"
+            - link "Barcelona" [ref=e1007]:
+              - /url: https://maps.app.goo.gl/TGYpnaESmci1h4PS8
+        - generic [ref=e1008]:
+          - button "Request a call" [ref=e1009]
+          - generic [ref=e1011]:
+            - link [ref=e1012]:
+              - /url: https://www.instagram.com/stanzza_design
+            - link [ref=e1016]:
+              - /url: https://www.linkedin.com/in/kirill-ivko-a503a6313
+            - link [ref=e1020]:
+              - /url: https://www.behance.net/stanzza
+    - generic [ref=e1028]:
+      - generic [ref=e1029]:
+        - generic "FAQs" [ref=e1030]:
+          - paragraph [ref=e1034]:
+            - generic [aria-hidden] [ref=e1035]: F
+            - generic [aria-hidden] [ref=e1036]: A
+            - generic [aria-hidden] [ref=e1037]: Q
+            - generic [aria-hidden] [ref=e1038]: s
+        - heading "Questions clients often ask" [level=2] [ref=e1042]:
+          - generic [aria-hidden] [ref=e1043]:
+            - generic [aria-hidden] [ref=e1044]: Q
+            - generic [aria-hidden] [ref=e1045]: u
+            - generic [aria-hidden] [ref=e1046]: e
+            - generic [aria-hidden] [ref=e1047]: s
+            - generic [aria-hidden] [ref=e1048]: t
+            - generic [aria-hidden] [ref=e1049]: i
+            - generic [aria-hidden] [ref=e1050]: o
+            - generic [aria-hidden] [ref=e1051]: "n"
+            - generic [aria-hidden] [ref=e1052]: s
+          - generic [aria-hidden] [ref=e1053]:
+            - generic [aria-hidden] [ref=e1054]: c
+            - generic [aria-hidden] [ref=e1055]: l
+            - generic [aria-hidden] [ref=e1056]: i
+            - generic [aria-hidden] [ref=e1057]: e
+            - generic [aria-hidden] [ref=e1058]: "n"
+            - generic [aria-hidden] [ref=e1059]: t
+            - generic [aria-hidden] [ref=e1060]: s
+          - generic [aria-hidden] [ref=e1061]:
+            - generic [aria-hidden] [ref=e1062]: o
+            - generic [aria-hidden] [ref=e1063]: f
+            - generic [aria-hidden] [ref=e1064]: t
+            - generic [aria-hidden] [ref=e1065]: e
+            - generic [aria-hidden] [ref=e1066]: "n"
+          - generic [aria-hidden] [ref=e1067]:
+            - generic [aria-hidden] [ref=e1068]: a
+            - generic [aria-hidden] [ref=e1069]: s
+            - generic [aria-hidden] [ref=e1070]: k
+      - generic [ref=e1072]:
+        - button [ref=e1074] [cursor=pointer]:
+          - heading "Do you only create the design project, or do you manage the renovation end to end?" [level=3] [ref=e1075]
+        - button [ref=e1081] [cursor=pointer]:
+          - heading "What is included in the design project, and what will I receive?" [level=3] [ref=e1082]
+        - button [ref=e1088] [cursor=pointer]:
+          - heading "How much does the design project cost, and what affects the price?" [level=3] [ref=e1089]
+        - button [ref=e1095] [cursor=pointer]:
+          - heading "How is the renovation estimate prepared, and what does it include?" [level=3] [ref=e1096]
+        - generic [ref=e1101]:
+          - generic:
+            - button [ref=e1103] [cursor=pointer]:
+              - heading "What happens if the final cost of works exceeds the estimate?" [level=3] [ref=e1104]
+            - button [ref=e1110] [cursor=pointer]:
+              - heading "What are the stages of work — from first enquiry to completion?" [level=3] [ref=e1111]
+            - button [ref=e1117] [cursor=pointer]:
+              - heading "How long does the design project take, and how long does the renovation take?" [level=3] [ref=e1118]
+            - button [ref=e1124] [cursor=pointer]:
+              - heading "What is design supervision, and why do I need it?" [level=3] [ref=e1125]
+            - button [ref=e1131] [cursor=pointer]:
+              - heading "What is project management, and why is it necessary?" [level=3] [ref=e1132]
+            - button [ref=e1138] [cursor=pointer]:
+              - heading "How many rounds of revisions are included?" [level=3] [ref=e1139]
+            - button [ref=e1145] [cursor=pointer]:
+              - heading "What warranties do you provide for the renovation?" [level=3] [ref=e1146]
+            - button [ref=e1152] [cursor=pointer]:
+              - heading "Do I need permits for the renovation, and do you handle them?" [level=3] [ref=e1153]
+            - button [ref=e1159] [cursor=pointer]:
+              - heading "Do you purchase materials and furniture, or is that my responsibility?" [level=3] [ref=e1160]
+            - button [ref=e1166] [cursor=pointer]:
+              - heading "Can we work together remotely if I live in another country or city?" [level=3] [ref=e1167]
+          - button "show more" [ref=e1172]
+    - contentinfo [ref=e1174]:
+      - generic [ref=e1176]:
+        - generic [ref=e1177]:
+          - generic "GET IN TOUCH" [ref=e1178]:
+            - paragraph [ref=e1182]:
+              - generic [aria-hidden] [ref=e1183]: G
+              - generic [aria-hidden] [ref=e1184]: E
+              - generic [aria-hidden] [ref=e1185]: T
+              - generic [aria-hidden] [ref=e1186]: I
+              - generic [aria-hidden] [ref=e1187]: "N"
+              - generic [aria-hidden] [ref=e1188]: T
+              - generic [aria-hidden] [ref=e1189]: O
+              - generic [aria-hidden] [ref=e1190]: U
+              - generic [aria-hidden] [ref=e1191]: C
+              - generic [aria-hidden] [ref=e1192]: H
+          - heading "Start with a conversation." [level=2] [ref=e1196]:
+            - generic [aria-hidden] [ref=e1197]:
+              - generic [aria-hidden] [ref=e1198]: S
+              - generic [aria-hidden] [ref=e1199]: t
+              - generic [aria-hidden] [ref=e1200]: a
+              - generic [aria-hidden] [ref=e1201]: r
+              - generic [aria-hidden] [ref=e1202]: t
+            - generic [aria-hidden] [ref=e1203]:
+              - generic [aria-hidden] [ref=e1204]: w
+              - generic [aria-hidden] [ref=e1205]: i
+              - generic [aria-hidden] [ref=e1206]: t
+              - generic [aria-hidden] [ref=e1207]: h
+            - generic [aria-hidden] [ref=e1209]: a
+            - generic [aria-hidden] [ref=e1210]:
+              - generic [aria-hidden] [ref=e1211]: c
+              - generic [aria-hidden] [ref=e1212]: o
+              - generic [aria-hidden] [ref=e1213]: "n"
+              - generic [aria-hidden] [ref=e1214]: v
+              - generic [aria-hidden] [ref=e1215]: e
+              - generic [aria-hidden] [ref=e1216]: r
+              - generic [aria-hidden] [ref=e1217]: s
+              - generic [aria-hidden] [ref=e1218]: a
+              - generic [aria-hidden] [ref=e1219]: t
+              - generic [aria-hidden] [ref=e1220]: i
+              - generic [aria-hidden] [ref=e1221]: o
+              - generic [aria-hidden] [ref=e1222]: "n"
+              - generic [aria-hidden] [ref=e1223]: .
+        - generic [ref=e1224]:
+          - paragraph [ref=e1226]:
+            - generic [aria-hidden] [ref=e1227]: Share
+            - generic [aria-hidden] [ref=e1228]: a
+            - generic [aria-hidden] [ref=e1229]: few
+            - generic [aria-hidden] [ref=e1230]: details
+            - generic [aria-hidden] [ref=e1231]: about
+            - generic [aria-hidden] [ref=e1232]: your
+            - generic [aria-hidden] [ref=e1233]: project
+            - generic [aria-hidden] [ref=e1234]: and
+            - generic [aria-hidden] [ref=e1235]: we'll
+            - generic [aria-hidden] [ref=e1236]: come
+            - generic [aria-hidden] [ref=e1237]: back
+            - generic [aria-hidden] [ref=e1238]: with
+            - generic [aria-hidden] [ref=e1239]: a
+            - generic [aria-hidden] [ref=e1240]: clear
+            - generic [aria-hidden] [ref=e1241]: plan.
+          - button "START A PROJECT" [ref=e1242]
+      - generic [ref=e1244]:
+        - generic [ref=e1246]:
+          - navigation [ref=e1247]:
+            - link "About" [ref=e1248]:
+              - /url: /#composition
+            - link "Projects" [ref=e1249]:
+              - /url: /projects
+            - link "Approach" [ref=e1250]:
+              - /url: /#story
+            - link "Blog" [ref=e1251]:
+              - /url: /blog
+            - link "Contacts" [ref=e1252]:
+              - /url: "#footer"
+          - generic [ref=e1254]:
+            - link [ref=e1255]:
+              - /url: /
+            - paragraph [ref=e1265]:
+              - generic [aria-hidden] [ref=e1266]: ©
+              - generic [aria-hidden] [ref=e1267]: Stanzza
+              - generic [aria-hidden] [ref=e1268]: design
+              - generic [aria-hidden] [ref=e1269]: Europe
+              - generic [aria-hidden] [ref=e1270]: "2026"
+          - generic [ref=e1271]:
+            - link "LinkedIn" [ref=e1272]:
+              - /url: https://www.linkedin.com/in/kirill-ivko-a503a6313
+            - link "Instagram" [ref=e1273]:
+              - /url: https://www.instagram.com/stanzza_design
+            - link "Behance" [ref=e1274]:
+              - /url: https://www.behance.net/stanzza
+            - link "Facebook" [ref=e1275]:
+              - /url: https://www.facebook.com/Stanzza-Design-111487748009895
+        - generic [ref=e1276]:
+          - generic [ref=e1277]:
+            - paragraph [ref=e1278]:
+              - generic [aria-hidden] [ref=e1279]: Call
+              - generic [aria-hidden] [ref=e1280]: us
+            - link "+34 654 496 780" [ref=e1281]:
+              - /url: tel:+34654496780
+          - link "Back to top" [ref=e1283]:
+            - /url: "#hero"
+          - generic [ref=e1284]:
+            - link "Privacy Policy" [ref=e1285]:
+              - /url: /documents/privacy-policy
+            - link "Terms of Service" [ref=e1286]:
+              - /url: /documents/terms-of-service
+            - link "Cookies Settings" [ref=e1287]:
+              - /url: /documents/cookie-policy
+  - dialog:
+    - generic:
+      - generic:
+        - form "Project inquiry":
+          - generic:
+            - generic:
+              - paragraph: Project inquiry
+              - paragraph: Every interior starts with a conversation.Share a few details and we’ll get back with next steps.
+          - generic:
+            - generic:
+              - generic:
+                - generic: Name*
+                - textbox "Name*"
+              - generic:
+                - generic: Name*
+                - textbox "Name*":
+                  - /placeholder: Email*
+              - generic:
+                - generic: Message
+                - textbox "Message":
+                  - /placeholder: Type your message...
+              - generic:
+                - checkbox "By submitting this form, you agree to our Privacy Policy." [checked]
+                - generic:
+                  - text: By submitting this form, you agree to our
+                  - link "Privacy Policy.":
+                    - /url: /documents/privacy-policy
+              - button "Submit"
+          - generic "Close modal"
+    - generic "Close modal"
+  - dialog:
+    - generic:
+      - iframe [ref=e1290]
+      - generic "Close modal"
+    - generic "Close modal"

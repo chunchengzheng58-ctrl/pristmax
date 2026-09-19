@@ -1,0 +1,83 @@
+- generic [ref=e1]:
+  - banner [ref=e4]:
+    - link "存序首页" [ref=e5] [cursor=pointer]:
+      - /url: "#dashboard"
+      - generic [aria-hidden] [ref=e6]: ▱
+      - generic [ref=e7]:
+        - text: 存序
+        - generic [ref=e8]: STORAGE ATLAS
+    - navigation "主要导航" [ref=e9]:
+      - button "总览 Overview" [ref=e10] [cursor=pointer]
+      - button "语义降量" [ref=e11] [cursor=pointer]
+      - button "分布式存储" [ref=e12] [cursor=pointer]
+      - button "审计记录" [active] [ref=e13] [cursor=pointer]
+      - button "ROI估算" [ref=e14] [cursor=pointer]
+    - generic [ref=e15]:
+      - generic [ref=e16]: 演示工作空间
+      - button "刷新页面" [ref=e18] [cursor=pointer]: ↻
+  - generic [ref=e19]:
+    - generic [ref=e20]: WORKSPACE / 企业数据控制台
+    - generic [ref=e21]: PRIVATE BY DESIGN · 本地部署
+  - main [ref=e22]:
+    - generic [ref=e169]:
+      - generic [ref=e170]:
+        - img "玉石与金属环保护着玻璃数据层" [ref=e171]
+        - generic [ref=e172]:
+          - paragraph [ref=e173]: PRESERVE THE ORIGINAL
+          - heading "每一次还原， 都有迹可循。" [level=2] [ref=e174]: 每一次还原，都有迹可循。
+          - paragraph [ref=e175]: 从处理记录到完整性校验，让数据的来路与去向清晰可见。
+      - generic [ref=e176]:
+        - generic [ref=e177]:
+          - generic [ref=e178]: 操作审计
+          - generic [ref=e179]:
+            - combobox "筛选审计模块" [ref=e180]:
+              - option "全部模块" [selected]
+              - option "语义降量"
+              - option "分布式存储"
+            - button "导出记录" [ref=e181] [cursor=pointer]
+        - table [ref=e183]:
+          - rowgroup [ref=e184]:
+            - row [ref=e185]:
+              - columnheader "时间" [ref=e186]
+              - columnheader "事件" [ref=e187]
+              - columnheader "处理模块" [ref=e188]
+              - columnheader "数据来源" [ref=e189]
+              - columnheader "原始体积" [ref=e190]
+              - columnheader "处理后" [ref=e191]
+          - rowgroup [ref=e192]:
+            - row [ref=e193]:
+              - cell "10:30:45" [ref=e194]
+              - cell "SEMANTIC_REDUCED" [ref=e195]
+              - cell "语义" [ref=e196]
+              - cell "CAM-001" [ref=e198]
+              - cell "100 MB" [ref=e199]
+              - cell "10 MB" [ref=e200]
+            - row [ref=e201]:
+              - cell "10:28:12" [ref=e202]
+              - cell "DEDUP_STORED" [ref=e203]
+              - cell "分布式" [ref=e204]
+              - cell "backup-2024" [ref=e206]
+              - cell "200 GB" [ref=e207]
+              - cell "54 GB" [ref=e208]
+            - row [ref=e209]:
+              - cell "10:25:33" [ref=e210]
+              - cell "CDC_CHUNKED" [ref=e211]
+              - cell "分布式" [ref=e212]
+              - cell "/data/logs" [ref=e214]
+              - cell "50 GB" [ref=e215]
+              - cell "8 GB" [ref=e216]
+            - row [ref=e217]:
+              - cell "10:20:00" [ref=e218]
+              - cell "NODE_REGISTERED" [ref=e219]
+              - cell "分布式" [ref=e220]
+              - cell "node-4" [ref=e222]
+              - cell "-" [ref=e223]
+              - cell "-" [ref=e224]
+        - generic [ref=e225]:
+          - generic [ref=e226]: 演示审计链 · 尚未执行实际校验
+          - generic [ref=e227]: 本页为合并系统的功能演示，记录与完整性状态均为样例。
+  - contentinfo [ref=e145]:
+    - link "存序 Storage, thoughtfully." [ref=e146] [cursor=pointer]:
+      - /url: "#dashboard"
+    - generic [ref=e147]: 企业数据，始终由企业掌控。
+    - generic [ref=e148]: PRODUCT PREVIEW / 2026

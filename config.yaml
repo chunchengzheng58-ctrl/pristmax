@@ -1,0 +1,42 @@
+# Semantic Reduction System Configuration
+# Production Version 1.0
+
+system:
+  name: SemanticReduction
+  version: 1.0.0
+  debug: false
+
+processing:
+  batch_size: 100
+  max_workers: 4
+  timeout_seconds: 300
+
+video:
+  frame_skip: 1
+  motion_threshold: 0.05
+  min_brightness: 0.1
+  min_sharpness: 0.3
+  preserve_with_faces: true
+  preserve_with_people: true
+  preserve_with_vehicles: true
+  low_value_downsample_ratio: 0.1
+
+log:
+  default_sampling_rate: 0.1
+  preserve_error: true
+  preserve_warn: true
+  discard_trace: true
+
+storage:
+  type: filesystem
+  base_path: ./data
+  audit_path: ./data/audit
+
+audit:
+  enabled: true
+  path: ./data/audit
+  retention_days: 365
+
+roi:
+  storage_cost_per_tb: 5000
+  currency: CNY

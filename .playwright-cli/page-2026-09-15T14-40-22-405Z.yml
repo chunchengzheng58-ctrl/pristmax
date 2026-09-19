@@ -1,0 +1,123 @@
+- generic [ref=f2e1]:
+  - banner [ref=f2e2]:
+    - link "存序首页" [ref=f2e3] [cursor=pointer]:
+      - /url: "#dashboard"
+      - generic [aria-hidden] [ref=f2e4]: ▱
+      - generic [ref=f2e5]:
+        - text: 存序
+        - generic [ref=f2e6]: STORAGE ATLAS
+    - navigation "主要导航" [ref=f2e7]:
+      - button "总览" [active] [ref=f2e78] [cursor=pointer]
+      - button "语义降量" [ref=f2e9] [cursor=pointer]
+      - button "分布式存储" [ref=f2e10] [cursor=pointer]
+      - button "审计记录" [ref=f2e11] [cursor=pointer]
+    - button "刷新页面" [ref=f2e15] [cursor=pointer]: ↻
+  - generic [ref=f2e16]: WORKSPACE / 企业数据控制台
+  - main [ref=f2e19]:
+    - generic [ref=f2e79]:
+      - generic [ref=f2e81]:
+        - paragraph [ref=f2e82]: LESS STORAGE. MORE POSSIBILITY.
+        - heading "让数据的价值， 超越它的体积。" [level=1] [ref=f2e83]: 让数据的价值，超越它的体积。
+        - paragraph [ref=f2e84]: 从内容理解到分布式去重，让每一份企业数据，都有更合适的存储方式。
+        - generic [ref=f2e85]:
+          - button "探索存储引擎 ↗" [ref=f2e86] [cursor=pointer]:
+            - text: 探索存储引擎
+            - generic [ref=f2e87]: ↗
+          - button "了解语义降量 →" [ref=f2e88] [cursor=pointer]
+        - generic [ref=f2e89]:
+          - generic [ref=f2e90]: 01 / UNDERSTAND
+          - generic [ref=f2e91]: 02 / REDUCE
+          - generic [ref=f2e92]: 03 / VERIFY
+      - generic [ref=f2e93]:
+        - generic [ref=f2e94]:
+          - paragraph [ref=f2e95]: YOUR STORAGE, AT A GLANCE
+          - heading "全局视野，清晰掌控。" [level=2] [ref=f2e96]
+        - generic [ref=f2e97]: 以下为演示数据 · 不代表实际节省
+      - generic [ref=f2e99]:
+        - generic [ref=f2e100]:
+          - generic [ref=f2e101]: 1.5 PB
+          - generic [ref=f2e102]: 累计节省 · 示例
+        - generic [ref=f2e103]:
+          - generic [ref=f2e104]: 73%
+          - generic [ref=f2e105]: 去重比例 · 示例
+        - generic [ref=f2e106]:
+          - generic [ref=f2e107]: 本地
+          - generic [ref=f2e108]: 部署方式
+      - generic [ref=f2e109]:
+        - generic [ref=f2e110]:
+          - generic [ref=f2e111]:
+            - text: 01 / SEMANTIC ENGINE
+            - generic [ref=f2e112]: ↗
+          - generic [ref=f2e113]: 读懂内容，保留价值。
+          - generic [ref=f2e114]: 语义降量 · 面向视频与日志的内容理解
+          - generic [ref=f2e115]:
+            - generic [ref=f2e116]:
+              - generic [ref=f2e117]: 68%
+              - generic [ref=f2e118]: 视频降量比例
+            - generic [ref=f2e119]:
+              - generic [ref=f2e120]: "156"
+              - generic [ref=f2e121]: 接入摄像头
+            - generic [ref=f2e122]:
+              - generic [ref=f2e123]: 892 TB
+              - generic [ref=f2e124]: 节省空间
+            - generic [ref=f2e125]:
+              - generic [ref=f2e126]: "3"
+              - generic [ref=f2e127]: 运行策略
+          - button "进入引擎工作台 →" [ref=f2e128] [cursor=pointer]
+        - generic [ref=f2e129]:
+          - generic [ref=f2e130]:
+            - text: 02 / STORAGE ENGINE
+            - generic [ref=f2e131]: ↗
+          - generic [ref=f2e132]: 折叠冗余，释放空间。
+          - generic [ref=f2e133]: 分布式存储 · 内容分块与指纹去重
+          - generic [ref=f2e134]:
+            - generic [ref=f2e135]:
+              - generic [ref=f2e136]: 73%
+              - generic [ref=f2e137]: 去重比例
+            - generic [ref=f2e138]:
+              - generic [ref=f2e139]: "5"
+              - generic [ref=f2e140]: 节点管理
+            - generic [ref=f2e141]:
+              - generic [ref=f2e142]: 648 TB
+              - generic [ref=f2e143]: 存储占用
+            - generic [ref=f2e144]:
+              - generic [ref=f2e145]: 2.4 PB
+              - generic [ref=f2e146]: 原始数据
+          - button "进入引擎工作台 →" [ref=f2e147] [cursor=pointer]
+      - generic [ref=f2e148]:
+        - generic [ref=f2e149]: 最近处理活动
+        - table [ref=f2e152]:
+          - rowgroup [ref=f2e153]:
+            - row [ref=f2e154]:
+              - columnheader "时间" [ref=f2e155]
+              - columnheader "处理模块" [ref=f2e156]
+              - columnheader "数据来源" [ref=f2e157]
+              - columnheader "原始体积" [ref=f2e158]
+              - columnheader "处理后" [ref=f2e159]
+              - columnheader "缩减比例" [ref=f2e160]
+          - rowgroup [ref=f2e161]:
+            - row [ref=f2e162]:
+              - cell "10:30:45" [ref=f2e163]
+              - cell "Semantic" [ref=f2e164]
+              - cell "CAM-001 Lobby" [ref=f2e166]
+              - cell "100 MB" [ref=f2e167]
+              - cell "12 MB" [ref=f2e168]
+              - cell "88%" [ref=f2e169]
+            - row [ref=f2e171]:
+              - cell "10:28:12" [ref=f2e172]
+              - cell "Distributed" [ref=f2e173]
+              - cell "backup-2024" [ref=f2e175]
+              - cell "200 GB" [ref=f2e176]
+              - cell "54 GB" [ref=f2e177]
+              - cell "73%" [ref=f2e178]
+            - row [ref=f2e180]:
+              - cell "10:25:33" [ref=f2e181]
+              - cell "Distributed" [ref=f2e182]
+              - cell "/data/logs" [ref=f2e184]
+              - cell "50 GB" [ref=f2e185]
+              - cell "8 GB" [ref=f2e186]
+              - cell "84%" [ref=f2e187]
+  - contentinfo [ref=f2e73]:
+    - link "存序 Storage, thoughtfully." [ref=f2e74] [cursor=pointer]:
+      - /url: "#dashboard"
+    - generic [ref=f2e75]: 企业数据，始终由企业掌控。

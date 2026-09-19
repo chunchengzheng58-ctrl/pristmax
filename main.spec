@@ -15,21 +15,19 @@ a = Analysis(
     pathex=[ROOT],
     binaries=[],
     datas=[
-        # 官网静态文件
-        ('site', 'site'),
         # 产品控制台
-        ('unified/web', 'unified/web'),
-        # 设计资源
-        ('unified/design.css', 'unified'),
-        ('unified/design.js', 'unified'),
-        ('unified/pristmax-editorial.css', 'unified'),
+        ('src/pristmax/web', 'src/pristmax/web'),
+        # 营销网站
+        ('src/pristmax/site', 'src/pristmax/site'),
         # 图标资源
-        ('unified/assets', 'unified/assets'),
+        ('unified/assets/brand', 'src/pristmax/assets/brand'),
     ],
     hiddenimports=[
         'flask', 'flask_cors', 'werkzeug', 'jinja2',
-        'auth', 'monitor', 'scheduler', 'storage',
-        'api.server', 'api.task_processor',
+        'src.pristmax.auth', 'src.pristmax.monitor',
+        'src.pristmax.scheduler', 'src.pristmax.storage',
+        'src.pristmax.api.server', 'src.pristmax.api.task_processor',
+        'src.pristmax.dedup',
     ],
     hookspath=[],
     hooksconfig={},
@@ -63,5 +61,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=None,  # 可指定 .ico 文件
+    icon=None,
 )

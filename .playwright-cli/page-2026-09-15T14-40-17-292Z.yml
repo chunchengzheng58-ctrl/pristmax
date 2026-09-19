@@ -1,0 +1,55 @@
+- generic [ref=f2e1]:
+  - banner [ref=f2e2]:
+    - link "存序首页" [ref=f2e3] [cursor=pointer]:
+      - /url: "#dashboard"
+      - generic [aria-hidden] [ref=f2e4]: ▱
+      - generic [ref=f2e5]:
+        - text: 存序
+        - generic [ref=f2e6]: STORAGE ATLAS
+    - navigation "主要导航" [ref=f2e7]:
+      - button "总览 Overview" [ref=f2e8] [cursor=pointer]
+      - button "语义降量" [ref=f2e9] [cursor=pointer]
+      - button "分布式存储" [ref=f2e10] [cursor=pointer]
+      - button "审计记录" [ref=f2e11] [cursor=pointer]
+    - generic [ref=f2e12]:
+      - generic [ref=f2e13]: 演示工作空间
+      - button "刷新页面" [ref=f2e15] [cursor=pointer]: ↻
+  - generic [ref=f2e16]:
+    - generic [ref=f2e17]: WORKSPACE / 企业数据控制台
+    - generic [ref=f2e18]: PRIVATE BY DESIGN · 本地部署
+  - main [ref=f2e19]:
+    - generic [ref=f2e21]:
+      - generic [ref=f2e22]:
+        - generic [ref=f2e23]: 操作审计
+        - generic [ref=f2e24]:
+          - combobox "筛选审计模块" [ref=f2e25]:
+            - option "全部模块"
+            - option "语义降量" [selected]
+            - option "分布式存储"
+          - button "导出记录" [active] [ref=f2e26] [cursor=pointer]
+      - table [ref=f2e28]:
+        - rowgroup [ref=f2e29]:
+          - row [ref=f2e30]:
+            - columnheader "时间" [ref=f2e31]
+            - columnheader "Event" [ref=f2e32]
+            - columnheader "处理模块" [ref=f2e33]
+            - columnheader "数据来源" [ref=f2e34]
+            - columnheader "原始体积" [ref=f2e35]
+            - columnheader "处理后" [ref=f2e36]
+        - rowgroup [ref=f2e37]:
+          - row [ref=f2e38]:
+            - cell "10:30:45" [ref=f2e39]
+            - cell "SEMANTIC_REDUCED" [ref=f2e40]
+            - cell "Semantic" [ref=f2e41]
+            - cell "CAM-001" [ref=f2e43]
+            - cell "100 MB" [ref=f2e44]
+            - cell "10 MB" [ref=f2e45]
+      - generic [ref=f2e70]:
+        - generic [ref=f2e71]: 演示审计链 · 尚未执行实际校验
+        - generic [ref=f2e72]: 本页为合并系统的功能演示，记录与完整性状态均为样例。
+  - contentinfo [ref=f2e73]:
+    - link "存序 Storage, thoughtfully." [ref=f2e74] [cursor=pointer]:
+      - /url: "#dashboard"
+    - generic [ref=f2e75]: 企业数据，始终由企业掌控。
+    - generic [ref=f2e76]: PRODUCT PREVIEW / 2026
+  - status [ref=f2e77]: 已导出演示审计记录

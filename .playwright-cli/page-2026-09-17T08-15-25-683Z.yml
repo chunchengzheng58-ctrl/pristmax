@@ -1,0 +1,33 @@
+- generic [active] [ref=f3e1]:
+  - banner [ref=f3e2]:
+    - link "pristmax" [ref=f3e3] [cursor=pointer]:
+      - /url: index.html
+    - link "← 返回下载区" [ref=f3e4] [cursor=pointer]:
+      - /url: index.html#download
+  - main [ref=f3e5]:
+    - text: DOCUMENTATION / PREVIEW EDITION
+    - heading "Start small. Verify everything." [level=1] [ref=f3e6]: Start small.Verify everything.
+    - paragraph [ref=f3e7]: Pristmax 部署与试点说明 · 预发布版
+    - paragraph [ref=f3e8]: 目前未发布正式安装包，公开仓库与许可证待确认。本文用于已有源码的开发与试点评估，不表示产品已通过生产验收。
+    - heading "01 / 官网与产品分开" [level=2] [ref=f3e9]
+    - paragraph [ref=f3e10]: 官网是独立静态网站，只展示介绍、文档与发行状态。产品在企业自己的环境中运行；本地控制台与 API 不应直接暴露到公网。
+    - heading "02 / 开发环境启动" [level=2] [ref=f3e11]
+    - paragraph [ref=f3e12]: 已有本项目源码时，可在隔离的测试环境中运行以下命令。先准备 Python、依赖与 FFmpeg；视频处理需要单独检查 FFmpeg 是否可用。
+    - generic [ref=f3e13]: cd unified python -m pip install -r requirements.txt python -m api.server --host 127.0.0.1 --port 5001
+    - paragraph [ref=f3e14]:
+      - text: 启动后访问
+      - code [ref=f3e15]: http://127.0.0.1:5001
+      - text: 。首次按界面完成账号配置。当前部分统计与模块仍使用演示数据，不能作为真实节省率证明。
+    - heading "03 / 试点验收" [level=2] [ref=f3e16]
+    - list [ref=f3e17]:
+      - listitem [ref=f3e18]: 准备代表性样本与独立原件，记录字节数、文件哈希、类型与访问频率。
+      - listitem [ref=f3e19]: 先验证无损路径的逐字节恢复，再单独评估视频降量的画质与业务准确率。
+      - listitem [ref=f3e20]: 计算包含索引、元数据与副本的净存储占用，同时测量处理时间与恢复时间。
+      - listitem [ref=f3e21]: 覆盖任务中断、容量不足、损坏检测与权限隔离。通过恢复演练后再扩大范围。
+    - heading "04 / 发行与开源" [level=2] [ref=f3e22]
+    - paragraph [ref=f3e23]: 正式发行将提供版本说明、安装包校验值、支持的平台与升级路径。公开仓库及许可证确定后再启用相应入口；现阶段网站不提供占位下载链接。
+    - heading "05 / 数据保留边界" [level=2] [ref=f3e24]
+    - paragraph [ref=f3e25]: 无损压缩与去重是数据的编码方式，不等同于“系统从未保存数据”。自部署环境仍需明确工作目录、缓存、日志、备份和删除策略。视频有损降量与原文件无损归档应分开配置和验收。
+    - paragraph [ref=f3e26]:
+      - link "返回 Pristmax →" [ref=f3e27] [cursor=pointer]:
+        - /url: index.html

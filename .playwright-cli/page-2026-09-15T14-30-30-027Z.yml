@@ -1,0 +1,503 @@
+- generic [ref=e1]:
+  - banner:
+    - generic:
+      - link "访问 EnsureOK 官网":
+        - /url: https://www.ensureok.ai/
+        - generic: ENSUREOK
+      - navigation:
+        - link "Features 特性":
+          - /url: /#features
+          - generic:
+            - generic: Features
+            - generic: 特性
+        - link "Components 组件":
+          - /url: /#components
+          - generic:
+            - generic: Components
+            - generic: 组件
+        - link "Docs 文档":
+          - /url: /docs/
+          - generic:
+            - generic: Docs
+            - generic: 文档
+        - link "Blog 博客":
+          - /url: /blog/
+          - generic:
+            - generic: Blog
+            - generic: 博客
+        - link "Community 社区":
+          - /url: /#community
+          - generic:
+            - generic: Community
+            - generic: 社区
+        - link "Install 安装":
+          - /url: /#start
+          - generic:
+            - generic: Install
+            - generic: 安装
+      - generic:
+        - link "GitHub":
+          - /url: https://github.com/Gnosil/semantix
+          - text: GitHub
+          - generic [aria-hidden]: ↗
+        - link "Install 安装":
+          - /url: /#start
+  - main [ref=e2]:
+    - region "Semantix introduction" [ref=e3]:
+      - generic [ref=e4]:
+        - generic [aria-hidden] [ref=e6]:
+          - generic [ref=e7]: SEMANTIX / 04 AGENT KERNEL
+          - generic [ref=e8]: SEMANTIC MEMORY SYSTEM
+        - button "Continue to the Semantix overview" [active]
+        - paragraph [aria-hidden] [ref=e12]: SEMANTIX
+        - generic:
+          - heading "A verifiable agent memory kernel." [level=1]
+          - paragraph:
+            - text: 把每一次对话，
+            - generic: 沉淀为可检索的记忆
+          - time: Last updated · 2026-08-12
+          - generic:
+            - generic:
+              - generic:
+                - heading "GitHub 仓库" [level=2]
+                - paragraph: 开源 · MIT · 设计文档与路线图都在这里
+                - link "GitHub ↗":
+                  - /url: https://github.com/Gnosil/semantix
+            - generic:
+              - generic:
+                - heading "CLI" [level=2]
+                - paragraph: Coding Agent + 跨会话记忆内核
+                - generic:
+                  - generic:
+                    - code: $ curl -fsSL https://raw.githubusercontent.com/Gnosil/semantix/main/agent-skill/scripts/install.sh | sh
+                  - button "复制代码":
+                    - generic: 复制
+    - generic [ref=e13]:
+      - generic [aria-hidden]:
+        - generic: extract · index · retrieve · evolve
+        - generic: L1 · L2 · L3 · semantic cache
+      - generic [ref=e16]:
+        - generic [ref=e17]:
+          - generic [ref=e18]: ~/semantix — extract & search
+          - generic [ref=e23]:
+            - generic [ref=e24]: $ semantix extract -session sessions/2026-08-07.jsonl -scope project
+            - generic [ref=e25]: ✓ extracted=512 slices stored=512 scope=project
+            - generic [ref=e26]: P-slices 214 · C-slices 158 · T-slices 140
+            - generic [ref=e28]: $ semantix search "如何缓存跨会话前缀" -topk 3
+            - generic [ref=e29]: "#1 [P] id=9f2a score=7.42 \"stable slice injection → vendor byte cache\""
+            - generic [ref=e30]: "#2 [T] id=3c81 score=6.98 \"grep → readFile → editFile → test\""
+            - generic [ref=e31]: "#3 [C] id=b704 score=6.51 \"L2 freeze-period ≥1h guard\""
+            - generic [ref=e33]: 命中 3 slices · 0.4ms · 下次会话注入前缀，直接命中字节缓存
+            - generic [ref=e34]: ▍
+        - paragraph [ref=e36]: Semantix 连接 Agent Harness 与资源层，提供切片提取、BM25 检索和稳定注入路径。当前公开证据来自仓库测试与合成演示；生产环境中的成本和性能收益仍待验证。
+    - generic [ref=e38]:
+      - generic [ref=e39]:
+        - paragraph [ref=e40]: Features 特性
+        - heading "跨会话复用， 能力持续进化。" [level=2] [ref=e41]:
+          - generic [ref=e42]: 跨会话复用，
+          - generic [ref=e43]: 能力持续进化。
+        - paragraph [ref=e44]: Shipped capabilities, traceable evidence, and explicit limits.
+        - paragraph [ref=e45]: Semantix 当前已提供切片提取、BM25 与混合检索、稳定注入等路径。调度、预取和参数反馈处于接口或实验阶段；是否降低生产成本，需要用真实会话单独测量。
+      - generic [ref=e46]:
+        - generic [ref=e47]:
+          - generic [ref=e48]:
+            - generic [ref=e49]: LOOP A / MEMORY
+            - generic [ref=e50]: 沉淀 → 复用
+          - button "01 跨会话记忆 Cross-Session Memory" [ref=e51]:
+            - generic [ref=e52]: "01"
+            - generic [ref=e53]:
+              - generic [ref=e54]: 跨会话记忆
+              - generic [ref=e55]: Cross-Session Memory
+          - button "02 减少重复付费 Less Repeated Spend" [ref=e58]:
+            - generic [ref=e59]: "02"
+            - generic [ref=e60]:
+              - generic [ref=e61]: 减少重复付费
+              - generic [ref=e62]: Less Repeated Spend
+        - generic [ref=e64]:
+          - generic [ref=e65]:
+            - generic [ref=e66]: LOOP B / SCHEDULING
+            - generic [ref=e67]: 决策 → 预取
+          - button "03 减少重复工作 Faster Repeat Work" [ref=e68]:
+            - generic [ref=e69]: "03"
+            - generic [ref=e70]:
+              - generic [ref=e71]: 减少重复工作
+              - generic [ref=e72]: Faster Repeat Work
+          - button "04 利用等待时间 Useful Waiting Time" [ref=e75]:
+            - generic [ref=e76]: "04"
+            - generic [ref=e77]:
+              - generic [ref=e78]: 利用等待时间
+              - generic [ref=e79]: Useful Waiting Time
+        - generic [ref=e81]:
+          - generic [ref=e82]:
+            - generic [ref=e83]: LOOP C / EVOLUTION
+            - generic [ref=e84]: 反馈 → 适配
+          - button "05 越用越准确 Bounded Learning" [ref=e85]:
+            - generic [ref=e86]: "05"
+            - generic [ref=e87]:
+              - generic [ref=e88]: 越用越准确
+              - generic [ref=e89]: Bounded Learning
+          - button "06 多 Agent 适配 Works With Your Agent" [ref=e92]:
+            - generic [ref=e93]: "06"
+            - generic [ref=e94]:
+              - generic [ref=e95]: 多 Agent 适配
+              - generic [ref=e96]: Works With Your Agent
+    - generic [ref=e99]:
+      - generic [ref=e101]:
+        - paragraph [ref=e102]: Components 内核组件
+        - heading "一个内核，四个组件。" [level=2] [ref=e103]
+        - paragraph [ref=e104]: 四个组件组把一次会话变成下一次可以复用的经验：先摄取与切片，再检索与复用，同时完成资源编排，最后用验证和反馈守住边界。
+      - generic [ref=e106]:
+        - group "Semantix 内核组件" [ref=e107]:
+          - button "01 已实现 会话摄取与切片 Ingest & Slice" [ref=e108]:
+            - generic [ref=e109]:
+              - generic [ref=e110]: "01"
+              - generic [ref=e111]:
+                - generic [ref=e112]: 已实现
+                - generic [aria-hidden] [ref=e113]: +
+            - generic [ref=e114]: 会话摄取与切片
+            - generic [ref=e115]: Ingest & Slice
+          - button "02 已实现 检索注入与复用 Retrieve, Inject & Reuse" [ref=e116]:
+            - generic [ref=e117]:
+              - generic [ref=e118]: "02"
+              - generic [ref=e119]:
+                - generic [ref=e120]: 已实现
+                - generic [aria-hidden] [ref=e121]: +
+            - generic [ref=e122]: 检索注入与复用
+            - generic [ref=e123]: Retrieve, Inject & Reuse
+          - button "03 MVP 已接线 调度与投机预取 Schedule & Prefetch" [ref=e124]:
+            - generic [ref=e125]:
+              - generic [ref=e126]: "03"
+              - generic [ref=e127]:
+                - generic [ref=e128]: MVP 已接线
+                - generic [aria-hidden] [ref=e129]: +
+            - generic [ref=e130]: 调度与投机预取
+            - generic [ref=e131]: Schedule & Prefetch
+          - button "04 持续验证 验证安全与演化 Trust & Evolution" [ref=e132]:
+            - generic [ref=e133]:
+              - generic [ref=e134]: "04"
+              - generic [ref=e135]:
+                - generic [ref=e136]: 持续验证
+                - generic [aria-hidden] [ref=e137]: +
+            - generic [ref=e138]: 验证安全与演化
+            - generic [ref=e139]: Trust & Evolution
+        - generic [ref=e140]:
+          - generic [ref=e141]:
+            - generic [ref=e142]:
+              - paragraph [ref=e143]: Ingest & Slice
+              - heading [level=3] [ref=e144]: 会话摄取与切片
+            - generic [ref=e145]: 已实现
+          - paragraph [ref=e146]: 把 Harness 事件与会话记录规范化，提取为带类型、作用域、来源和价值信息的语义切片，并持久化到本地库。
+          - generic [ref=e147]:
+            - generic [ref=e148]:
+              - term [ref=e149]: 输入与输出
+              - definition [ref=e150]: 输入事件流或会话 JSONL，输出可追溯、可检索、可维护的 Slice。
+            - generic [ref=e151]:
+              - term [ref=e152]: 当前边界
+              - definition [ref=e153]: 提取遵守大小、类型和作用域约束。畸形输入会跳过，抽象结果保留到原始会话的来源链接。
+          - link [ref=e154] [cursor=pointer]:
+            - /url: https://github.com/Gnosil/semantix/tree/main/kernel/ingest
+            - text: 查看摄取与切片 ↗
+    - generic [ref=e157]:
+      - generic [ref=e158]:
+        - paragraph [ref=e160]: Community 社区
+        - generic [ref=e162]:
+          - heading "所有贡献，都应留下可复核的路径。" [level=2] [ref=e163]
+          - paragraph [ref=e164]: Semantix 在 GitHub 公开开发。每个 Issue、PR 与验证结果，都应留下可检查的输入、方法和结论。
+          - navigation "社区参与入口" [ref=e165]:
+            - list [ref=e166]:
+              - listitem [ref=e167]:
+                - link "验证方法 ↗" [ref=e168] [cursor=pointer]:
+                  - /url: https://github.com/Gnosil/semantix/blob/main/docs/QUICKSTART.md
+              - listitem [ref=e169]:
+                - link "技术讨论 ↗" [ref=e170] [cursor=pointer]:
+                  - /url: https://github.com/Gnosil/semantix/issues
+              - listitem [ref=e171]:
+                - link "安全边界 ↗" [ref=e172] [cursor=pointer]:
+                  - /url: https://github.com/Gnosil/semantix/blob/main/docs/Security-安全设计.md
+              - listitem [ref=e173]:
+                - link "贡献指南 ↗" [ref=e174] [cursor=pointer]:
+                  - /url: https://github.com/Gnosil/semantix/blob/main/CONTRIBUTING.md
+      - generic [ref=e175]:
+        - paragraph [ref=e177]: 贡献者
+        - generic "Semantix 贡献者" [ref=e178]:
+          - generic [ref=e179]:
+            - generic [ref=e180]:
+              - link "查看 Gnosil 的 GitHub 主页" [ref=e181] [cursor=pointer]:
+                - /url: https://github.com/Gnosil
+                - img "Gnosil 的 GitHub 头像" [ref=e182]
+                - generic [ref=e183]: "@Gnosil"
+              - link "查看 radianceded 的 GitHub 主页" [ref=e184] [cursor=pointer]:
+                - /url: https://github.com/radianceded
+                - img "radianceded 的 GitHub 头像" [ref=e185]
+                - generic [ref=e186]: "@radianceded"
+              - link "查看 jh10724-dotcom 的 GitHub 主页" [ref=e187] [cursor=pointer]:
+                - /url: https://github.com/jh10724-dotcom
+                - img "jh10724-dotcom 的 GitHub 头像" [ref=e188]
+                - generic [ref=e189]: "@jh10724-dotcom"
+              - link "查看 Allenllii 的 GitHub 主页" [ref=e190] [cursor=pointer]:
+                - /url: https://github.com/Allenllii
+                - img "Allenllii 的 GitHub 头像" [ref=e191]
+                - generic [ref=e192]: "@Allenllii"
+              - link [aria-hidden] [ref=e193] [cursor=pointer]:
+                - /url: https://github.com/Gnosil
+                - generic [ref=e194]: "@Gnosil"
+              - link [aria-hidden] [ref=e195] [cursor=pointer]:
+                - /url: https://github.com/radianceded
+                - generic [ref=e196]: "@radianceded"
+              - link [aria-hidden] [ref=e197] [cursor=pointer]:
+                - /url: https://github.com/jh10724-dotcom
+                - generic [ref=e198]: "@jh10724-dotcom"
+              - link [aria-hidden] [ref=e199] [cursor=pointer]:
+                - /url: https://github.com/Allenllii
+                - generic [ref=e200]: "@Allenllii"
+              - link [aria-hidden] [ref=e201] [cursor=pointer]:
+                - /url: https://github.com/Gnosil
+                - generic [ref=e202]: "@Gnosil"
+              - link [aria-hidden] [ref=e203] [cursor=pointer]:
+                - /url: https://github.com/radianceded
+                - generic [ref=e204]: "@radianceded"
+              - link [aria-hidden] [ref=e205] [cursor=pointer]:
+                - /url: https://github.com/jh10724-dotcom
+                - generic [ref=e206]: "@jh10724-dotcom"
+              - link [aria-hidden] [ref=e207] [cursor=pointer]:
+                - /url: https://github.com/Allenllii
+                - generic [ref=e208]: "@Allenllii"
+            - generic [aria-hidden] [ref=e209]:
+              - link [aria-hidden] [ref=e210] [cursor=pointer]:
+                - /url: https://github.com/Gnosil
+                - generic [ref=e211]: "@Gnosil"
+              - link [aria-hidden] [ref=e212] [cursor=pointer]:
+                - /url: https://github.com/radianceded
+                - generic [ref=e213]: "@radianceded"
+              - link [aria-hidden] [ref=e214] [cursor=pointer]:
+                - /url: https://github.com/jh10724-dotcom
+                - generic [ref=e215]: "@jh10724-dotcom"
+              - link [aria-hidden] [ref=e216] [cursor=pointer]:
+                - /url: https://github.com/Allenllii
+                - generic [ref=e217]: "@Allenllii"
+              - link [aria-hidden] [ref=e218] [cursor=pointer]:
+                - /url: https://github.com/Gnosil
+                - generic [ref=e219]: "@Gnosil"
+              - link [aria-hidden] [ref=e220] [cursor=pointer]:
+                - /url: https://github.com/radianceded
+                - generic [ref=e221]: "@radianceded"
+              - link [aria-hidden] [ref=e222] [cursor=pointer]:
+                - /url: https://github.com/jh10724-dotcom
+                - generic [ref=e223]: "@jh10724-dotcom"
+              - link [aria-hidden] [ref=e224] [cursor=pointer]:
+                - /url: https://github.com/Allenllii
+                - generic [ref=e225]: "@Allenllii"
+              - link [aria-hidden] [ref=e226] [cursor=pointer]:
+                - /url: https://github.com/Gnosil
+                - generic [ref=e227]: "@Gnosil"
+              - link [aria-hidden] [ref=e228] [cursor=pointer]:
+                - /url: https://github.com/radianceded
+                - generic [ref=e229]: "@radianceded"
+              - link [aria-hidden] [ref=e230] [cursor=pointer]:
+                - /url: https://github.com/jh10724-dotcom
+                - generic [ref=e231]: "@jh10724-dotcom"
+              - link [aria-hidden] [ref=e232] [cursor=pointer]:
+                - /url: https://github.com/Allenllii
+                - generic [ref=e233]: "@Allenllii"
+        - generic [ref=e235]:
+          - generic [ref=e236]:
+            - link [ref=e237] [cursor=pointer]:
+              - /url: https://github.com/Allenllii
+              - generic [ref=e238]: "@Allenllii"
+            - link [ref=e239] [cursor=pointer]:
+              - /url: https://github.com/jh10724-dotcom
+              - generic [ref=e240]: "@jh10724-dotcom"
+            - link [ref=e241] [cursor=pointer]:
+              - /url: https://github.com/radianceded
+              - generic [ref=e242]: "@radianceded"
+            - link [ref=e243] [cursor=pointer]:
+              - /url: https://github.com/Gnosil
+              - generic [ref=e244]: "@Gnosil"
+            - link [ref=e245] [cursor=pointer]:
+              - /url: https://github.com/Allenllii
+              - generic [ref=e246]: "@Allenllii"
+            - link [ref=e247] [cursor=pointer]:
+              - /url: https://github.com/jh10724-dotcom
+              - generic [ref=e248]: "@jh10724-dotcom"
+            - link [ref=e249] [cursor=pointer]:
+              - /url: https://github.com/radianceded
+              - generic [ref=e250]: "@radianceded"
+            - link [ref=e251] [cursor=pointer]:
+              - /url: https://github.com/Gnosil
+              - generic [ref=e252]: "@Gnosil"
+            - link [ref=e253] [cursor=pointer]:
+              - /url: https://github.com/Allenllii
+              - generic [ref=e254]: "@Allenllii"
+            - link [ref=e255] [cursor=pointer]:
+              - /url: https://github.com/jh10724-dotcom
+              - generic [ref=e256]: "@jh10724-dotcom"
+            - link [ref=e257] [cursor=pointer]:
+              - /url: https://github.com/radianceded
+              - generic [ref=e258]: "@radianceded"
+            - link [ref=e259] [cursor=pointer]:
+              - /url: https://github.com/Gnosil
+              - generic [ref=e260]: "@Gnosil"
+          - generic [ref=e261]:
+            - link [ref=e262] [cursor=pointer]:
+              - /url: https://github.com/Allenllii
+              - generic [ref=e263]: "@Allenllii"
+            - link [ref=e264] [cursor=pointer]:
+              - /url: https://github.com/jh10724-dotcom
+              - generic [ref=e265]: "@jh10724-dotcom"
+            - link [ref=e266] [cursor=pointer]:
+              - /url: https://github.com/radianceded
+              - generic [ref=e267]: "@radianceded"
+            - link [ref=e268] [cursor=pointer]:
+              - /url: https://github.com/Gnosil
+              - generic [ref=e269]: "@Gnosil"
+            - link [ref=e270] [cursor=pointer]:
+              - /url: https://github.com/Allenllii
+              - generic [ref=e271]: "@Allenllii"
+            - link [ref=e272] [cursor=pointer]:
+              - /url: https://github.com/jh10724-dotcom
+              - generic [ref=e273]: "@jh10724-dotcom"
+            - link [ref=e274] [cursor=pointer]:
+              - /url: https://github.com/radianceded
+              - generic [ref=e275]: "@radianceded"
+            - link [ref=e276] [cursor=pointer]:
+              - /url: https://github.com/Gnosil
+              - generic [ref=e277]: "@Gnosil"
+            - link [ref=e278] [cursor=pointer]:
+              - /url: https://github.com/Allenllii
+              - generic [ref=e279]: "@Allenllii"
+            - link [ref=e280] [cursor=pointer]:
+              - /url: https://github.com/jh10724-dotcom
+              - generic [ref=e281]: "@jh10724-dotcom"
+            - link [ref=e282] [cursor=pointer]:
+              - /url: https://github.com/radianceded
+              - generic [ref=e283]: "@radianceded"
+            - link [ref=e284] [cursor=pointer]:
+              - /url: https://github.com/Gnosil
+              - generic [ref=e285]: "@Gnosil"
+        - paragraph [ref=e286]: 以 GitHub commit、PR 审阅和 Contributors 记录为准。
+        - generic [ref=e287]:
+          - link "参与贡献 ↗" [ref=e288] [cursor=pointer]:
+            - /url: https://github.com/Gnosil/semantix/blob/main/CONTRIBUTING.md
+          - link "查看贡献记录 ↗" [ref=e289] [cursor=pointer]:
+            - /url: https://github.com/Gnosil/semantix/graphs/contributors
+    - generic [ref=e292]:
+      - generic [ref=e293]:
+        - paragraph [ref=e294]: Install 安装
+        - heading "从源码跑起来。" [level=2] [ref=e295]
+        - paragraph [ref=e296]: Clone, build, extract. Then verify the results yourself.
+      - generic [ref=e297]:
+        - article [ref=e299]:
+          - generic [ref=e300]:
+            - generic [ref=e301]: "01"
+            - generic [ref=e302]: Step / 01
+          - heading "安装完整 Agent" [level=3] [ref=e303]
+          - paragraph [ref=e304]: Install
+          - paragraph [ref=e305]: 一行安装交互式 Agent 与记忆内核，无需安装 Go。
+          - generic [ref=e306]:
+            - code [ref=e308]: $ curl -fsSL https://raw.githubusercontent.com/Gnosil/semantix/main/agent-skill/scripts/install.sh | sh
+            - button "复制代码" [ref=e309]:
+              - generic [ref=e313]: 复制
+          - link "发布包 ↗" [ref=e315] [cursor=pointer]:
+            - /url: https://github.com/Gnosil/semantix/releases/latest
+        - article [ref=e317]:
+          - generic [ref=e318]:
+            - generic [ref=e319]: "02"
+            - generic [ref=e320]: Step / 02
+          - heading "进入项目" [level=3] [ref=e321]
+          - paragraph [ref=e322]: Open project
+          - paragraph [ref=e323]: 进入你的项目文件夹；该目录将成为 Agent 的工作区。
+          - generic [ref=e324]:
+            - code [ref=e326]: $ cd ~/your-project
+            - button "复制代码" [ref=e327]:
+              - generic [ref=e331]: 复制
+          - link "快速上手 ↗" [ref=e333] [cursor=pointer]:
+            - /url: https://github.com/Gnosil/semantix/blob/main/docs/QUICKSTART.md
+        - article [ref=e335]:
+          - generic [ref=e336]:
+            - generic [ref=e337]: "03"
+            - generic [ref=e338]: Step / 03
+          - heading "开始对话" [level=3] [ref=e339]
+          - paragraph [ref=e340]: Start
+          - paragraph [ref=e341]: 运行 Semantix；首次启动会引导你配置模型与 API key。
+          - generic [ref=e342]:
+            - code [ref=e344]: $ semantix
+            - button "复制代码" [ref=e345]:
+              - generic [ref=e349]: 复制
+          - link "深度文档 →" [ref=e351] [cursor=pointer]:
+            - /url: /docs/guide/
+      - navigation "安装后续操作" [ref=e353]:
+        - link "运行离线验证" [ref=e354] [cursor=pointer]:
+          - /url: https://github.com/Gnosil/semantix/blob/main/docs/QUICKSTART.md
+          - generic [aria-hidden] [ref=e356]: ↗
+        - link "阅读架构文档" [ref=e358] [cursor=pointer]:
+          - /url: /docs/guide/
+          - text: 阅读架构文档 →
+        - link "参与贡献" [ref=e360] [cursor=pointer]:
+          - /url: https://github.com/Gnosil/semantix/blob/main/CONTRIBUTING.md
+          - text: 参与贡献 →
+      - generic [ref=e362]:
+        - paragraph [ref=e363]: © 2026 MIT License / Semantix
+        - paragraph [ref=e364]:
+          - generic [ref=e365]: 维护者
+          - link "Gnosil" [ref=e366] [cursor=pointer]:
+            - /url: https://github.com/Gnosil
+          - link "radianceded" [ref=e367] [cursor=pointer]:
+            - /url: https://github.com/radianceded
+          - link "Allenllii" [ref=e368] [cursor=pointer]:
+            - /url: https://github.com/Allenllii
+          - link "jh10724-dotcom" [ref=e369] [cursor=pointer]:
+            - /url: https://github.com/jh10724-dotcom
+          - generic [ref=e370]: /
+          - generic [ref=e371]: 技术作者 Gnosil
+    - region "Semantix" [ref=e372]:
+      - generic [ref=e373]:
+        - generic [ref=e374]:
+          - generic:
+            - generic: Semantix / 04Memory system
+            - generic: Open sourceMIT license / 2026
+            - generic:
+              - heading "Semantix" [level=2]
+              - generic:
+                - paragraph:
+                  - generic: A verifiable memory kernel for agents
+                  - generic: Retrieve • Validate • Evolve
+                - link "Enter the repository ↗ (opens in a new tab)" [ref=e375] [cursor=pointer]:
+                  - /url: https://github.com/Gnosil/semantix
+                  - text: Enter the repository ↗
+                  - generic [ref=e376]: (opens in a new tab)
+            - generic: Semantix © 2026MIT
+            - generic:
+              - paragraph: 由 确石人工智能科技（上海）有限公司 运营与维护
+              - navigation "终章导航":
+                - link "About" [ref=e377] [cursor=pointer]:
+                  - /url: /about
+                - link "Docs" [ref=e378] [cursor=pointer]:
+                  - /url: /docs
+                - link "Privacy" [ref=e379] [cursor=pointer]:
+                  - /url: /privacy
+                - link "Contact" [ref=e380] [cursor=pointer]:
+                  - /url: /contact
+                - link "GitHub" [ref=e381] [cursor=pointer]:
+                  - /url: https://github.com/Gnosil/semantix
+        - generic [aria-hidden]:
+          - generic:
+            - generic [aria-hidden]:
+              - generic: Semantix / 04 Memory system
+              - generic: Open source MIT license / 2026
+              - generic:
+                - heading [level=2]: Semantix
+                - generic:
+                  - paragraph:
+                    - generic: A verifiable memory kernel for agents
+                    - generic: Retrieve • Validate • Evolve
+                  - generic: Enter the repository ↗
+              - generic: Semantix © 2026 MIT
+              - generic:
+                - paragraph: 由 确石人工智能科技（上海）有限公司 运营与维护
+                - navigation:
+                  - generic: About
+                  - generic: Docs
+                  - generic: Privacy
+                  - generic: Contact
+                  - generic: GitHub
+  - alert [ref=e383]

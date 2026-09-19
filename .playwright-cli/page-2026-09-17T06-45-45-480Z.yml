@@ -1,0 +1,48 @@
+- main [ref=e2]:
+  - generic [ref=e3]:
+    - strong [ref=e4]: PRISTINE / BRAND STUDY 01
+    - generic [ref=e5]: DESIGN PROPOSAL · 17 SEP 2026
+  - heading "A quieter kind of technology." [level=1] [ref=e6]
+  - paragraph [ref=e7]: Pristine 品牌初稿：冰蓝、留白、清晰的秩序。官网负责介绍与下载，企业在自己的环境运行产品。以下为三个原创图形方向与推荐方案的首屏应用。
+  - generic [ref=e8]:
+    - article [ref=e9]:
+      - generic [ref=e10]: A / FOLDED P · 推荐
+      - img "折叠的 P" [ref=e12]
+      - heading "Folded P" [level=2] [ref=e14]
+      - paragraph [ref=e15]: 以折角构成字母 P，表达信息折叠与保留。几何轮廓适合软件图标、导航与命令行品牌。
+      - generic [ref=e16]: PRISTINE
+    - article [ref=e22]:
+      - generic [ref=e23]: B / CONVERGENCE
+      - img "汇聚的层片" [ref=e25]
+      - heading "Convergence" [level=2] [ref=e27]
+      - paragraph [ref=e28]: 多层信息汇聚为有序的存储单元。偏基础设施气质，直观、稳定，但字母识别较弱。
+      - generic [ref=e29]: PRISTINE
+    - article [ref=e35]:
+      - generic [ref=e36]: C / QUIET WINGS
+      - img "抽象蝶翼" [ref=e38]
+      - heading "Quiet Wings" [level=2] [ref=e40]
+      - paragraph [ref=e41]: 用抽象蝶翼呼应现有页面的手绘自然元素。更轻盈、有亲和力，产品类别的辨识度较弱。
+      - generic [ref=e42]: PRISTINE
+  - generic [ref=e48]:
+    - generic [ref=e49]: 01 / WEBSITE APPLICATION — A
+    - generic [ref=e50]: 首屏排版概念 · 非已发布页面
+  - generic [ref=e51]:
+    - navigation [ref=e52]:
+      - strong [ref=e53]: PRISTINE
+      - generic [ref=e56]: Features
+      - generic [ref=e57]: Architecture
+      - generic [ref=e58]: Docs
+      - generic [ref=e59]: Source ↗
+      - generic [ref=e60]: Download ↓
+    - generic [ref=e61]:
+      - generic [ref=e62]: ENTERPRISE STORAGE · YOUR ENVIRONMENT
+      - heading "PRISTINE" [level=2] [ref=e63]
+      - heading "Less storage. More clarity." [level=3] [ref=e64]
+      - paragraph [ref=e65]: 让企业数据，更轻盈、更有序。部署在你的环境，按需求选择原文件还原或录像降量。
+      - generic [ref=e66]:
+        - generic [ref=e67]: Download Pristine ↓
+        - generic [ref=e68]: Explore the source ↗
+      - generic [ref=e69]: PRODUCT FLOW / 示意流程，非可执行命令01 Connect your storage02 Optimize & validate03 Retrieve with confidence
+  - generic [ref=e70]:
+    - generic [ref=e71]: 建议：A 作为产品 Logo，手绘蝶翼作为背景插画。本页按钮为设计示意；源码地址、许可证与发行版本尚待确定。
+    - generic [ref=e72]: INK / ICE / SNOW
