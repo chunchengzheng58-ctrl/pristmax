@@ -4,6 +4,7 @@
 
     let currentPath = null;
     let currentPage = 'overview';
+    let scanResults = null;
 
     // Initialize
     document.addEventListener('DOMContentLoaded', function() {
@@ -11,6 +12,7 @@
         initSidebar();
         initActions();
         initPathSelector();
+        loadDemoData();
     });
 
     // Window Controls
@@ -35,6 +37,7 @@
                 const page = this.dataset.page;
                 currentPage = page;
                 updatePageTitle(page);
+                showPage(page);
             });
         });
     }
@@ -52,15 +55,107 @@
         document.getElementById('page-title').textContent = titles[page] || '概览';
     }
 
+    function showPage(page) {
+        // Hide all pages first
+        document.querySelectorAll('.page-content').forEach(p => p.style.display = 'none');
+
+        // Show selected page
+        const pageEl = document.getElementById('page-' + page);
+        if (pageEl) pageEl.style.display = 'flex';
+
+        // Update content based on page
+        if (page === 'duplicates' && scanResults) {
+            showDuplicatesPage();
+        } else if (page === 'large' && scanResults) {
+            showLargeFilesPage();
+        }
+    }
+
     // Actions
     function initActions() {
-        // Scan button
         document.getElementById('btn-scan')?.addEventListener('click', selectAndScan);
-
-        // Quick action cards
         document.getElementById('action-scan-dir')?.addEventListener('click', selectAndScan);
-        document.getElementById('action-find-dup')?.addEventListener('click', findDuplicates);
-        document.getElementById('action-find-large')?.addEventListener('click', findLargeFiles);
+        document.getElementById('action-find-dup')?.addEventListener('click', function() {
+            if (!currentPath) {
+                showNotification('请先选择文件夹');
+                return;
+            }
+            navigateTo('duplicates');
+        });
+        document.getElementById('action-find-large')?.addEventListener('click', function() {
+            if (!currentPath) {
+                showNotification('请先选择文件夹');
+                return;
+            }
+            navigateTo('large');
+        });
+
+        // Task actions
+        document.getElementById('btn-new-task')?.addEventListener('click', function() {
+            navigateTo('tasks');
+            showNotification('新建任务功能开发中...');
+        });
+    }
+
+    function navigateTo(page) {
+        document.querySelectorAll('.sidebar-icon').forEach(icon => {
+            icon.classList.toggle('active', icon.dataset.page === page);
+        });
+        currentPage = page;
+        updatePageTitle(page);
+        showPage(page);
+    }
+
+    // Load demo data for display
+    function loadDemoData() {
+        scanResults = {
+            totalFiles: 12847,
+            totalSize: 128.5 * 1024 * 1024 * 1024, // bytes
+            duplicates: 5,
+            duplicateSize: 4.2 * 1024 * 1024 * 1024,
+            largeFiles: [
+                { name: 'video_archive_2024.mp4', size: 2.8 * 1024**3, path: '/data/video_archive_2024.mp4' },
+                { name: 'database_backup.sql', size: 1.5 * 1024**3, path: '/data/database_backup.sql' },
+                { name: 'ubuntu-22.04.iso', size: 890 * 1024**2, path: '/data/ubuntu-22.04.iso' },
+                { name: 'photos_archive.zip', size: 650 * 1024**2, path: '/data/photos_archive.zip' },
+                { name: 'project_videos.mp4', size: 420 * 1024**2, path: '/data/project_videos.mp4' }
+            ],
+            byCategory: {
+                video: 45 * 1024**3,
+                image: 25 * 1024**3,
+                document: 12 * 1024**3,
+                code: 8 * 1024**3,
+                other: 38.5 * 1024**3
+            },
+            duplicateGroups: [
+                { name: 'operations.csv', count: 8, size: 120 * 1024**2, wasted: 105 * 1024**2 },
+                { name: 'backup_2024.zip', count: 3, size: 800 * 1024**2, wasted: 600 * 1024**2 },
+                { name: 'report.docx', count: 5, size: 50 * 1024**2, wasted: 40 * 1024**2 },
+                { name: 'data_export.xlsx', count: 4, size: 30 * 1024**2, wasted: 22 * 1024**2 },
+                { name: 'image_assets.png', count: 6, size: 180 * 1024**2, wasted: 150 * 1024**2 }
+            ]
+        };
+
+        updateMetricsDisplay();
+    }
+
+    function updateMetricsDisplay() {
+        if (!scanResults) return;
+
+        document.getElementById('metric-files').textContent = scanResults.totalFiles.toLocaleString();
+        document.getElementById('metric-size').innerHTML = `${(scanResults.totalSize / 1024**3).toFixed(1)} <span class="unit">GB</span>`;
+        document.getElementById('metric-duplicates').textContent = scanResults.duplicates;
+        document.getElementById('metric-savings').innerHTML = `${(scanResults.duplicateSize / 1024**3).toFixed(1)} <span class="unit">GB</span>`;
+
+        // Update storage bars
+        const maxSize = Math.max(...Object.values(scanResults.byCategory), 1);
+        const cats = ['video', 'image', 'doc', 'code', 'other'];
+        cats.forEach((cat, i) => {
+            const size = scanResults.byCategory[cat] || 0;
+            const pct = (size / maxSize * 100).toFixed(0);
+            document.querySelectorAll('.storage-fill')[i].style.width = pct + '%';
+            document.getElementById('size-' + cat).textContent = formatSize(size);
+        });
     }
 
     // Path Selector
@@ -70,13 +165,20 @@
 
     // Select directory and scan
     async function selectAndScan() {
+        updateStatus('正在选择文件夹...');
         try {
             const path = await window.electronAPI?.selectDirectory();
             if (path) {
                 currentPath = path;
                 document.getElementById('current-path').textContent = path;
                 updateStatus('正在扫描...');
-                scanDirectory(path);
+
+                // Simulate scan delay
+                setTimeout(() => {
+                    performScan(path);
+                }, 500);
+            } else {
+                updateStatus('已取消');
             }
         } catch (e) {
             console.error('Select directory error:', e);
@@ -84,19 +186,88 @@
         }
     }
 
-    // Scan directory
-    async function scanDirectory(path) {
+    async function performScan(path) {
         try {
             const items = await window.electronAPI?.readDirectory(path);
-            if (items) {
+            if (items && items.length > 0) {
+                // Calculate real stats
+                const stats = calculateStats(items);
+                scanResults = stats;
                 displayFiles(items);
-                updateMetrics(items);
-                updateStatus('扫描完成');
+                updateMetricsDisplay();
+                updateStatus(`扫描完成: ${items.length} 个项目`);
+                showNotification(`扫描完成！找到 ${stats.totalFiles} 个文件`);
+            } else {
+                updateStatus('文件夹为空');
+                showNotification('选择的文件夹为空');
             }
         } catch (e) {
             console.error('Scan error:', e);
             updateStatus('扫描失败');
+            showNotification('扫描失败: ' + e.message);
         }
+    }
+
+    function calculateStats(items) {
+        const result = {
+            totalFiles: 0,
+            totalSize: 0,
+            duplicates: 0,
+            duplicateSize: 0,
+            largeFiles: [],
+            byCategory: { video: 0, image: 0, doc: 0, code: 0, other: 0 },
+            duplicateGroups: []
+        };
+
+        const sizeMap = {};
+        const extMap = {};
+
+        items.forEach(item => {
+            if (item.isDirectory) return;
+            result.totalFiles++;
+            result.totalSize += item.size;
+
+            // Track by extension
+            const ext = getFileExtension(item.name).toLowerCase();
+            extMap[ext] = (extMap[ext] || 0) + item.size;
+
+            // Track large files
+            if (item.size > 100 * 1024 * 1024) {
+                result.largeFiles.push(item);
+            }
+
+            // Track for duplicates (by size)
+            if (!sizeMap[item.size]) sizeMap[item.size] = [];
+            sizeMap[item.size].push(item);
+        });
+
+        // Find duplicates (same size)
+        Object.values(sizeMap).forEach(files => {
+            if (files.length > 1) {
+                result.duplicates += files.length - 1;
+                result.duplicateSize += files[0].size * (files.length - 1);
+                result.duplicateGroups.push({
+                    name: files[0].name,
+                    count: files.length,
+                    size: files[0].size,
+                    wasted: files[0].size * (files.length - 1)
+                });
+            }
+        });
+
+        // Categorize
+        result.byCategory = {
+            video: (extMap['mp4'] || 0) + (extMap['avi'] || 0) + (extMap['mkv'] || 0) + (extMap['mov'] || 0),
+            image: (extMap['jpg'] || 0) + (extMap['jpeg'] || 0) + (extMap['png'] || 0) + (extMap['gif'] || 0),
+            doc: (extMap['pdf'] || 0) + (extMap['doc'] || 0) + (extMap['docx'] || 0) + (extMap['xls'] || 0),
+            code: (extMap['py'] || 0) + (extMap['js'] || 0) + (extMap['java'] || 0) + (extMap['cpp'] || 0),
+            other: result.totalSize - Object.values(result.byCategory).reduce((a, b) => a + b, 0)
+        };
+
+        // Sort large files
+        result.largeFiles.sort((a, b) => b.size - a.size);
+
+        return result;
     }
 
     // Display files
@@ -116,10 +287,17 @@
             return;
         }
 
-        count.textContent = `${items.length} 个文件`;
+        count.textContent = `${items.length} 个项目`;
 
-        list.innerHTML = items.map(item => `
-            <div class="file-item" data-path="${item.path}">
+        // Sort: folders first, then by size
+        items.sort((a, b) => {
+            if (a.isDirectory && !b.isDirectory) return -1;
+            if (!a.isDirectory && b.isDirectory) return 1;
+            return (b.size || 0) - (a.size || 0);
+        });
+
+        list.innerHTML = items.slice(0, 100).map(item => `
+            <div class="file-item" data-path="${item.path || item.name}">
                 <div class="file-icon">${item.isDirectory ? '📁' : getFileIcon(item.name)}</div>
                 <div class="file-info">
                     <div class="file-name">${item.name}</div>
@@ -132,13 +310,16 @@
         // Add click handlers
         list.querySelectorAll('.file-item').forEach(item => {
             item.addEventListener('click', function() {
+                // Remove previous selection
+                list.querySelectorAll('.file-item').forEach(i => i.classList.remove('selected'));
+                this.classList.add('selected');
+
                 const path = this.dataset.path;
                 handleFileClick(path);
             });
         });
     }
 
-    // Handle file click
     async function handleFileClick(path) {
         try {
             const info = await window.electronAPI?.getFileInfo(path);
@@ -146,10 +327,10 @@
                 if (info.isDirectory) {
                     currentPath = path;
                     document.getElementById('current-path').textContent = path;
-                    scanDirectory(path);
+                    updateStatus('正在进入: ' + path);
+                    performScan(path);
                 } else {
-                    // Show file info
-                    alert(`文件: ${path}\n大小: ${formatSize(info.size)}\n修改时间: ${formatDate(info.modified)}`);
+                    showNotification(`文件: ${path.split(/[/\\]/).pop()}\n大小: ${formatSize(info.size)}\n修改: ${formatDate(info.modified)}`);
                 }
             }
         } catch (e) {
@@ -157,67 +338,59 @@
         }
     }
 
-    // Update metrics
-    function updateMetrics(items) {
-        const totalFiles = items.filter(i => !i.isDirectory).length;
-        const totalSize = items.reduce((sum, i) => sum + (i.size || 0), 0);
-
-        document.getElementById('metric-files').textContent = totalFiles.toLocaleString();
-        document.getElementById('metric-size').innerHTML = `${(totalSize / 1024**3).toFixed(2)} <span class="unit">GB</span>`;
-
-        // Calculate by type
-        const byType = { video: 0, image: 0, doc: 0, code: 0, other: 0 };
-        items.forEach(item => {
-            if (item.isDirectory) return;
-            const ext = getFileExtension(item.name).toLowerCase();
-            if (['mp4', 'avi', 'mkv', 'mov', 'wmv'].includes(ext)) byType.video += item.size;
-            else if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(ext)) byType.image += item.size;
-            else if (['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt'].includes(ext)) byType.doc += item.size;
-            else if (['py', 'js', 'java', 'c', 'cpp', 'h', 'cs', 'go'].includes(ext)) byType.code += item.size;
-            else byType.other += item.size;
-        });
-
-        const maxSize = Math.max(...Object.values(byType), 1);
-        document.getElementById('size-video').textContent = formatSize(byType.video);
-        document.getElementById('size-image').textContent = formatSize(byType.image);
-        document.getElementById('size-doc').textContent = formatSize(byType.doc);
-        document.getElementById('size-code').textContent = formatSize(byType.code);
-        document.getElementById('size-other').textContent = formatSize(byType.other);
-
-        // Update progress bars
-        document.querySelectorAll('.storage-fill')[0].style.width = `${(byType.video / maxSize * 100)}%`;
-        document.querySelectorAll('.storage-fill')[1].style.width = `${(byType.image / maxSize * 100)}%`;
-        document.querySelectorAll('.storage-fill')[2].style.width = `${(byType.doc / maxSize * 100)}%`;
-        document.querySelectorAll('.storage-fill')[3].style.width = `${(byType.code / maxSize * 100)}%`;
-        document.querySelectorAll('.storage-fill')[4].style.width = `${(byType.other / maxSize * 100)}%`;
-    }
-
-    // Find duplicates
-    function findDuplicates() {
-        if (!currentPath) {
-            alert('请先选择文件夹');
+    // Duplicates page
+    function showDuplicatesPage() {
+        const list = document.getElementById('duplicate-list');
+        if (!scanResults || !scanResults.duplicateGroups.length) {
+            list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📦</div><h3>未找到重复文件</h3><p>当前扫描结果中没有重复文件</p></div>';
             return;
         }
-        updateStatus('正在查找重复文件...');
-        // TODO: Implement duplicate detection
-        setTimeout(() => {
-            document.getElementById('metric-duplicates').textContent = '5';
-            document.getElementById('metric-savings').innerHTML = `4.2 <span class="unit">GB</span>`;
-            updateStatus('找到 5 组重复文件，可释放 4.2 GB');
-        }, 1500);
+
+        list.innerHTML = scanResults.duplicateGroups.map(g => `
+            <div class="duplicate-item">
+                <div class="dup-info">
+                    <div class="dup-name">${g.name}</div>
+                    <div class="dup-meta">${g.count} 个重复 · 单个 ${formatSize(g.size)}</div>
+                </div>
+                <div class="dup-waste">浪费 ${formatSize(g.wasted)}</div>
+            </div>
+        `).join('');
     }
 
-    // Find large files
-    function findLargeFiles() {
-        if (!currentPath) {
-            alert('请先选择文件夹');
+    // Large files page
+    function showLargeFilesPage() {
+        const list = document.getElementById('large-list');
+        if (!scanResults || !scanResults.largeFiles.length) {
+            list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📊</div><h3>没有大文件</h3><p>没有找到超过 100MB 的文件</p></div>';
             return;
         }
-        updateStatus('正在查找大文件...');
-        // TODO: Implement large file detection
-        setTimeout(() => {
-            updateStatus('找到大文件分析完成');
-        }, 1500);
+
+        list.innerHTML = scanResults.largeFiles.slice(0, 20).map((f, i) => `
+            <div class="large-item">
+                <div class="large-rank">#${i + 1}</div>
+                <div class="large-info">
+                    <div class="large-name">${f.name}</div>
+                    <div class="large-path">${f.path}</div>
+                </div>
+                <div class="large-size">${formatSize(f.size)}</div>
+            </div>
+        `).join('');
+    }
+
+    // Notification
+    function showNotification(message) {
+        const notification = document.getElementById('notification');
+        if (notification) {
+            notification.textContent = message;
+            notification.style.display = 'block';
+            notification.style.opacity = '1';
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 300);
+            }, 3000);
+        }
     }
 
     // Update status
@@ -244,7 +417,7 @@
     }
 
     function formatSize(bytes) {
-        if (bytes === 0) return '0 B';
+        if (!bytes || bytes === 0) return '0 B';
         const units = ['B', 'KB', 'MB', 'GB', 'TB'];
         const i = Math.floor(Math.log(bytes) / Math.log(1024));
         return (bytes / Math.pow(1024, i)).toFixed(1) + ' ' + units[i];

@@ -61,15 +61,9 @@
             margin-right: auto;
         }
 
-        .title-bar-logo svg {
-            width: 14px;
-            height: 14px;
-        }
+        .title-bar-logo svg { width: 14px; height: 14px; }
 
-        .title-bar-controls {
-            display: flex;
-            -webkit-app-region: no-drag;
-        }
+        .title-bar-controls { display: flex; -webkit-app-region: no-drag; }
 
         .title-bar-btn {
             width: 36px;
@@ -85,26 +79,15 @@
             transition: background 0.15s;
         }
 
-        .title-bar-btn:hover {
-            background: rgba(255,255,255,0.1);
-            color: var(--white);
-        }
-
-        .title-bar-btn.close:hover {
-            background: var(--danger);
-            color: white;
-        }
+        .title-bar-btn:hover { background: rgba(255,255,255,0.1); color: var(--white); }
+        .title-bar-btn.close:hover { background: var(--danger); color: white; }
 
         /* App Container */
-        .app-container {
-            flex: 1;
-            display: flex;
-            overflow: hidden;
-        }
+        .app-container { flex: 1; display: flex; overflow: hidden; }
 
         /* Sidebar */
         .sidebar {
-            width: 60px;
+            width: 56px;
             background: var(--sidebar-bg);
             display: flex;
             flex-direction: column;
@@ -112,8 +95,8 @@
         }
 
         .sidebar-icon {
-            width: 60px;
-            height: 60px;
+            width: 56px;
+            height: 52px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -123,15 +106,8 @@
             position: relative;
         }
 
-        .sidebar-icon:hover {
-            background: var(--sidebar-hover);
-            color: var(--white);
-        }
-
-        .sidebar-icon.active {
-            color: var(--white);
-        }
-
+        .sidebar-icon:hover { background: var(--sidebar-hover); color: var(--white); }
+        .sidebar-icon.active { color: var(--white); background: rgba(17,53,119,0.6); }
         .sidebar-icon.active::before {
             content: '';
             position: absolute;
@@ -142,41 +118,25 @@
             background: var(--accent);
         }
 
-        .sidebar-icon svg {
-            width: 22px;
-            height: 22px;
-        }
-
-        .sidebar-divider {
-            height: 1px;
-            background: rgba(255,255,255,0.1);
-            margin: 8px 12px;
-        }
+        .sidebar-icon svg { width: 20px; height: 20px; }
+        .sidebar-divider { height: 1px; background: rgba(255,255,255,0.1); margin: 4px 10px; }
 
         /* Main Content */
-        .main-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
+        .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
 
         /* Top Bar */
         .top-bar {
-            height: 50px;
+            height: 48px;
             background: var(--white);
             border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
-            padding: 0 20px;
-            gap: 16px;
+            padding: 0 16px;
+            gap: 12px;
             flex-shrink: 0;
         }
 
-        .top-bar-title {
-            font-size: 15px;
-            font-weight: 600;
-        }
+        .top-bar-title { font-size: 14px; font-weight: 600; min-width: 80px; }
 
         .top-bar-path {
             flex: 1;
@@ -187,105 +147,53 @@
             border: 1px solid var(--border);
             border-radius: 6px;
             padding: 0 12px;
-            height: 34px;
+            height: 32px;
             cursor: pointer;
+            max-width: 500px;
         }
 
-        .top-bar-path:hover {
-            border-color: var(--primary);
-        }
+        .top-bar-path:hover { border-color: var(--primary); }
+        .top-bar-path svg { width: 14px; height: 14px; color: var(--text-muted); flex-shrink: 0; }
+        .top-bar-path span { flex: 1; font-size: 12px; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-        .top-bar-path svg {
-            width: 16px;
-            height: 16px;
-            color: var(--text-muted);
-        }
-
-        .top-bar-path span {
-            flex: 1;
-            font-size: 13px;
-            color: var(--text-muted);
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
+        .top-bar-actions { display: flex; gap: 8px; margin-left: auto; }
 
         .top-bar-btn {
             display: flex;
             align-items: center;
             gap: 6px;
-            padding: 8px 14px;
+            padding: 6px 12px;
             border: 1px solid var(--border);
             background: var(--white);
             border-radius: 6px;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 500;
             color: var(--text);
             cursor: pointer;
             transition: all 0.15s;
         }
 
-        .top-bar-btn:hover {
-            background: var(--bg);
-            border-color: var(--primary);
-        }
-
-        .top-bar-btn.primary {
-            background: var(--primary);
-            border-color: var(--primary);
-            color: var(--white);
-        }
-
-        .top-bar-btn.primary:hover {
-            background: var(--primary-dark);
-        }
-
-        .top-bar-btn svg {
-            width: 16px;
-            height: 16px;
-        }
+        .top-bar-btn:hover { background: var(--bg); border-color: var(--primary); }
+        .top-bar-btn.primary { background: var(--primary); border-color: var(--primary); color: var(--white); }
+        .top-bar-btn.primary:hover { background: var(--primary-dark); }
+        .top-bar-btn svg { width: 14px; height: 14px; }
 
         /* Content Area */
-        .content-area {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
+        .content-area { flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
 
         /* Metrics */
-        .metrics-row {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
-        }
+        .metrics-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
 
         .metric-card {
             background: var(--white);
             border: 1px solid var(--border);
             border-radius: 8px;
-            padding: 16px 20px;
+            padding: 14px 16px;
         }
 
-        .metric-label {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-        }
-
-        .metric-value {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--text);
-        }
-
-        .metric-value .unit {
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--text-muted);
-        }
+        .metric-label { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
+        .metric-value { font-size: 22px; font-weight: 700; color: var(--text); }
+        .metric-value .unit { font-size: 12px; font-weight: 500; color: var(--text-muted); }
 
         /* Panel */
         .panel {
@@ -297,32 +205,94 @@
         }
 
         .panel-header {
-            padding: 14px 20px;
+            padding: 12px 16px;
             border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: space-between;
+            flex-shrink: 0;
         }
 
-        .panel-title {
-            font-size: 14px;
-            font-weight: 600;
+        .panel-title { font-size: 13px; font-weight: 600; }
+        .panel-body { flex: 1; padding: 12px; overflow-y: auto; }
+
+        /* Actions Grid */
+        .actions-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+
+        .action-card {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.15s;
         }
 
-        .panel-body {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
+        .action-card:hover { border-color: var(--primary); background: rgba(17,53,119,0.04); }
+
+        .action-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
         }
+
+        .action-text h4 { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+        .action-text p { font-size: 11px; color: var(--text-muted); }
+
+        /* Two Column Layout */
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; min-height: 0; }
 
         /* File List */
-        .file-list {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
+        .file-list { display: flex; flex-direction: column; gap: 2px; }
 
         .file-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .file-item:hover { background: var(--bg); }
+        .file-item.selected { background: rgba(17,53,119,0.08); }
+
+        .file-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 4px;
+            background: var(--bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .file-info { flex: 1; min-width: 0; }
+        .file-name { font-size: 12px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .file-meta { font-size: 10px; color: var(--text-muted); }
+        .file-size { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
+
+        /* Storage Bars */
+        .storage-bar { display: flex; align-items: center; gap: 10px; padding: 6px 0; }
+        .storage-label { width: 50px; font-size: 11px; color: var(--text-muted); }
+        .storage-track { flex: 1; height: 16px; background: var(--bg); border-radius: 4px; overflow: hidden; }
+        .storage-fill { height: 100%; background: var(--primary); border-radius: 4px; transition: width 0.3s; }
+        .storage-value { width: 55px; font-size: 11px; text-align: right; color: var(--text-muted); }
+
+        /* Duplicate/Large Item */
+        .duplicate-item, .large-item {
             display: flex;
             align-items: center;
             gap: 12px;
@@ -332,152 +302,42 @@
             transition: background 0.15s;
         }
 
-        .file-item:hover {
-            background: var(--bg);
-        }
+        .duplicate-item:hover, .large-item:hover { background: var(--bg); }
 
-        .file-item.selected {
-            background: rgba(17, 53, 119, 0.08);
-        }
-
-        .file-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 6px;
-            background: var(--bg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            flex-shrink: 0;
-        }
-
-        .file-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .file-name {
-            font-size: 13px;
-            font-weight: 500;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .file-meta {
-            font-size: 11px;
-            color: var(--text-muted);
-        }
-
-        .file-size {
-            font-size: 12px;
-            color: var(--text-muted);
-            font-variant-numeric: tabular-nums;
-        }
-
-        /* Actions Grid */
-        .actions-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-        }
-
-        .action-card {
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 16px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-            transition: all 0.15s;
-        }
-
-        .action-card:hover {
-            border-color: var(--primary);
-            background: rgba(17, 53, 119, 0.04);
-        }
-
-        .action-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
-            background: var(--white);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            flex-shrink: 0;
-        }
-
-        .action-text h4 {
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 2px;
-        }
-
-        .action-text p {
-            font-size: 11px;
-            color: var(--text-muted);
-        }
-
-        /* Progress */
-        .progress-section {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .progress-item {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .progress-header {
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-        }
-
-        .progress-bar {
-            height: 6px;
-            background: var(--bg);
-            border-radius: 3px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: var(--primary);
-            border-radius: 3px;
-            transition: width 0.3s;
-        }
+        .dup-info, .large-info { flex: 1; min-width: 0; }
+        .dup-name, .large-name { font-size: 12px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .dup-meta, .large-path { font-size: 10px; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .dup-waste { font-size: 12px; color: var(--danger); font-weight: 500; white-space: nowrap; }
+        .large-rank { font-size: 12px; font-weight: 600; color: var(--primary); width: 24px; }
+        .large-size { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
 
         /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--text-muted);
-        }
+        .empty-state { text-align: center; padding: 30px 16px; color: var(--text-muted); }
+        .empty-state-icon { font-size: 36px; margin-bottom: 8px; }
+        .empty-state h3 { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+        .empty-state p { font-size: 11px; }
 
-        .empty-state-icon {
-            font-size: 48px;
-            margin-bottom: 12px;
-        }
-
-        .empty-state h3 {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text);
-            margin-bottom: 4px;
-        }
-
-        .empty-state p {
+        /* Notification */
+        .notification {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text);
+            color: var(--white);
+            padding: 10px 20px;
+            border-radius: 8px;
             font-size: 12px;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+            max-width: 400px;
+            text-align: center;
+            white-space: pre-line;
         }
+
+        .notification.show { display: block; opacity: 1; }
 
         /* Status Bar */
         .status-bar {
@@ -492,97 +352,18 @@
             flex-shrink: 0;
         }
 
-        .status-item {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
+        .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); }
 
-        .status-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--success);
-        }
-
-        /* Tab Bar */
-        .tab-bar {
-            display: flex;
-            gap: 4px;
-            padding: 0 20px;
-            background: var(--white);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .tab-item {
-            padding: 12px 16px;
-            font-size: 13px;
-            color: var(--text-muted);
-            cursor: pointer;
-            border-bottom: 2px solid transparent;
-            transition: all 0.15s;
-        }
-
-        .tab-item:hover {
-            color: var(--text);
-        }
-
-        .tab-item.active {
-            color: var(--primary);
-            border-bottom-color: var(--primary);
-        }
-
-        /* Two Column Layout */
-        .two-col {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            flex: 1;
-        }
-
-        /* Storage Chart */
-        .storage-bar {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 8px 0;
-        }
-
-        .storage-label {
-            width: 80px;
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-
-        .storage-track {
-            flex: 1;
-            height: 20px;
-            background: var(--bg);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .storage-fill {
-            height: 100%;
-            background: var(--primary);
-            border-radius: 4px;
-        }
-
-        .storage-value {
-            width: 60px;
-            font-size: 12px;
-            text-align: right;
-            font-variant-numeric: tabular-nums;
-        }
+        /* Page visibility */
+        .page-content { display: none; flex-direction: column; gap: 16px; flex: 1; }
+        .page-content.active { display: flex; }
     </style>
 </head>
 <body>
     <!-- Title Bar -->
     <div class="title-bar">
         <div class="title-bar-logo">
-            <svg viewBox="0 0 24 24" fill="#d4af37">
-                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-            </svg>
+            <svg viewBox="0 0 24 24" fill="#d4af37"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
             <span>Pristmax</span>
         </div>
         <div class="title-bar-controls">
@@ -604,10 +385,8 @@
         <aside class="sidebar">
             <div class="sidebar-icon active" data-page="overview" title="概览">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="3" width="7" height="7"/>
-                    <rect x="14" y="3" width="7" height="7"/>
-                    <rect x="3" y="14" width="7" height="7"/>
-                    <rect x="14" y="14" width="7" height="7"/>
+                    <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+                    <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
                 </svg>
             </div>
             <div class="sidebar-icon" data-page="files" title="文件">
@@ -618,20 +397,16 @@
             </div>
             <div class="sidebar-icon" data-page="duplicates" title="重复文件">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="8" y="8" width="12" height="12" rx="2"/>
-                    <path d="M16 8V6a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2h2"/>
+                    <rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2h2"/>
                 </svg>
             </div>
             <div class="sidebar-icon" data-page="large" title="大文件">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
-                    <polyline points="17,8 12,3 7,8"/>
-                    <line x1="12" y1="3" x2="12" y2="15"/>
+                    <polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/>
                 </svg>
             </div>
-
             <div class="sidebar-divider"></div>
-
             <div class="sidebar-icon" data-page="tasks" title="任务">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <polyline points="9,11 12,14 22,4"/>
@@ -644,9 +419,7 @@
                     <polyline points="14,2 14,8 20,8"/>
                 </svg>
             </div>
-
-            <div style="flex: 1;"></div>
-
+            <div style="flex:1;"></div>
             <div class="sidebar-icon" data-page="settings" title="设置">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="12" cy="12" r="3"/>
@@ -664,120 +437,139 @@
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/>
                     </svg>
-                    <span id="current-path">选择文件夹...</span>
+                    <span id="current-path">选择文件夹开始...</span>
                 </div>
-                <button class="top-bar-btn primary" id="btn-scan">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="11" cy="11" r="8"/>
-                        <path d="M21 21l-4.35-4.35"/>
-                    </svg>
-                    扫描
-                </button>
+                <div class="top-bar-actions">
+                    <button class="top-bar-btn primary" id="btn-scan">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+                        </svg>
+                        扫描
+                    </button>
+                    <button class="top-bar-btn" id="btn-new-task">新建任务</button>
+                </div>
             </div>
 
             <!-- Content Area -->
             <div class="content-area">
-                <!-- Metrics Row -->
-                <div class="metrics-row">
-                    <div class="metric-card">
-                        <div class="metric-label">文件总数</div>
-                        <div class="metric-value" id="metric-files">0</div>
+                <!-- Overview Page -->
+                <div class="page-content active" id="page-overview">
+                    <!-- Metrics -->
+                    <div class="metrics-row">
+                        <div class="metric-card">
+                            <div class="metric-label">文件总数</div>
+                            <div class="metric-value" id="metric-files">0</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">总大小</div>
+                            <div class="metric-value" id="metric-size">0 <span class="unit">GB</span></div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">重复文件</div>
+                            <div class="metric-value" id="metric-duplicates">0</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">可释放</div>
+                            <div class="metric-value" id="metric-savings">0 <span class="unit">GB</span></div>
+                        </div>
                     </div>
-                    <div class="metric-card">
-                        <div class="metric-label">总大小</div>
-                        <div class="metric-value" id="metric-size">0 <span class="unit">GB</span></div>
+
+                    <!-- Quick Actions -->
+                    <div class="panel">
+                        <div class="panel-header"><span class="panel-title">快速操作</span></div>
+                        <div class="panel-body">
+                            <div class="actions-grid">
+                                <div class="action-card" id="action-scan-dir">
+                                    <div class="action-icon">📁</div>
+                                    <div class="action-text"><h4>扫描目录</h4><p>分析文件夹结构</p></div>
+                                </div>
+                                <div class="action-card" id="action-find-dup">
+                                    <div class="action-icon">📦</div>
+                                    <div class="action-text"><h4>查找重复</h4><p>检测重复文件</p></div>
+                                </div>
+                                <div class="action-card" id="action-find-large">
+                                    <div class="action-icon">📊</div>
+                                    <div class="action-text"><h4>查找大文件</h4><p>找出占用空间最多的文件</p></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="metric-card">
-                        <div class="metric-label">重复文件</div>
-                        <div class="metric-value" id="metric-duplicates">0</div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-label">可释放空间</div>
-                        <div class="metric-value" id="metric-savings">0 <span class="unit">GB</span></div>
+
+                    <!-- Two Columns -->
+                    <div class="two-col">
+                        <div class="panel">
+                            <div class="panel-header">
+                                <span class="panel-title">文件列表</span>
+                                <span class="panel-title" style="color:var(--text-muted);font-weight:400" id="file-count">0 个文件</span>
+                            </div>
+                            <div class="panel-body"><div class="file-list" id="file-list"></div></div>
+                        </div>
+                        <div class="panel">
+                            <div class="panel-header"><span class="panel-title">存储分类</span></div>
+                            <div class="panel-body">
+                                <div class="storage-bar"><div class="storage-label">视频</div><div class="storage-track"><div class="storage-fill" id="bar-video"></div></div><div class="storage-value" id="size-video">0 GB</div></div>
+                                <div class="storage-bar"><div class="storage-label">图片</div><div class="storage-track"><div class="storage-fill" id="bar-image"></div></div><div class="storage-value" id="size-image">0 GB</div></div>
+                                <div class="storage-bar"><div class="storage-label">文档</div><div class="storage-track"><div class="storage-fill" id="bar-doc"></div></div><div class="storage-value" id="size-doc">0 GB</div></div>
+                                <div class="storage-bar"><div class="storage-label">代码</div><div class="storage-track"><div class="storage-fill" id="bar-code"></div></div><div class="storage-value" id="size-code">0 GB</div></div>
+                                <div class="storage-bar"><div class="storage-label">其他</div><div class="storage-track"><div class="storage-fill" id="bar-other"></div></div><div class="storage-value" id="size-other">0 GB</div></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Quick Actions -->
-                <div class="panel">
-                    <div class="panel-header">
-                        <span class="panel-title">快速操作</span>
+                <!-- Duplicates Page -->
+                <div class="page-content" id="page-duplicates">
+                    <div class="panel" style="flex:1;">
+                        <div class="panel-header"><span class="panel-title">重复文件</span><span style="font-size:12px;color:var(--text-muted)">点击查看详情</span></div>
+                        <div class="panel-body"><div class="file-list" id="duplicate-list"></div></div>
                     </div>
-                    <div class="panel-body">
-                        <div class="actions-grid">
-                            <div class="action-card" id="action-scan-dir">
-                                <div class="action-icon">📁</div>
-                                <div class="action-text">
-                                    <h4>扫描目录</h4>
-                                    <p>分析文件夹结构</p>
-                                </div>
-                            </div>
-                            <div class="action-card" id="action-find-dup">
-                                <div class="action-icon">📦</div>
-                                <div class="action-text">
-                                    <h4>查找重复</h4>
-                                    <p>检测重复文件</p>
-                                </div>
-                            </div>
-                            <div class="action-card" id="action-find-large">
-                                <div class="action-icon">📊</div>
-                                <div class="action-text">
-                                    <h4>查找大文件</h4>
-                                    <p>找出占用空间最多的文件</p>
-                                </div>
+                </div>
+
+                <!-- Large Files Page -->
+                <div class="page-content" id="page-large">
+                    <div class="panel" style="flex:1;">
+                        <div class="panel-header"><span class="panel-title">大文件 (Top 20)</span></div>
+                        <div class="panel-body"><div class="file-list" id="large-list"></div></div>
+                    </div>
+                </div>
+
+                <!-- Tasks Page -->
+                <div class="page-content" id="page-tasks">
+                    <div class="panel" style="flex:1;">
+                        <div class="panel-header"><span class="panel-title">任务列表</span><button class="top-bar-btn primary" style="padding:4px 10px;font-size:11px">+ 新建</button></div>
+                        <div class="panel-body">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">📋</div>
+                                <h3>暂无任务</h3>
+                                <p>点击上方按钮创建新任务</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Two Columns -->
-                <div class="two-col">
-                    <!-- File List -->
-                    <div class="panel">
-                        <div class="panel-header">
-                            <span class="panel-title">文件列表</span>
-                            <span class="panel-title" style="color: var(--text-muted); font-weight: 400;" id="file-count">0 个文件</span>
-                        </div>
+                <!-- Reports Page -->
+                <div class="page-content" id="page-reports">
+                    <div class="panel" style="flex:1;">
+                        <div class="panel-header"><span class="panel-title">分析报告</span></div>
                         <div class="panel-body">
-                            <div class="file-list" id="file-list">
-                                <div class="empty-state">
-                                    <div class="empty-state-icon">📂</div>
-                                    <h3>暂无数据</h3>
-                                    <p>选择文件夹开始扫描</p>
-                                </div>
+                            <div class="empty-state">
+                                <div class="empty-state-icon">📊</div>
+                                <h3>暂无报告</h3>
+                                <p>完成扫描后自动生成报告</p>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Storage Info -->
-                    <div class="panel">
-                        <div class="panel-header">
-                            <span class="panel-title">存储分类</span>
-                        </div>
+                <!-- Settings Page -->
+                <div class="page-content" id="page-settings">
+                    <div class="panel" style="flex:1;">
+                        <div class="panel-header"><span class="panel-title">设置</span></div>
                         <div class="panel-body">
-                            <div class="storage-bar">
-                                <div class="storage-label">视频</div>
-                                <div class="storage-track"><div class="storage-fill" style="width: 0%"></div></div>
-                                <div class="storage-value" id="size-video">0 GB</div>
-                            </div>
-                            <div class="storage-bar">
-                                <div class="storage-label">图片</div>
-                                <div class="storage-track"><div class="storage-fill" style="width: 0%"></div></div>
-                                <div class="storage-value" id="size-image">0 GB</div>
-                            </div>
-                            <div class="storage-bar">
-                                <div class="storage-label">文档</div>
-                                <div class="storage-track"><div class="storage-fill" style="width: 0%"></div></div>
-                                <div class="storage-value" id="size-doc">0 GB</div>
-                            </div>
-                            <div class="storage-bar">
-                                <div class="storage-label">代码</div>
-                                <div class="storage-track"><div class="storage-fill" style="width: 0%"></div></div>
-                                <div class="storage-value" id="size-code">0 GB</div>
-                            </div>
-                            <div class="storage-bar">
-                                <div class="storage-label">其他</div>
-                                <div class="storage-track"><div class="storage-fill" style="width: 0%"></div></div>
-                                <div class="storage-value" id="size-other">0 GB</div>
+                            <div style="padding:12px;color:var(--text-muted);font-size:13px;">
+                                <p style="margin-bottom:12px"><strong>版本:</strong> 1.2.0</p>
+                                <p style="margin-bottom:12px"><strong>Storage Agent:</strong> 安全增强版</p>
+                                <p><strong>数据目录:</strong> <span id="settings-path">未选择</span></p>
                             </div>
                         </div>
                     </div>
@@ -786,13 +578,13 @@
         </main>
     </div>
 
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
+
     <!-- Status Bar -->
     <div class="status-bar">
-        <div class="status-item">
-            <span class="status-dot"></span>
-            <span id="status-text">就绪</span>
-        </div>
-        <div style="flex: 1;"></div>
+        <div class="status-item"><span class="status-dot"></span><span id="status-text">就绪</span></div>
+        <div style="flex:1;"></div>
         <div>Pristmax v1.2.0</div>
     </div>
 
