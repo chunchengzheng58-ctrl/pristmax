@@ -7,15 +7,40 @@ Storage Agent: 智能存储管家
 - 存储使用统计
 - 文件分类整理
 - 智能搜索
+- 增量扫描
+- 导出报告
+- 对话交互
 """
 import os
+import sys
 import hashlib
 import json
 import sqlite3
+import time
 from datetime import datetime
 from pathlib import Path
-from typing import List, Dict, Optional, Tuple
+from typing import List, Dict, Optional, Tuple, Callable
 from dataclasses import dataclass, asdict
+
+
+# ANSI 颜色码
+class Colors:
+    RESET = '\033[0m'
+    BOLD = '\033[1m'
+    RED = '\033[91m'
+    GREEN = '\033[92m'
+    YELLOW = '\033[93m'
+    BLUE = '\033[94m'
+    MAGENTA = '\033[95m'
+    CYAN = '\033[96m'
+    GRAY = '\033[90m'
+
+
+def color(text: str, code: str) -> str:
+    """给文本添加颜色"""
+    if sys.platform == 'win32' and not os.environ.get('ANSI_COLORS'):
+        return text
+    return f"{code}{text}{Colors.RESET}"
 
 
 @dataclass
@@ -212,13 +237,14 @@ class StorageAgent:
         duplicates.sort(key=lambda x: x.wasted_space, reverse=True)
         return duplicates
 
-    def get_storage_stats(self, root_path: str, incremental: bool = True) -> Dict:
+    def get_storage_stats(self, root_path: str, incremental: bool = True, progress: Optional[Callable] = None) -> Dict:
         """
         获取存储统计
 
         Args:
             root_path: 扫描根目录
             incremental: 是否使用增量扫描（默认True，使用缓存）
+            progress: 进度回调函数 callback(current, total, message)
 
         Returns:
             统计信息
@@ -235,8 +261,12 @@ class StorageAgent:
             'new_files': 0
         }
 
+        # 先快速统计文件总数
+        total_files = sum(1 for _, _, files in os.walk(root_path) for f in files if not f.startswith('.'))
+
         dir_sizes: Dict[str, int] = {}
         now = datetime.now().isoformat()
+        processed = 0
 
         for dirpath, dirnames, filenames in os.walk(root_path):
             dirnames[:] = [d for d in dirnames if not d.startswith('.')]
@@ -247,6 +277,10 @@ class StorageAgent:
                     continue
 
                 filepath = os.path.join(dirpath, filename)
+                processed += 1
+                if progress and total_files > 0:
+                    progress(processed, total_files, f"扫描: {filename[:40]}")
+
                 try:
                     size = os.path.getsize(filepath)
                     stat = os.stat(filepath)
