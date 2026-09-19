@@ -15,8 +15,11 @@
     },
     "files": [
       "main.js",
-      "../site/**/*"
+      "site"
     ],
+    "extraMetadata": {
+      "main": "main.js"
+    },
     "win": {
       "target": "portable"
     }

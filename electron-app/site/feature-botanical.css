@@ -1,0 +1,96 @@
+/* Pristmax - All Rights Reserved. Copyright © 2024-2026 */
+/* Pine botanical animation for feature card expansions */
+
+.feature-expansion {
+  position: relative;
+  overflow: hidden;
+}
+
+.pine-svg {
+  position: absolute;
+  right: -5px;
+  top: 0;
+  width: 55%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* Trunk: gold color matching footer art */
+.pine-trunk {
+  stroke: #c8a84b;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  fill: none;
+  /* Reveal from bottom using clip */
+  clip-path: inset(100% 0 0 0);
+}
+
+/* Branches: slightly lighter gold */
+.pine-branch {
+  stroke: #d4b85a;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  fill: none;
+  /* Start invisible and scaled down */
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+/* Needles: muted blue-green */
+.pine-needle {
+  stroke: #5a9f8a;
+  stroke-width: 0.7;
+  stroke-linecap: round;
+  fill: none;
+  opacity: 0;
+}
+
+/* ===== Animations ===== */
+
+/* Trunk grows upward from base */
+@keyframes trunk-grow {
+  from { clip-path: inset(100% 0 0 0); }
+  to   { clip-path: inset(0% 0 0 0); }
+}
+
+/* Branch spreads outward from trunk */
+@keyframes branch-grow {
+  from { opacity: 0; transform: scaleX(0); }
+  to   { opacity: 1; transform: scaleX(1); }
+}
+
+/* Needle fades in after branch */
+@keyframes needle-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Triggered by .pine-growing on .feature-expansion */
+.feature-expansion.pine-growing .pine-trunk {
+  animation: trunk-grow 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.feature-expansion.pine-growing .pine-branch {
+  animation: branch-grow 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.feature-expansion.pine-growing .pine-needle {
+  animation: needle-in 0.3s ease forwards;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .pine-trunk { clip-path: none; }
+  .pine-branch { opacity: 1; transform: scaleX(1); }
+  .pine-needle { opacity: 1; }
+}
+
+/* Mobile */
+@media (max-width: 800px) {
+  .pine-svg {
+    width: 70%;
+    opacity: 0.3;
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "name": "Pristmax",
+  "short_name": "Pristmax",
+  "description": "Enterprise storage optimization — reduce redundancy, preserve value.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f4f9fc",
+  "theme_color": "#173d58",
+  "icons": [
+    {
+      "src": "assets/pristmax-symbol.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "productivity", "developer tools"]
+}

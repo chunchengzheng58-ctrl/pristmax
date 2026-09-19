@@ -1,0 +1,18 @@
+/* Pristmax - All Rights Reserved. Copyright © 2024-2026 */
+/* Isolated from the shared stylesheet to preserve concurrent page edits. */
+.living-painting{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:hidden}
+.landscape-mist{opacity:.24;animation-duration:14s}
+.landscape-mist-near{opacity:.16;animation-duration:20s}
+footer.in-view .art-paused .landscape-mist{animation-play-state:paused}
+.art-reduced .living-painting{display:none}
+.landscape-toggle{display:block;margin:8px 0 18px auto;padding:9px 12px;background:transparent;color:#d4e7f6;border:1px solid #7895ad;font:10px Consolas,monospace;cursor:pointer}
+.landscape-toggle[hidden]{display:none}
+.landscape-toggle:focus-visible{outline:2px solid #e5be6b;outline-offset:4px}
+.landscape-toggle:disabled{cursor:default;opacity:.7}
+.contributor-track{max-width:100%}
+footer{background:var(--footer-bg,#113577);color:var(--footer-ink,#e5eeff)}
+footer .footer-word,footer .footer-invitation,footer .footer-top,footer .footer-bottom,footer a,footer .footer-invitation .button{color:var(--footer-ink,#e5eeff)}
+footer .footer-invitation .button,footer .footer-bottom{border-color:currentColor}
+footer .footer-landscape{background:transparent}
+footer .footer-top .brand img{filter:brightness(var(--footer-logo,1))}
+@media(prefers-reduced-motion:reduce){.living-painting{display:none}}

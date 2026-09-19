@@ -20,7 +20,7 @@ function createWindow() {
   });
 
   // Load local website
-  const websitePath = path.join(__dirname, '..', 'site');
+  const websitePath = path.join(__dirname, 'site');
   mainWindow.loadFile(path.join(websitePath, 'index.html'));
 
   mainWindow.on('closed', () => {
