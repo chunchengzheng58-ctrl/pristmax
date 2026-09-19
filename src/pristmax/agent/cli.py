@@ -159,6 +159,54 @@ def cmd_export(agent: StorageAgent, args):
         return 1
 
 
+def cmd_chat(agent: StorageAgent, args):
+    """对话命令"""
+    path = args.path or os.getcwd()
+
+    print(f"\n🤖 Storage Agent 对话模式")
+    print(f"   扫描目录: {path}")
+    print(f"   输入 'quit' 或 'exit' 退出\n")
+
+    while True:
+        try:
+            user_input = input("\n你: ").strip()
+        except (EOFError, KeyboardInterrupt):
+            print("\n\n👋 再见!")
+            return 0
+
+        if not user_input:
+            continue
+
+        if user_input.lower() in ['quit', 'exit', 'q', '退出']:
+            print("👋 再见!")
+            return 0
+
+        response = agent.chat(path, user_input)
+        print(f"\nAgent: {response}")
+
+
+def cmd_suggest(agent: StorageAgent, args):
+    """建议命令"""
+    path = args.path or os.getcwd()
+
+    print(f"\n💡 智能建议: {path}")
+    print("=" * 50)
+
+    suggestions = agent.get_suggestions(path)
+
+    if not suggestions:
+        print("\n✅ 目前没有需要关注的建议")
+        return 0
+
+    for s in suggestions:
+        icon = "⚠️" if s['type'] == 'warning' else "💡" if s['type'] == 'tip' else "ℹ️"
+        print(f"\n{icon} {s['title']}")
+        print(f"   {s['description']}")
+        print(f"   → {s['action']}")
+
+    return 0
+
+
 def cmd_serve(agent: StorageAgent, args):
     """启动API服务"""
     from src.pristmax.agent.api import app
@@ -180,8 +228,9 @@ def main():
   %(prog)s --duplicates               查找重复文件
   %(prog)s --stats                    显示统计信息 (增量扫描)
   %(prog)s --stats --full-scan        强制全量扫描
+  %(prog)s --suggest                  显示智能建议
   %(prog)s --export -o report.html    导出HTML报告
-  %(prog)s --export -o data.json --format json  导出JSON报告
+  %(prog)s --chat                     进入对话交互模式
   %(prog)s serve --port 5002          启动API服务
         """
     )
@@ -192,6 +241,8 @@ def main():
     parser.add_argument('--duplicates', '-d', action='store_true', help='查找重复文件')
     parser.add_argument('--stats', '-s', action='store_true', help='显示统计信息')
     parser.add_argument('--export', '-e', action='store_true', help='导出报告')
+    parser.add_argument('--suggest', action='store_true', help='显示智能建议')
+    parser.add_argument('--chat', action='store_true', help='对话交互模式')
     parser.add_argument('--serve', action='store_true', help='启动API服务')
     parser.add_argument('--min', type=int, default=100, help='最小大小(MB for files, KB for dupes)')
     parser.add_argument('--limit', type=int, default=20, help='返回结果数量限制')
@@ -208,7 +259,7 @@ def main():
     agent = StorageAgent(db_path=db_path)
 
     # 如果没有指定命令，默认分析
-    if not any([args.analyze, args.large_files, args.duplicates, args.stats, args.serve, args.export]):
+    if not any([args.analyze, args.large_files, args.duplicates, args.stats, args.serve, args.export, args.suggest, args.chat]):
         args.analyze = True
 
     try:
@@ -222,6 +273,10 @@ def main():
             return cmd_stats(agent, args)
         elif args.export:
             return cmd_export(agent, args)
+        elif args.suggest:
+            return cmd_suggest(agent, args)
+        elif args.chat:
+            return cmd_chat(agent, args)
         elif args.serve:
             return cmd_serve(agent, args)
     finally:
