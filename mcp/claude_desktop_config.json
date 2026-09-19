@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "storage-agent": {
+      "command": "python",
+      "args": [
+        "-m",
+        "src.pristmax.agent.mcp_server"
+      ],
+      "cwd": "${workspaceFolder}",
+      "env": {}
+    }
+  }
+}

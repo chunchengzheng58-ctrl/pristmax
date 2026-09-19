@@ -8,6 +8,30 @@ Built with Claude Code by Anthropic · [Website](https://jiangchenghehe.top) · 
 
 ---
 
+## AI Integration (MCP)
+
+Storage Agent 支持 MCP (Model Context Protocol)，可被 Claude Code、Cursor 等 AI 助手直接调用。
+
+```bash
+# 配置 Claude Desktop
+# 编辑 ~/.claude/settings.json (macOS) 或 %APPDATA%\Claude\claude_desktop_config.json (Windows)
+{
+  "mcpServers": {
+    "storage-agent": {
+      "command": "python",
+      "args": ["-m", "src.pristmax.agent.mcp_server"],
+      "cwd": "你的项目路径"
+    }
+  }
+}
+```
+
+可用工具：`storage_stats`、`storage_large_files`、`storage_duplicates`、`storage_suggestions`、`storage_chat` 等。
+
+详细文档：[mcp/README.md](mcp/README.md)
+
+---
+
 ## Open Source Philosophy
 
 **Commercial parts are not open source.**
