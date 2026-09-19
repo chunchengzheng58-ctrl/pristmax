@@ -212,9 +212,13 @@ class StorageAgent:
         duplicates.sort(key=lambda x: x.wasted_space, reverse=True)
         return duplicates
 
-    def get_storage_stats(self, root_path: str) -> Dict:
+    def get_storage_stats(self, root_path: str, incremental: bool = True) -> Dict:
         """
         获取存储统计
+
+        Args:
+            root_path: 扫描根目录
+            incremental: 是否使用增量扫描（默认True，使用缓存）
 
         Returns:
             统计信息
@@ -225,10 +229,14 @@ class StorageAgent:
             'total_size_display': '0 B',
             'by_category': {},
             'by_extension': {},
-            'largest_dirs': []
+            'largest_dirs': [],
+            'scan_type': 'incremental' if incremental else 'full',
+            'cached_files': 0,
+            'new_files': 0
         }
 
         dir_sizes: Dict[str, int] = {}
+        now = datetime.now().isoformat()
 
         for dirpath, dirnames, filenames in os.walk(root_path):
             dirnames[:] = [d for d in dirnames if not d.startswith('.')]
@@ -241,12 +249,36 @@ class StorageAgent:
                 filepath = os.path.join(dirpath, filename)
                 try:
                     size = os.path.getsize(filepath)
-                    stats['total_files'] += 1
-                    stats['total_size'] += size
-                    dir_size += size
+                    stat = os.stat(filepath)
+                    mtime = datetime.fromtimestamp(stat.st_mtime).isoformat()
 
-                    ext = Path(filename).suffix.lower() or '.none'
-                    category = self._categorize(ext)
+                    # 增量扫描：检查缓存
+                    if incremental:
+                        cached = self._get_cached_file(filepath)
+                        if cached and cached['modified'] == mtime and cached['size'] == size:
+                            # 文件未变化，使用缓存
+                            stats['total_files'] += 1
+                            stats['total_size'] += size
+                            dir_size += size
+                            category = cached['category']
+                            ext = cached['extension']
+                            stats['cached_files'] += 1
+                        else:
+                            # 文件变化或无缓存，重新扫描
+                            ext = Path(filename).suffix.lower() or '.none'
+                            category = self._categorize(ext)
+                            self._update_cache(filepath, filename, size, ext, category, mtime, stat)
+                            stats['total_files'] += 1
+                            stats['total_size'] += size
+                            dir_size += size
+                            stats['new_files'] += 1
+                    else:
+                        # 全量扫描
+                        ext = Path(filename).suffix.lower() or '.none'
+                        category = self._categorize(ext)
+                        stats['total_files'] += 1
+                        stats['total_size'] += size
+                        dir_size += size
 
                     # 按分类统计
                     if category not in stats['by_category']:
@@ -288,6 +320,167 @@ class StorageAgent:
         ]
 
         return stats
+
+    def _get_cached_file(self, filepath: str) -> Optional[Dict]:
+        """获取缓存的文件信息"""
+        cursor = self.conn.execute(
+            "SELECT name, size, extension, category, modified, hash FROM file_cache WHERE path = ?",
+            (filepath,)
+        )
+        row = cursor.fetchone()
+        if row:
+            return {
+                'name': row[0],
+                'size': row[1],
+                'extension': row[2],
+                'category': row[3],
+                'modified': row[4],
+                'hash': row[5]
+            }
+        return None
+
+    def _update_cache(self, filepath: str, name: str, size: int, ext: str, category: str, modified: str, stat):
+        """更新文件缓存"""
+        created = datetime.fromtimestamp(stat.st_ctime).isoformat()
+        self.conn.execute('''
+            INSERT OR REPLACE INTO file_cache (path, name, size, extension, category, modified, created, scanned_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        ''', (filepath, name, size, ext, category, modified, created, datetime.now().isoformat()))
+        self.conn.commit()
+
+    def export_report(self, root_path: str, output_path: str, format: str = 'html') -> str:
+        """
+        导出分析报告
+
+        Args:
+            root_path: 扫描目录
+            output_path: 输出文件路径
+            format: 报告格式 ('html' 或 'json')
+
+        Returns:
+            报告文件路径
+        """
+        stats = self.get_storage_stats(root_path, incremental=True)
+
+        if format == 'json':
+            return self._export_json(stats, output_path)
+        else:
+            return self._export_html(stats, root_path, output_path)
+
+    def _export_json(self, stats: Dict, output_path: str) -> str:
+        """导出 JSON 格式报告"""
+        with open(output_path, 'w', encoding='utf-8') as f:
+            json.dump(stats, f, ensure_ascii=False, indent=2)
+        return output_path
+
+    def _export_html(self, stats: Dict, root_path: str, output_path: str) -> str:
+        """导出 HTML 格式报告"""
+        html = f'''<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>Storage Report - {root_path}</title>
+    <style>
+        * {{ margin: 0; padding: 0; box-sizing: border-box; }}
+        body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; padding: 20px; }}
+        .container {{ max-width: 1000px; margin: 0 auto; }}
+        h1 {{ color: #173d58; margin-bottom: 10px; }}
+        .meta {{ color: #666; font-size: 14px; margin-bottom: 30px; }}
+        .card {{ background: white; border-radius: 8px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }}
+        .card h2 {{ color: #173d58; font-size: 18px; margin-bottom: 16px; border-bottom: 2px solid #d4af37; padding-bottom: 8px; }}
+        .stats-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; }}
+        .stat-item {{ text-align: center; padding: 16px; background: #f8f9fa; border-radius: 6px; }}
+        .stat-value {{ font-size: 28px; font-weight: bold; color: #173d58; }}
+        .stat-label {{ font-size: 12px; color: #666; margin-top: 4px; }}
+        table {{ width: 100%; border-collapse: collapse; }}
+        th, td {{ text-align: left; padding: 12px 8px; border-bottom: 1px solid #eee; }}
+        th {{ color: #666; font-weight: 600; font-size: 12px; text-transform: uppercase; }}
+        .category-bar {{ display: flex; align-items: center; gap: 12px; margin: 8px 0; }}
+        .category-name {{ width: 80px; font-size: 13px; }}
+        .category-size {{ width: 80px; text-align: right; font-size: 13px; color: #666; }}
+        .bar-bg {{ flex: 1; height: 8px; background: #eee; border-radius: 4px; }}
+        .bar-fill {{ height: 100%; background: linear-gradient(90deg, #d4af37, #173d58); border-radius: 4px; }}
+        .scan-type {{ display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 11px; background: #e8f4e8; color: #2e7d32; }}
+        .scan-type.full {{ background: #fff3e0; color: #e65100; }}
+        .footer {{ text-align: center; color: #999; font-size: 12px; margin-top: 30px; }}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Storage Report</h1>
+        <p class="meta">Scan: {root_path} · Generated: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}</p>
+
+        <div class="card">
+            <h2>Overview 总览</h2>
+            <span class="scan-type {'full' if stats['scan_type'] == 'full' else ''}">{stats['scan_type']}</span>
+            <div class="stats-grid" style="margin-top: 16px;">
+                <div class="stat-item">
+                    <div class="stat-value">{stats['total_files']:,}</div>
+                    <div class="stat-label">Total Files</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">{stats['total_size_display']}</div>
+                    <div class="stat-label">Total Size</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">{stats.get('cached_files', 0):,}</div>
+                    <div class="stat-label">Cached (unchanged)</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">{stats.get('new_files', 0):,}</div>
+                    <div class="stat-label">New/Changed</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>By Category 类型分布</h2>
+            {self._render_category_bars(stats)}
+        </div>
+
+        <div class="card">
+            <h2>Largest Directories 最大目录</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Path</th>
+                        <th style="text-align:right;">Size</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {''.join(f'<tr><td>{d["path"]}</td><td style="text-align:right;color:#666;">{d["size_display"]}</td></tr>' for d in stats['largest_dirs'][:10])}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="footer">
+            Generated by Pristmax Storage Agent
+        </div>
+    </div>
+</body>
+</html>'''
+        with open(output_path, 'w', encoding='utf-8') as f:
+            f.write(html)
+        return output_path
+
+    def _render_category_bars(self, stats: Dict) -> str:
+        """渲染分类条形图"""
+        if not stats['by_category']:
+            return '<p style="color:#666;">No data</p>'
+
+        max_size = max(cat['size'] for cat in stats['by_category'].values())
+
+        bars = []
+        for cat, info in sorted(stats['by_category'].items(), key=lambda x: x[1]['size'], reverse=True):
+            pct = int(info['size'] / max_size * 100) if max_size > 0 else 0
+            bars.append(f'''
+            <div class="category-bar">
+                <span class="category-name">{cat}</span>
+                <div class="bar-bg"><div class="bar-fill" style="width:{pct}%"></div></div>
+                <span class="category-size">{info['size_display']}</span>
+            </div>
+            ''')
+        return ''.join(bars)
 
     def _compute_hash(self, filepath: str) -> Optional[str]:
         """计算文件 SHA256 哈希"""

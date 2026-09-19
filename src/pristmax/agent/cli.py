@@ -109,11 +109,18 @@ def cmd_duplicates(agent: StorageAgent, args):
 def cmd_stats(agent: StorageAgent, args):
     """统计命令"""
     path = args.path or os.getcwd()
+    incremental = not args.full_scan
 
     print(f"\n📈 存储统计: {path}")
     print("=" * 50)
 
-    stats = agent.get_storage_stats(path)
+    stats = agent.get_storage_stats(path, incremental=incremental)
+
+    scan_type = "全量扫描" if not incremental else "增量扫描"
+    print(f"\n📍 扫描模式: {scan_type}")
+    if incremental:
+        print(f"   缓存命中: {stats.get('cached_files', 0):,} 文件")
+        print(f"   新增/变更: {stats.get('new_files', 0):,} 文件")
 
     print(f"\n【概览】")
     print(f"   总文件数: {stats['total_files']:,}")
@@ -132,6 +139,24 @@ def cmd_stats(agent: StorageAgent, args):
             print(f"   {d['size_display']:>10s}  {d['path']}")
 
     return 0
+
+
+def cmd_export(agent: StorageAgent, args):
+    """导出报告命令"""
+    path = args.path or os.getcwd()
+    output = args.output or f"storage-report.{args.format}"
+
+    print(f"\n📄 正在生成报告: {output}")
+    print(f"   格式: {args.format.upper()}")
+    print(f"   目录: {path}")
+
+    try:
+        result = agent.export_report(path, output, format=args.format)
+        print(f"\n✅ 报告已生成: {result}")
+        return 0
+    except Exception as e:
+        print(f"\n❌ 生成失败: {e}")
+        return 1
 
 
 def cmd_serve(agent: StorageAgent, args):
@@ -153,7 +178,10 @@ def main():
   %(prog)s --path /data --analyze      分析目录
   %(prog)s --large-files --min 100    查找大于100MB的文件
   %(prog)s --duplicates               查找重复文件
-  %(prog)s --stats                    显示统计信息
+  %(prog)s --stats                    显示统计信息 (增量扫描)
+  %(prog)s --stats --full-scan        强制全量扫描
+  %(prog)s --export -o report.html    导出HTML报告
+  %(prog)s --export -o data.json --format json  导出JSON报告
   %(prog)s serve --port 5002          启动API服务
         """
     )
@@ -163,11 +191,15 @@ def main():
     parser.add_argument('--large-files', '-l', action='store_true', help='查找大文件')
     parser.add_argument('--duplicates', '-d', action='store_true', help='查找重复文件')
     parser.add_argument('--stats', '-s', action='store_true', help='显示统计信息')
+    parser.add_argument('--export', '-e', action='store_true', help='导出报告')
     parser.add_argument('--serve', action='store_true', help='启动API服务')
     parser.add_argument('--min', type=int, default=100, help='最小大小(MB for files, KB for dupes)')
     parser.add_argument('--limit', type=int, default=20, help='返回结果数量限制')
     parser.add_argument('--port', type=int, default=5002, help='API服务端口')
     parser.add_argument('--db', help='数据库路径 (默认: 内存数据库)')
+    parser.add_argument('--full-scan', action='store_true', help='禁用增量扫描，强制全量扫描')
+    parser.add_argument('--format', choices=['html', 'json'], default='html', help='报告格式 (默认: html)')
+    parser.add_argument('--output', '-o', help='报告输出路径')
 
     args = parser.parse_args()
 
@@ -176,7 +208,7 @@ def main():
     agent = StorageAgent(db_path=db_path)
 
     # 如果没有指定命令，默认分析
-    if not any([args.analyze, args.large_files, args.duplicates, args.stats, args.serve]):
+    if not any([args.analyze, args.large_files, args.duplicates, args.stats, args.serve, args.export]):
         args.analyze = True
 
     try:
@@ -188,6 +220,8 @@ def main():
             return cmd_duplicates(agent, args)
         elif args.stats:
             return cmd_stats(agent, args)
+        elif args.export:
+            return cmd_export(agent, args)
         elif args.serve:
             return cmd_serve(agent, args)
     finally:
