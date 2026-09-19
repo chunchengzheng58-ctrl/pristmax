@@ -5,7 +5,8 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-builder --win --publish never"
+    "build": "electron-builder --win --publish never",
+    "build:signed": "electron-builder --win --publish never -c.win.certificateFile=$CERT_FILE -c.win.certificatePassword=$CERT_PASSWORD"
   },
   "build": {
     "appId": "com.pristmax.desktop",
@@ -21,14 +22,44 @@
       "main": "main.js"
     },
     "win": {
-      "target": "portable"
-    }
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "build/icon.ico",
+      "artifactName": "${productName}-Setup-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "deleteAppDataOnUninstall": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Pristmax"
+    },
+    "mac": {
+      "target": ["dmg"],
+      "icon": "build/icon.icns",
+      "category": "public.app-category.utilities"
+    },
+    "linux": {
+      "target": ["AppImage"],
+      "icon": "build/icon.png",
+      "category": "Utility"
+    },
+    "publish": null
   },
-  "keywords": ["storage", "optimization"],
+  "keywords": [
+    "storage",
+    "optimization"
+  ],
   "author": "Pristmax",
   "license": "Apache-2.0",
   "devDependencies": {
-    "electron": "33.2.1",
+    "electron": "^33.2.1",
     "electron-builder": "25.1.8"
   }
 }
