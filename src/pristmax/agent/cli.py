@@ -11,17 +11,44 @@ import argparse
 import sys
 import os
 import io
+import time
 from pathlib import Path
+from datetime import datetime
 
 # Fix Windows console encoding
 if sys.platform == 'win32':
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
     sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
 
+
+class ProgressBar:
+    """终端进度条"""
+    def __init__(self, width: int = 40):
+        self.width = width
+        self.current = 0
+        self.total = 0
+        self.message = ""
+
+    def update(self, current: int, total: int, message: str = ""):
+        self.current = current
+        self.total = total
+        self.message = message
+        if total > 0:
+            pct = int(current / total * 100)
+            filled = int(self.width * current / total)
+            bar = '█' * filled + '░' * (self.width - filled)
+            sys.stdout.write(f'\r[{bar}] {pct:3d}% {message[:30]}')
+            sys.stdout.flush()
+
+    def finish(self, message: str = "完成"):
+        sys.stdout.write(f'\r{" " * (self.width + 50)}\r')
+        sys.stdout.flush()
+        print(f"✅ {message}")
+
 # 添加父目录到路径
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
-from src.pristmax.agent.storage_agent import StorageAgent, FileInfo
+from src.pristmax.agent.storage_agent import StorageAgent, FileInfo, color, Colors
 
 
 def format_bytes(size: int) -> str:
@@ -111,32 +138,44 @@ def cmd_stats(agent: StorageAgent, args):
     path = args.path or os.getcwd()
     incremental = not args.full_scan
 
-    print(f"\n📈 存储统计: {path}")
+    print(f"\n\033[1m\033[94m📈 存储统计: {path}\033[0m")
     print("=" * 50)
 
-    stats = agent.get_storage_stats(path, incremental=incremental)
+    progress = None
+    if sys.stdout.isatty():
+        progress = ProgressBar()
+        progress.update(0, 100, "开始扫描...")
 
-    scan_type = "全量扫描" if not incremental else "增量扫描"
+    def progress_callback(current, total, message):
+        if progress:
+            progress.update(current, total, message)
+
+    stats = agent.get_storage_stats(path, incremental=incremental, progress=progress_callback)
+
+    if progress:
+        progress.finish(f"扫描完成 {stats['total_files']:,} 文件")
+
+    scan_type = "\033[33m全量扫描\033[0m" if not incremental else "\033[92m增量扫描\033[0m"
     print(f"\n📍 扫描模式: {scan_type}")
     if incremental:
-        print(f"   缓存命中: {stats.get('cached_files', 0):,} 文件")
-        print(f"   新增/变更: {stats.get('new_files', 0):,} 文件")
+        print(f"   缓存命中: \033[92m{stats.get('cached_files', 0):,}\033[0m 文件")
+        print(f"   新增/变更: \033[93m{stats.get('new_files', 0):,}\033[0m 文件")
 
-    print(f"\n【概览】")
-    print(f"   总文件数: {stats['total_files']:,}")
-    print(f"   总大小:   {stats['total_size_display']}")
+    print(f"\n\033[1m【概览】\033[0m")
+    print(f"   总文件数: \033[1m\033[94m{stats['total_files']:,}\033[0m")
+    print(f"   总大小:   \033[1m\033[94m{stats['total_size_display']}\033[0m")
 
-    print(f"\n【类型分布】")
+    print(f"\n\033[1m【类型分布】\033[0m")
     if stats['by_category']:
         for cat, info in sorted(stats['by_category'].items(), key=lambda x: x[1]['size'], reverse=True):
             bar_len = int(info['size'] / stats['total_size'] * 40) if stats['total_size'] > 0 else 0
-            bar = '█' * bar_len + '░' * (40 - bar_len)
+            bar = '\033[92m' + '█' * bar_len + '\033[90m' + '░' * (40 - bar_len) + '\033[0m'
             print(f"   {cat:12s} [{bar}] {info['size_display']}")
 
-    print(f"\n【最大目录】")
+    print(f"\n\033[1m【最大目录】\033[0m")
     if stats['largest_dirs']:
         for d in stats['largest_dirs'][:5]:
-            print(f"   {d['size_display']:>10s}  {d['path']}")
+            print(f"   \033[90m{d['size_display']:>10s}\033[0m  {d['path']}")
 
     return 0
 
@@ -189,7 +228,7 @@ def cmd_suggest(agent: StorageAgent, args):
     """建议命令"""
     path = args.path or os.getcwd()
 
-    print(f"\n💡 智能建议: {path}")
+    print(f"\n\033[1m\033[93m💡 智能建议: {path}\033[0m")
     print("=" * 50)
 
     suggestions = agent.get_suggestions(path)
@@ -199,12 +238,61 @@ def cmd_suggest(agent: StorageAgent, args):
         return 0
 
     for s in suggestions:
-        icon = "⚠️" if s['type'] == 'warning' else "💡" if s['type'] == 'tip' else "ℹ️"
-        print(f"\n{icon} {s['title']}")
+        icon = "\033[91m⚠️\033[0m" if s['type'] == 'warning' else "\033[96m💡\033[0m" if s['type'] == 'tip' else "\033[94mℹ️\033[0m"
+        print(f"\n{icon} \033[1m{s['title']}\033[0m")
         print(f"   {s['description']}")
-        print(f"   → {s['action']}")
+        print(f"   → \033[92m{s['action']}\033[0m")
 
     return 0
+
+
+def cmd_monitor(agent: StorageAgent, args):
+    """监控模式命令"""
+    path = args.path or os.getcwd()
+    interval = args.interval
+
+    print(f"\n\033[1m\033[95m🔄 监控模式: {path}\033[0m")
+    print(f"   检测间隔: {interval} 秒")
+    print(f"   按 Ctrl+C 停止\n")
+
+    last_stats = None
+    last_check = None
+
+    try:
+        while True:
+            print(f"\n\033[90m[{datetime.now().strftime('%H:%M:%S')}] 执行检测...\033[0m")
+            stats = agent.get_storage_stats(path, incremental=True)
+            suggestions = agent.get_suggestions(path)
+
+            if last_stats:
+                # 检测变化
+                file_diff = stats['total_files'] - last_stats['total_files']
+                size_diff = stats['total_size'] - last_stats['total_size']
+
+                if file_diff != 0 or size_diff != 0:
+                    size_change = FileInfo.format_size(abs(size_diff)) if size_diff != 0 else "无"
+                    direction = "↑" if size_diff > 0 else "↓"
+                    print(f"\n\033[92m📊 变化检测:\033[0m 文件 {direction}{abs(file_diff):+,}, 大小 {direction}{size_change}")
+
+            # 显示关键指标
+            print(f"   总文件: \033[94m{stats['total_files']:,}\033[0m")
+            print(f"   总大小: \033[94m{stats['total_size_display']}\033[0m")
+            print(f"   缓存命中: \033[92m{stats.get('cached_files', 0):,}\033[0m")
+
+            # 显示建议
+            if suggestions:
+                print(f"\n\033[93m⚠️ 建议 ({len(suggestions)}):\033[0m")
+                for s in suggestions[:2]:
+                    print(f"   • {s['title']} - {s['description']}")
+
+            last_stats = stats
+            last_check = datetime.now()
+
+            time.sleep(interval)
+
+    except KeyboardInterrupt:
+        print("\n\n\033[92m👋 监控已停止\033[0m")
+        return 0
 
 
 def cmd_serve(agent: StorageAgent, args):
@@ -226,11 +314,12 @@ def main():
   %(prog)s --path /data --analyze      分析目录
   %(prog)s --large-files --min 100    查找大于100MB的文件
   %(prog)s --duplicates               查找重复文件
-  %(prog)s --stats                    显示统计信息 (增量扫描)
+  %(prog)s --stats                    显示统计信息 (带进度条)
   %(prog)s --stats --full-scan        强制全量扫描
   %(prog)s --suggest                  显示智能建议
   %(prog)s --export -o report.html    导出HTML报告
   %(prog)s --chat                     进入对话交互模式
+  %(prog)s --monitor --interval 30    监控模式 (30秒检测一次)
   %(prog)s serve --port 5002          启动API服务
         """
     )
@@ -243,6 +332,7 @@ def main():
     parser.add_argument('--export', '-e', action='store_true', help='导出报告')
     parser.add_argument('--suggest', action='store_true', help='显示智能建议')
     parser.add_argument('--chat', action='store_true', help='对话交互模式')
+    parser.add_argument('--monitor', action='store_true', help='监控模式')
     parser.add_argument('--serve', action='store_true', help='启动API服务')
     parser.add_argument('--min', type=int, default=100, help='最小大小(MB for files, KB for dupes)')
     parser.add_argument('--limit', type=int, default=20, help='返回结果数量限制')
@@ -251,6 +341,7 @@ def main():
     parser.add_argument('--full-scan', action='store_true', help='禁用增量扫描，强制全量扫描')
     parser.add_argument('--format', choices=['html', 'json'], default='html', help='报告格式 (默认: html)')
     parser.add_argument('--output', '-o', help='报告输出路径')
+    parser.add_argument('--interval', type=int, default=60, help='监控检测间隔秒数 (默认: 60)')
 
     args = parser.parse_args()
 
@@ -259,7 +350,7 @@ def main():
     agent = StorageAgent(db_path=db_path)
 
     # 如果没有指定命令，默认分析
-    if not any([args.analyze, args.large_files, args.duplicates, args.stats, args.serve, args.export, args.suggest, args.chat]):
+    if not any([args.analyze, args.large_files, args.duplicates, args.stats, args.serve, args.export, args.suggest, args.chat, args.monitor]):
         args.analyze = True
 
     try:
@@ -277,6 +368,8 @@ def main():
             return cmd_suggest(agent, args)
         elif args.chat:
             return cmd_chat(agent, args)
+        elif args.monitor:
+            return cmd_monitor(agent, args)
         elif args.serve:
             return cmd_serve(agent, args)
     finally:
