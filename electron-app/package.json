@@ -1,0 +1,21 @@
+{
+  "name": "pristmax-desktop",
+  "version": "1.2.0",
+  "description": "Pristmax - Enterprise Storage Optimization Desktop App",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win --publish never"
+  },
+  "keywords": [
+    "storage",
+    "optimization",
+    "deduplication"
+  ],
+  "author": "Pristmax",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "electron": "^44.4.3",
+    "electron-builder": "^25.1.8"
+  }
+}
