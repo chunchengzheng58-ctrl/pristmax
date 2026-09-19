@@ -163,12 +163,20 @@ html{scroll-behavior:smooth;scrollbar-gutter:stable;-webkit-font-smoothing:antia
   will-change: transform;
   gap: 24px;
 }
+.contributors-row--reverse {
+  animation-name: contributors-slide-reverse;
+  margin-top: 16px;
+}
 .contributors-track:is(:hover, :focus-within) .contributors-row {
   animation-play-state: paused;
 }
 @keyframes contributors-slide {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
+}
+@keyframes contributors-slide-reverse {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
 }
 .contributor-item {
   display: flex;
