@@ -17,8 +17,8 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
-      webSecurity: true,
-      disableDevTools: false
+      preload: path.join(__dirname, 'preload.js'),
+      webSecurity: true
     }
   });
 
@@ -99,7 +99,7 @@ function createWindow() {
   Menu.setApplicationMenu(menu);
 }
 
-// 窗口控制
+// IPC Handlers
 ipcMain.on('window-minimize', () => {
   if (mainWindow) mainWindow.minimize();
 });
@@ -148,7 +148,7 @@ ipcMain.handle('read-directory', async (event, dirPath) => {
           modified: stats.mtime.toISOString()
         });
       } catch (e) {
-        // 跳过无法访问的文件
+        // Skip inaccessible files
       }
     }
     return result;
@@ -171,7 +171,7 @@ ipcMain.handle('get-file-info', async (event, filePath) => {
   }
 });
 
-// 等待应用准备好
+// App lifecycle
 app.whenReady().then(() => {
   console.log('App ready, creating window...');
   createWindow();
