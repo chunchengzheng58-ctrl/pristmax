@@ -196,6 +196,26 @@
         footer a { color: var(--primary); text-decoration: none; }
         footer a:hover { text-decoration: underline; }
 
+        /* GitHub Stats */
+        .github-stats {
+            margin-bottom: 15px;
+        }
+        .github-stats a {
+            display: inline-flex;
+            align-items: center;
+            gap: 20px;
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 0.95rem;
+        }
+        .github-stats a:hover { color: var(--primary); }
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .github-stats svg { opacity: 0.7; }
+
         /* Responsive */
         @media (max-width: 768px) {
             h1 { font-size: 2rem; }
@@ -315,13 +335,45 @@
         </section>
 
         <footer>
-            <p>
+            <div class="github-stats" id="github-stats">
+                <a href="https://github.com/chunchengzheng58-ctrl/pristmax" target="_blank" rel="noopener">
+                    <span class="stat-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        <span id="stars">--</span> Stars
+                    </span>
+                    <span class="stat-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                        <span id="forks">--</span> Forks
+                    </span>
+                    <span class="stat-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        <span id="contributors">--</span> Contributors
+                    </span>
+                </a>
+            </div>
+            <p style="margin-top: 15px;">
                 <a href="https://jiangchenghehe.top">官网</a> ·
                 <a href="https://github.com/chunchengzheng58-ctrl/pristmax">GitHub</a> ·
                 <a href="/docs.html">文档</a>
             </p>
             <p style="margin-top: 10px;">Pristmax v1.2.0 · Built with Claude Code</p>
         </footer>
+        <script>
+            // Fetch GitHub stats
+            fetch('https://api.github.com/repos/chunchengzheng58-ctrl/pristmax')
+                .then(r => r.json())
+                .then(data => {
+                    document.getElementById('stars').textContent = data.stargazers_count || 0;
+                    document.getElementById('forks').textContent = data.forks_count || 0;
+                })
+                .catch(() => {});
+            fetch('https://api.github.com/repos/chunchengzheng58-ctrl/pristmax/contributors')
+                .then(r => r.json())
+                .then(data => {
+                    document.getElementById('contributors').textContent = Array.isArray(data) ? data.length : 0;
+                })
+                .catch(() => {});
+        </script>
     </div>
 </body>
 </html>
