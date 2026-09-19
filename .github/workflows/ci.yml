@@ -50,12 +50,13 @@ jobs:
         pip install flask flask-cors pyyaml pyinstaller
 
     - name: Build executable
+      shell: bash
       run: |
-        if exist main.spec (
+        if [ -f main.spec ]; then
           pyinstaller main.spec --noconfirm
-        ) else (
+        else
           echo "main.spec not found, skipping build"
-        )
+        fi
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
