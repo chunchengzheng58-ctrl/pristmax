@@ -646,7 +646,80 @@ class StorageAgent:
   • "重复文件" - 查找重复文件
   • "统计" - 显示存储统计
   • "建议" - 获取优化建议
+  • "清理重复" - 删除重复文件（保留一个）
   • "帮助" - 显示所有命令"""
+
+    def cleanup_duplicates(self, root_path: str, dry_run: bool = True) -> Dict:
+        """
+        清理重复文件
+
+        Args:
+            root_path: 扫描目录
+            dry_run: True=预览模式, False=执行删除
+
+        Returns:
+            清理结果
+        """
+        duplicates = self.find_duplicates(root_path, min_size_kb=1)
+        result = {
+            'dry_run': dry_run,
+            'groups_found': len(duplicates),
+            'files_to_delete': [],
+            'space_to_free': 0,
+            'deleted': [],
+            'errors': []
+        }
+
+        for group in duplicates:
+            # 保留第一个文件，删除其余的
+            for filepath in group.files[1:]:
+                result['files_to_delete'].append(filepath)
+                result['space_to_free'] += group.size
+
+                if not dry_run:
+                    try:
+                        os.remove(filepath)
+                        result['deleted'].append(filepath)
+                    except OSError as e:
+                        result['errors'].append({'file': filepath, 'error': str(e)})
+
+        return result
+
+    def cleanup_large_files(self, root_path: str, min_size_mb: int = 100, dry_run: bool = True) -> Dict:
+        """
+        清理大文件
+
+        Args:
+            root_path: 扫描目录
+            min_size_mb: 最小文件大小(MB)
+            dry_run: True=预览模式, False=执行删除
+
+        Returns:
+            清理结果
+        """
+        large_files = self.analyze_large_files(root_path, min_size_mb=min_size_mb, limit=100)
+        result = {
+            'dry_run': dry_run,
+            'min_size_mb': min_size_mb,
+            'files_found': len(large_files),
+            'files_to_delete': [],
+            'space_to_free': 0,
+            'deleted': [],
+            'errors': []
+        }
+
+        for f in large_files:
+            result['files_to_delete'].append(f.path)
+            result['space_to_free'] += f.size
+
+            if not dry_run:
+                try:
+                    os.remove(f.path)
+                    result['deleted'].append(f.path)
+                except OSError as e:
+                    result['errors'].append({'file': f.path, 'error': str(e)})
+
+        return result
 
     def _compute_hash(self, filepath: str) -> Optional[str]:
         """计算文件 SHA256 哈希"""
