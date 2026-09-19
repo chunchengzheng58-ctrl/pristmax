@@ -482,6 +482,138 @@ class StorageAgent:
             ''')
         return ''.join(bars)
 
+    def get_suggestions(self, root_path: str) -> List[Dict]:
+        """
+        根据分析结果生成智能建议
+
+        Returns:
+            建议列表，每条建议包含 type, title, description, action
+        """
+        suggestions = []
+        stats = self.get_storage_stats(root_path, incremental=True)
+        large_files = self.analyze_large_files(root_path, min_size_mb=100, limit=10)
+        duplicates = self.find_duplicates(root_path, min_size_kb=1024)
+
+        # 重复文件建议
+        if duplicates:
+            total_wasted = sum(d.wasted_space for d in duplicates[:5])
+            suggestions.append({
+                'type': 'warning',
+                'icon': '🔄',
+                'title': f'发现 {len(duplicates)} 组重复文件',
+                'description': f'可节省空间: {FileInfo.format_size(total_wasted)}',
+                'action': f'运行 --duplicates 查看详情'
+            })
+
+        # 大文件建议
+        if large_files:
+            total_large = sum(f.size for f in large_files)
+            suggestions.append({
+                'type': 'info',
+                'icon': '📦',
+                'title': f'发现 {len(large_files)} 个大文件 (>100MB)',
+                'description': f'总占用: {FileInfo.format_size(total_large)}',
+                'action': f'运行 --large-files --min 100 查看详情'
+            })
+
+        # 按类型分析建议
+        if stats['by_category']:
+            top_cat = max(stats['by_category'].items(), key=lambda x: x[1]['size'])
+            cat_pct = int(top_cat[1]['size'] / stats['total_size'] * 100) if stats['total_size'] > 0 else 0
+            if cat_pct > 50:
+                suggestions.append({
+                    'type': 'tip',
+                    'icon': '💡',
+                    'title': f'{top_cat[0]} 类型占比过高 ({cat_pct}%)',
+                    'description': f'占用空间: {top_cat[1]["size_display"]}',
+                    'action': '考虑压缩或归档该类型文件'
+                })
+
+        # 空文件检查
+        if stats['total_files'] > 1000:
+            suggestions.append({
+                'type': 'tip',
+                'icon': '📊',
+                'title': f'文件数量较多 ({stats["total_files"]:,} 个)',
+                'description': '建议定期清理或归档',
+                'action': '使用 --export 生成报告进行详细分析'
+            })
+
+        return suggestions
+
+    def chat(self, root_path: str, message: str) -> str:
+        """
+        处理自然语言对话
+
+        Args:
+            root_path: 扫描目录
+            message: 用户消息
+
+        Returns:
+            响应消息
+        """
+        msg = message.lower().strip()
+
+        # 大文件相关
+        if any(k in msg for k in ['大文件', 'large file', 'big file']):
+            large_files = self.analyze_large_files(root_path, min_size_mb=50, limit=10)
+            if large_files:
+                result = f"📦 找到 {len(large_files)} 个大文件 (>50MB):\n\n"
+                for f in large_files:
+                    result += f"  • {f.size_display} - {f.name}\n"
+                return result
+            return "✅ 未找到大于 50MB 的文件"
+
+        # 重复文件相关
+        if any(k in msg for k in ['重复', 'duplicate', 'same']):
+            duplicates = self.find_duplicates(root_path, min_size_kb=1024)
+            if duplicates:
+                result = f"🔄 找到 {len(duplicates)} 组重复文件:\n\n"
+                for i, d in enumerate(duplicates[:5], 1):
+                    result += f"  组 {i}: {d.count} 个文件，可节省 {d.size_display}\n"
+                return result
+            return "✅ 未找到重复文件"
+
+        # 统计相关
+        if any(k in msg for k in ['统计', 'statistic', '分析', 'analyze']):
+            stats = self.get_storage_stats(root_path)
+            result = f"📊 存储统计: {root_path}\n\n"
+            result += f"  总文件: {stats['total_files']:,}\n"
+            result += f"  总大小: {stats['total_size_display']}\n\n"
+            result += "  按类型分布:\n"
+            for cat, info in sorted(stats['by_category'].items(), key=lambda x: x[1]['size'], reverse=True)[:5]:
+                result += f"    • {cat}: {info['size_display']}\n"
+            return result
+
+        # 建议相关
+        if any(k in msg for k in ['建议', 'suggest', 'tip', 'help']):
+            suggestions = self.get_suggestions(root_path)
+            if suggestions:
+                result = "💡 智能建议:\n\n"
+                for s in suggestions:
+                    result += f"  {s['icon']} {s['title']}\n    {s['description']}\n    → {s['action']}\n\n"
+                return result
+            return "✅ 目前没有需要关注的建议"
+
+        # 帮助
+        if any(k in msg for k in ['help', '帮助', '命令', 'command']):
+            return """🤖 可用命令:
+  • "大文件" / "large files" - 查找大文件
+  • "重复文件" / "duplicates" - 查找重复文件
+  • "统计" / "stats" - 显示存储统计
+  • "建议" / "suggestions" - 获取优化建议
+  • "帮助" / "help" - 显示此帮助信息"""
+
+        # 默认
+        return f"""🤔 我不太理解 "{message}"
+
+可用的命令:
+  • "大文件" - 查找大文件
+  • "重复文件" - 查找重复文件
+  • "统计" - 显示存储统计
+  • "建议" - 获取优化建议
+  • "帮助" - 显示所有命令"""
+
     def _compute_hash(self, filepath: str) -> Optional[str]:
         """计算文件 SHA256 哈希"""
         try:
