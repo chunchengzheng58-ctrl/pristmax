@@ -246,6 +246,89 @@ def cmd_suggest(agent: StorageAgent, args):
     return 0
 
 
+def cmd_cleanup_duplicates(agent: StorageAgent, args):
+    """清理重复文件命令"""
+    path = args.path or os.getcwd()
+    dry_run = not args.execute
+
+    if dry_run:
+        print(f"\n\033[93m🔍 预览模式: {path}\033[0m")
+        print("   将显示要删除的文件，但不实际删除\n")
+    else:
+        print(f"\n\033[91m⚠️ 执行模式: {path}\033[0m")
+        print("   即将删除以下文件!\n")
+
+    print("=" * 50)
+    result = agent.cleanup_duplicates(path, dry_run=dry_run)
+
+    if result['groups_found'] == 0:
+        print("\n✅ 没有发现重复文件")
+        return 0
+
+    print(f"\n发现 \033[1m{result['groups_found']}\033[0m 组重复文件")
+    print(f"将删除 \033[1m{len(result['files_to_delete'])}\033[0m 个文件")
+    print(f"可节省空间: \033[92m{FileInfo.format_size(result['space_to_free'])}\033[0m\n")
+
+    if result['files_to_delete']:
+        print("\033[1m【待删除文件】\033[0m")
+        for i, filepath in enumerate(result['files_to_delete'][:20], 1):
+            print(f"  {i}. \033[90m{filepath}\033[0m")
+        if len(result['files_to_delete']) > 20:
+            print(f"  ... 还有 {len(result['files_to_delete']) - 20} 个文件")
+
+    if not dry_run:
+        print(f"\n\033[92m✅ 已删除 {len(result['deleted'])} 个文件\033[0m")
+        if result['errors']:
+            print(f"\n\033[91m❌ 删除失败 {len(result['errors'])} 个文件\033[0m")
+            for e in result['errors'][:5]:
+                print(f"   • {e['file']}: {e['error']}")
+    else:
+        print(f"\n\033[93m💡 运行 --cleanup-duplicates --execute 实际删除\033[0m")
+
+    return 0
+
+
+def cmd_cleanup_large(agent: StorageAgent, args):
+    """清理大文件命令"""
+    path = args.path or os.getcwd()
+    dry_run = not args.execute
+    min_mb = args.min
+
+    if dry_run:
+        print(f"\n\033[93m🔍 预览模式: {path}\033[0m")
+        print(f"   查找大于 {min_mb}MB 的文件\n")
+    else:
+        print(f"\n\033[91m⚠️ 执行模式: {path}\033[0m")
+        print("   即将删除以下文件!\n")
+
+    print("=" * 50)
+    result = agent.cleanup_large_files(path, min_size_mb=min_mb, dry_run=dry_run)
+
+    if result['files_found'] == 0:
+        print(f"\n✅ 没有发现大于 {min_mb}MB 的文件")
+        return 0
+
+    print(f"\n发现 \033[1m{result['files_found']}\033[0m 个大文件")
+    print(f"将删除 \033[1m{len(result['files_to_delete'])}\033[0m 个文件")
+    print(f"可节省空间: \033[92m{FileInfo.format_size(result['space_to_free'])}\033[0m\n")
+
+    if result['files_to_delete']:
+        print("\033[1m【待删除文件】\033[0m")
+        for i, filepath in enumerate(result['files_to_delete'][:20], 1):
+            print(f"  {i}. \033[90m{filepath}\033[0m")
+        if len(result['files_to_delete']) > 20:
+            print(f"  ... 还有 {len(result['files_to_delete']) - 20} 个文件")
+
+    if not dry_run:
+        print(f"\n\033[92m✅ 已删除 {len(result['deleted'])} 个文件\033[0m")
+        if result['errors']:
+            print(f"\n\033[91m❌ 删除失败 {len(result['errors'])} 个文件\033[0m")
+    else:
+        print(f"\n\033[93m💡 运行 --cleanup-large --execute 实际删除\033[0m")
+
+    return 0
+
+
 def cmd_monitor(agent: StorageAgent, args):
     """监控模式命令"""
     path = args.path or os.getcwd()
@@ -317,6 +400,10 @@ def main():
   %(prog)s --stats                    显示统计信息 (带进度条)
   %(prog)s --stats --full-scan        强制全量扫描
   %(prog)s --suggest                  显示智能建议
+  %(prog)s --cleanup-duplicates        预览重复文件清理
+  %(prog)s --cleanup-duplicates --execute  执行重复文件清理
+  %(prog)s --cleanup-large --min 100  预览大文件清理
+  %(prog)s --cleanup-large --min 100 --execute  执行大文件清理
   %(prog)s --export -o report.html    导出HTML报告
   %(prog)s --chat                     进入对话交互模式
   %(prog)s --monitor --interval 30    监控模式 (30秒检测一次)
@@ -331,6 +418,8 @@ def main():
     parser.add_argument('--stats', '-s', action='store_true', help='显示统计信息')
     parser.add_argument('--export', '-e', action='store_true', help='导出报告')
     parser.add_argument('--suggest', action='store_true', help='显示智能建议')
+    parser.add_argument('--cleanup-duplicates', action='store_true', help='清理重复文件')
+    parser.add_argument('--cleanup-large', action='store_true', help='清理大文件')
     parser.add_argument('--chat', action='store_true', help='对话交互模式')
     parser.add_argument('--monitor', action='store_true', help='监控模式')
     parser.add_argument('--serve', action='store_true', help='启动API服务')
@@ -342,6 +431,7 @@ def main():
     parser.add_argument('--format', choices=['html', 'json'], default='html', help='报告格式 (默认: html)')
     parser.add_argument('--output', '-o', help='报告输出路径')
     parser.add_argument('--interval', type=int, default=60, help='监控检测间隔秒数 (默认: 60)')
+    parser.add_argument('--execute', action='store_true', help='执行清理操作（默认仅预览）')
 
     args = parser.parse_args()
 
@@ -350,7 +440,7 @@ def main():
     agent = StorageAgent(db_path=db_path)
 
     # 如果没有指定命令，默认分析
-    if not any([args.analyze, args.large_files, args.duplicates, args.stats, args.serve, args.export, args.suggest, args.chat, args.monitor]):
+    if not any([args.analyze, args.large_files, args.duplicates, args.stats, args.serve, args.export, args.suggest, args.chat, args.monitor, args.cleanup_duplicates, args.cleanup_large]):
         args.analyze = True
 
     try:
@@ -366,6 +456,10 @@ def main():
             return cmd_export(agent, args)
         elif args.suggest:
             return cmd_suggest(agent, args)
+        elif args.cleanup_duplicates:
+            return cmd_cleanup_duplicates(agent, args)
+        elif args.cleanup_large:
+            return cmd_cleanup_large(agent, args)
         elif args.chat:
             return cmd_chat(agent, args)
         elif args.monitor:
