@@ -74,3 +74,6 @@ const calcSavings=document.getElementById('calc-savings');
 const calcMoney=document.getElementById('calc-money');
 function updateCalculator(){const storage=parseFloat(calcStorage.value)||0;const dupe=parseFloat(calcDupe.value)||0;const savings=storage*(dupe/100);calcSavings.textContent=savings.toFixed(0)+' GB';calcMoney.textContent=(savings*0.1).toFixed(1)+' 元/月'}
 if(calcStorage&&calcDupe){calcStorage.addEventListener('input',updateCalculator);calcDupe.addEventListener('input',function(){dupeValueEl.textContent=this.value;updateCalculator()});updateCalculator()}
+
+// Statement section animation
+const statementObserver=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('in-view');statementObserver.disconnect()}})},{threshold:0.3});const statementEl=document.querySelector('.section-statement');if(statementEl)statementObserver.observe(statementEl);
