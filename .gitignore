@@ -19,6 +19,7 @@ build/
 
 # Node.js
 electron-app/node_modules/
+electron-app/dist/
 
 # Data & Database
 *.db
@@ -45,8 +46,8 @@ temp/
 *.tmp
 
 # Keep source JS private (commit obfuscated versions instead)
-main.js
-protect.js
+site/main.js
+site/protect.js
 
 # Allow obfuscated versions to be committed
 !main.min.js

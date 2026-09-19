@@ -7,15 +7,25 @@
     "start": "electron .",
     "build": "electron-builder --win --publish never"
   },
-  "keywords": [
-    "storage",
-    "optimization",
-    "deduplication"
-  ],
+  "build": {
+    "appId": "com.pristmax.desktop",
+    "productName": "Pristmax",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "../site/**/*"
+    ],
+    "win": {
+      "target": "portable"
+    }
+  },
+  "keywords": ["storage", "optimization"],
   "author": "Pristmax",
   "license": "Apache-2.0",
   "devDependencies": {
-    "electron": "^44.4.3",
+    "electron": "^33.2.1",
     "electron-builder": "^25.1.8"
   }
 }
