@@ -2,68 +2,64 @@
 
 **Less storage. More clarity.**
 
-Pristmax is an enterprise data storage optimization system that reduces redundancy, verifies integrity, and manages storage — running entirely in your own environment.
+Enterprise data storage optimization — runs locally, verifies integrity, reduces footprint.
 
-[Website](https://jiangchenghehe.top) · [Docs](site/docs.html) · [Download](#download)
+Built with Claude Code by Anthropic · [Website](https://jiangchenghehe.top) · [Docs](src/pristmax/site/docs.html)
 
 ---
 
-## Features
+## Project Structure
 
-### Understand Your Data
-Scan directories to establish baselines on capacity, duplication rate, and access frequency.
-
-### Reduce Storage Footprint
-- **Deduplication**: Content-defined chunking (FastCDC) identifies duplicate data blocks
-- **Video Optimization**: H.265 encoding with configurable quality modes — lossless, visually lossless, or compressed backup
-- **Semantic Reduction**: ROI detection, background separation for video content
-
-### Verify Results
-- Lossless paths validate file hashes after restore
-- Video quality metrics for lossy paths
-
-### Stay in Control
-- All processing runs locally in your environment — no data leaves your infrastructure
-- Multi-backend storage: Local disk, NAS, USB, Cloud, RAID
-- Real-time task monitoring with SSE streaming
-- RESTful API for integration
+```
+pristmax/
+├── src/pristmax/        ← Open source core (Apache 2.0)
+│   ├── api/            REST API server
+│   ├── web/            Product console UI
+│   ├── scheduler/      Task scheduling & queue
+│   ├── storage/        Storage abstraction layer
+│   ├── auth/           Authentication & RBAC
+│   ├── monitor/        System metrics & alerts
+│   └── site/           Marketing website
+├── commercial/          ← Proprietary (separate license)
+│   ├── encoder/        H.265 video encoding
+│   └── surveillance/   ROI/ASVC/BLUE video analysis
+├── binaries/           Windows executables (downloads)
+├── docs/              Architecture docs
+├── main.py            Application entry point
+└── main.spec          PyInstaller packaging config
+```
 
 ---
 
 ## Quick Start
 
-### Download
-Get the latest release from [GitHub Releases](https://github.com/chunchengzheng58-ctrl/pristmax/releases).
-
-### Run
-```
-./Pristmax.exe --host 0.0.0.0 --port 5000
-```
-Then open http://localhost:5000 in your browser.
-
-### From Source
+### Run the application
 ```bash
-pip install -r unified/requirements.txt
+pip install -r src/pristmax/requirements.txt
 python main.py --host 0.0.0.0 --port 5000
 ```
+Open http://localhost:5000
+
+### Download executable
+Get `binaries/Pristmax.exe` from [Releases](https://github.com/chunchengzheng58-ctrl/pristmax/releases).
 
 ---
 
-## Architecture
+## Features
 
-```
-Pristmax
-├── Web UI          # Local browser-based console
-├── API Server      # Flask REST API (port 5000)
-├── Task Scheduler  # Background job queue (ThreadPoolExecutor)
-├── Storage Layer   # Unified adapter: Local / NAS / USB / Cloud / RAID
-├── Encoder         # H.265 video encoding
-└── Dedup Engine    # FastCDC content-defined chunking
-```
+| Feature | Module | License |
+|---------|--------|---------|
+| REST API | `src/pristmax/api/` | Open Source |
+| Task Scheduler | `src/pristmax/scheduler/` | Open Source |
+| Storage Adapters | `src/pristmax/storage/` | Open Source |
+| Web Console | `src/pristmax/web/` | Open Source |
+| Marketing Site | `src/pristmax/site/` | Open Source |
+| H.265 Encoding | `commercial/encoder/` | Proprietary |
+| Video Analysis | `commercial/surveillance/` | Proprietary |
 
 ---
 
-## API
+## API Endpoints
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
@@ -73,8 +69,7 @@ Pristmax
 | `/api/tasks` | GET/POST | List or create tasks |
 | `/api/tasks/<id>/stream` | GET | SSE task progress |
 | `/api/storages` | GET | List storage volumes |
-
-Full API documentation at `/api/docs` (Swagger UI).
+| `/health` | GET | Health check |
 
 ---
 
@@ -92,11 +87,13 @@ Full API documentation at `/api/docs` (Swagger UI).
 
 ## License
 
-Coming soon. Contact the team for details.
+Open source components: Apache 2.0
+
+Proprietary components (H.265 encoder, video analysis): [Contact for licensing](mailto:[pending])
 
 ---
 
 ## Contact
 
 - Website: https://jiangchenghehe.top
-- GitHub Issues: https://github.com/chunchengzheng58-ctrl/pristmax/issues
+- GitHub: https://github.com/chunchengzheng58-ctrl/pristmax
