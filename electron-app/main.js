@@ -306,6 +306,24 @@ ipcMain.handle('storage_search_content', async (event, { path, keyword, file_typ
   }
 });
 
+ipcMain.handle('storage_schedule_add', async (event, { task_id, path, schedule, task_type }) => {
+  const { ScheduledTaskManager } = require('../src/pristmax/agent/storage_agent');
+  const manager = ScheduledTaskManager();
+  return manager.add_scan_task(task_id, path, schedule, task_type);
+});
+
+ipcMain.handle('storage_schedule_remove', async (event, { task_id }) => {
+  const { ScheduledTaskManager } = require('../src/pristmax/agent/storage_agent');
+  const manager = ScheduledTaskManager();
+  return manager.remove_task(task_id);
+});
+
+ipcMain.handle('storage_schedule_list', async (event) => {
+  const { ScheduledTaskManager } = require('../src/pristmax/agent/storage_agent');
+  const manager = ScheduledTaskManager();
+  return { tasks: manager.list_tasks() };
+});
+
 // App lifecycle
 app.whenReady().then(() => {
   console.log('App ready, creating window...');

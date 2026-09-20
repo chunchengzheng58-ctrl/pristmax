@@ -727,13 +727,12 @@
                 <!-- Tasks Page -->
                 <div class="page-content" id="page-tasks">
                     <div class="panel" style="flex:1;">
-                        <div class="panel-header"><span class="panel-title">任务列表</span><button class="top-bar-btn primary" style="padding:4px 10px;font-size:11px">+ 新建</button></div>
+                        <div class="panel-header">
+                            <span class="panel-title">定时任务</span>
+                            <button class="top-bar-btn primary" id="btn-add-task" style="padding:4px 10px;font-size:11px">+ 新建任务</button>
+                        </div>
                         <div class="panel-body">
-                            <div class="empty-state">
-                                <div class="empty-state-icon">📋</div>
-                                <h3>暂无任务</h3>
-                                <p>点击上方按钮创建新任务</p>
-                            </div>
+                            <div id="task-list"></div>
                         </div>
                     </div>
                 </div>

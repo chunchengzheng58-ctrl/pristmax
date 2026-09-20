@@ -115,6 +115,10 @@
         document.getElementById('search-input')?.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') performSearch();
         });
+
+        // Task actions
+        document.getElementById('btn-add-task')?.addEventListener('click', showAddTaskDialog);
+        loadScheduledTasks();
     }
 
     function navigateTo(page) {
@@ -903,5 +907,97 @@
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
+    }
+
+    // ===== Scheduled Tasks =====
+    async function loadScheduledTasks() {
+        try {
+            const response = await window.electronAPI?.invoke('storage_schedule_list', {});
+            const tasks = response?.tasks || [];
+
+            const listEl = document.getElementById('task-list');
+            if (tasks.length === 0) {
+                listEl.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📋</div>
+                        <h3>暂无定时任务</h3>
+                        <p>点击上方按钮创建新任务</p>
+                    </div>
+                `;
+            } else {
+                listEl.innerHTML = tasks.map(t => `
+                    <div class="cleanup-item">
+                        <div class="cleanup-icon">⏰</div>
+                        <div class="cleanup-info">
+                            <div class="cleanup-name">${t.task_id}</div>
+                            <div class="cleanup-desc">${t.task_type} - ${t.schedule} - ${t.path}</div>
+                        </div>
+                        <div class="cleanup-actions">
+                            <button class="cleanup-btn view" onclick="viewTaskResult('${t.task_id}')">查看</button>
+                            <button class="cleanup-btn clean" onclick="removeTask('${t.task_id}')">删除</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        } catch (err) {
+            console.error('Load tasks error:', err);
+        }
+    }
+
+    function showAddTaskDialog() {
+        const taskId = prompt('任务ID（如: daily_scan）:');
+        if (!taskId) return;
+
+        const path = currentPath || prompt('扫描路径:');
+        if (!path) return;
+
+        const scheduleOptions = [
+            { label: '每天凌晨2点', value: '0 2 * * *' },
+            { label: '每小时', value: '0 * * * *' },
+            { label: '每天8点', value: '0 8 * * *' },
+            { label: '每周一凌晨', value: '0 2 * * 1' }
+        ];
+
+        const schedule = scheduleOptions[0].value;
+        const taskType = 'stats';
+
+        // For simplicity, use default options
+        addScheduledTask(taskId, path, schedule, taskType);
+    }
+
+    async function addScheduledTask(taskId, path, schedule, taskType) {
+        try {
+            const response = await window.electronAPI?.invoke('storage_schedule_add', {
+                task_id: taskId,
+                path: path,
+                schedule: schedule,
+                task_type: taskType
+            });
+
+            if (response?.status === 'added') {
+                showNotification('任务已添加');
+                loadScheduledTasks();
+            } else {
+                showNotification('添加失败: ' + (response?.message || '未知错误'));
+            }
+        } catch (err) {
+            showNotification('添加失败: ' + err.message);
+        }
+    }
+
+    async function removeTask(taskId) {
+        if (!confirm('确定要删除任务 ' + taskId + ' 吗？')) return;
+
+        try {
+            await window.electronAPI?.invoke('storage_schedule_remove', { task_id: taskId });
+            showNotification('任务已删除');
+            loadScheduledTasks();
+        } catch (err) {
+            showNotification('删除失败: ' + err.message);
+        }
+    }
+
+    function viewTaskResult(taskId) {
+        showNotification('任务结果查看功能开发中...');
     }
 })();

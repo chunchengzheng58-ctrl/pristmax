@@ -122,6 +122,10 @@ class StorageAgentMCPServer:
             "storage_incremental_scan": self._handle_incremental_scan,
             # 内容搜索
             "storage_search_content": self._handle_search_content,
+            # 定时任务
+            "storage_schedule_add": self._handle_schedule_add,
+            "storage_schedule_remove": self._handle_schedule_remove,
+            "storage_schedule_list": self._handle_schedule_list,
         }
 
     def get_tools_list(self) -> list:
@@ -400,6 +404,40 @@ class StorageAgentMCPServer:
                         "max_results": {"type": "integer", "description": "最大结果数", "default": 100}
                     },
                     "required": ["path", "keyword"]
+                }
+            },
+            # ===== 定时任务 =====
+            {
+                "name": "storage_schedule_add",
+                "description": "添加定时扫描任务",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "task_id": {"type": "string", "description": "任务ID"},
+                        "path": {"type": "string", "description": "要扫描的路径"},
+                        "schedule": {"type": "string", "description": "Cron表达式，如 '0 2 * * *'（每天凌晨2点）"},
+                        "task_type": {"type": "string", "enum": ["stats", "duplicates", "large"], "description": "任务类型", "default": "stats"}
+                    },
+                    "required": ["task_id", "path", "schedule"]
+                }
+            },
+            {
+                "name": "storage_schedule_remove",
+                "description": "移除定时任务",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "task_id": {"type": "string", "description": "任务ID"}
+                    },
+                    "required": ["task_id"]
+                }
+            },
+            {
+                "name": "storage_schedule_list",
+                "description": "列出所有定时任务",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {}
                 }
             }
         ]
@@ -778,6 +816,29 @@ class StorageAgentMCPServer:
         file_types = params.get("file_types")
         max_results = params.get("max_results", 100)
         return self.agent.search_file_content(path, keyword, file_types, max_results)
+
+    def _handle_schedule_add(self, params: dict) -> dict:
+        """Handle storage_schedule_add"""
+        from src.pristmax.agent.storage_agent import ScheduledTaskManager
+        task_id = params.get("task_id", "")
+        path = params.get("path", "")
+        schedule = params.get("schedule", "")
+        task_type = params.get("task_type", "stats")
+        manager = ScheduledTaskManager()
+        return manager.add_scan_task(task_id, path, schedule, task_type)
+
+    def _handle_schedule_remove(self, params: dict) -> dict:
+        """Handle storage_schedule_remove"""
+        from src.pristmax.agent.storage_agent import ScheduledTaskManager
+        task_id = params.get("task_id", "")
+        manager = ScheduledTaskManager()
+        return manager.remove_task(task_id)
+
+    def _handle_schedule_list(self, params: dict) -> dict:
+        """Handle storage_schedule_list"""
+        from src.pristmax.agent.storage_agent import ScheduledTaskManager
+        manager = ScheduledTaskManager()
+        return {"tasks": manager.list_tasks()}
 
     # ===== MCP 协议处理 =====
 

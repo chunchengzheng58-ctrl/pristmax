@@ -134,7 +134,6 @@ class ScanProgressTracker:
                       if now - v.get('start_time', 0) > max_age_seconds]
             for k in expired:
                 cls._progress.pop(k, None)
-        return time.time() - self.start_time
 
     def to_dict(self) -> dict:
         return {
@@ -144,6 +143,162 @@ class ScanProgressTracker:
             'elapsed_seconds': self.elapsed_seconds,
             'errors': self.errors
         }
+
+
+class ScheduledTaskManager:
+    """定时任务管理器"""
+    _instance = None
+    _lock = threading.Lock()
+
+    def __new__(cls):
+        if cls._instance is None:
+            with cls._lock:
+                if cls._instance is None:
+                    cls._instance = super().__new__(cls)
+                    cls._instance._initialized = False
+        return cls._instance
+
+    def __init__(self):
+        if self._initialized:
+            return
+        self._initialized = True
+        self._scheduler = None
+        self._tasks = {}
+        self._results = {}
+
+    def start(self):
+        """启动调度器"""
+        if self._scheduler is not None:
+            return
+        try:
+            from apscheduler.schedulers.background import BackgroundScheduler
+            from apscheduler.schedulers.blocking import BlockingScheduler
+        except ImportError:
+            return
+
+        self._scheduler = BackgroundScheduler(timezone='Asia/Shanghai')
+        self._scheduler.start()
+
+    def stop(self):
+        """停止调度器"""
+        if self._scheduler:
+            self._scheduler.shutdown(wait=False)
+            self._scheduler = None
+
+    def add_scan_task(self, task_id: str, path: str, schedule: str, task_type: str = 'stats') -> dict:
+        """添加定时扫描任务
+
+        Args:
+            task_id: 任务ID
+            path: 要扫描的路径
+            schedule: Cron表达式，如 '0 2 * * *'（每天凌晨2点）
+            task_type: 任务类型 'stats'(统计) | 'duplicates'(重复文件) | 'large'(大文件)
+
+        Returns:
+            {'task_id': ..., 'status': 'added'/'error', 'message': ...}
+        """
+        if not self._scheduler:
+            self.start()
+
+        # 移除已存在的同ID任务
+        if task_id in self._tasks:
+            self.remove_task(task_id)
+
+        def task_func():
+            agent = StorageAgent()
+            if task_type == 'stats':
+                result = agent.get_storage_stats(path)
+            elif task_type == 'duplicates':
+                result = agent.find_duplicates(path)
+            elif task_type == 'large':
+                result = agent.analyze_large_files(path)
+            else:
+                result = {}
+
+            self._results[task_id] = {
+                'last_run': time.time(),
+                'result': result
+            }
+            ScanProgressTracker.update(f'scheduled_{task_id}',
+                status='completed',
+                last_run=time.time(),
+                result_summary=str(result)[:200]
+            )
+
+        try:
+            # 解析 cron 表达式
+            parts = schedule.split()
+            if len(parts) == 5:
+                self._scheduler.add_job(
+                    task_func,
+                    'cron',
+                    minute=parts[0],
+                    hour=parts[1],
+                    day=parts[2],
+                    month=parts[3],
+                    day_of_week=parts[4],
+                    id=task_id,
+                    replace_existing=True
+                )
+            else:
+                # 间隔执行，如 'interval', {'hours': 1}
+                self._scheduler.add_job(
+                    task_func,
+                    'interval',
+                    hours=1,
+                    id=task_id,
+                    replace_existing=True
+                )
+
+            self._tasks[task_id] = {
+                'path': path,
+                'schedule': schedule,
+                'task_type': task_type,
+                'status': 'active'
+            }
+
+            ScanProgressTracker.add(f'scheduled_{task_id}', {
+                'task_id': task_id,
+                'type': 'scheduled',
+                'path': path,
+                'schedule': schedule,
+                'task_type': task_type,
+                'status': 'active',
+                'start_time': time.time()
+            })
+
+            return {'task_id': task_id, 'status': 'added', 'message': 'Task scheduled successfully'}
+
+        except Exception as e:
+            return {'task_id': task_id, 'status': 'error', 'message': str(e)}
+
+    def remove_task(self, task_id: str) -> dict:
+        """移除定时任务"""
+        if self._scheduler and task_id in self._tasks:
+            self._scheduler.remove_job(task_id)
+            del self._tasks[task_id]
+            ScanProgressTracker.remove(f'scheduled_{task_id}')
+            return {'task_id': task_id, 'status': 'removed'}
+        return {'task_id': task_id, 'status': 'not_found'}
+
+    def list_tasks(self) -> list:
+        """列出所有定时任务"""
+        return [
+            {'task_id': tid, **task}
+            for tid, task in self._tasks.items()
+        ]
+
+    def get_task_result(self, task_id: str) -> dict:
+        """获取任务最近执行结果"""
+        return self._results.get(task_id, {})
+
+    def get_next_run(self, task_id: str) -> Optional[str]:
+        """获取任务下次执行时间"""
+        if self._scheduler:
+            job = self._scheduler.get_job(task_id)
+            if job:
+                return str(job.next_run_time)
+        return None
 
 
 class SecurityConfig:
