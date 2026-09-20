@@ -145,11 +145,50 @@ html{scroll-behavior:smooth;scrollbar-gutter:stable;-webkit-font-smoothing:antia
   margin-top: 40px;
   text-align: center;
 }
+.contributors-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
 .contributors-label {
   font: 10px/1 Consolas, monospace;
   letter-spacing: 3px;
   color: #666;
   text-transform: uppercase;
+  margin-bottom: 0;
+}
+.contributors-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.contributor-cta {
+  font: 11px/1 system-ui, sans-serif;
+  color: #fff;
+  background: #113577;
+  padding: 6px 14px;
+  border-radius: 16px;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+.contributor-cta:hover {
+  background: #0c2854;
+}
+.contributor-link {
+  font: 11px/1 system-ui, sans-serif;
+  color: #477f9f;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.contributor-link:hover {
+  color: #113577;
+}
+.contributors-note {
+  font: 10px/1 system-ui, sans-serif;
+  color: #999;
   margin-bottom: 16px;
 }
 .contributors-track {
