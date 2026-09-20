@@ -17,6 +17,12 @@ Storage Agent: 智能存储管家 (安全增强版)
 - 资源限制
 - 操作审批流程
 - 完整审计日志
+
+性能特性：
+- 并行扫描（ThreadPoolExecutor）
+- SQLite 缓存（TTL 过期）
+- 分页查询
+- 批量数据库操作
 """
 import os
 import sys
@@ -26,12 +32,21 @@ import sqlite3
 import time
 import re
 import threading
+import logging
 from datetime import datetime
 from pathlib import Path
-from typing import List, Dict, Optional, Tuple, Callable
-from dataclasses import dataclass, asdict
+from typing import List, Dict, Optional, Tuple, Callable, Generator, Iterator, Any
+from dataclasses import dataclass, field, asdict
 from enum import Enum
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from contextlib import contextmanager
+
+# 配置日志
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
 
 # ============================================
@@ -1175,6 +1190,41 @@ class StorageAgent:
         self.cache_ttl_seconds = 3600  # 缓存1小时
         self.cache_enabled = True
 
+        logger.info("StorageAgent initialized")
+
+    def health_check(self) -> dict:
+        """健康检查接口，返回系统状态
+
+        Returns:
+            健康状态字典
+        """
+        status = {
+            'status': 'healthy',
+            'timestamp': datetime.now().isoformat(),
+            'components': {}
+        }
+
+        # 检查数据库连接
+        try:
+            self.conn.execute('SELECT 1')
+            status['components']['database'] = 'ok'
+        except Exception as e:
+            status['components']['database'] = f'error: {str(e)}'
+            status['status'] = 'unhealthy'
+
+        # 检查缓存
+        try:
+            cursor = self.conn.execute('SELECT COUNT(*) FROM scan_cache')
+            cache_count = cursor.fetchone()[0]
+            status['components']['cache'] = f'ok ({cache_count} entries)'
+        except Exception as e:
+            status['components']['cache'] = f'error: {str(e)}'
+
+        # 检查安全配置
+        status['components']['security'] = 'enabled' if _security_config.allowed_paths else 'permissive'
+
+        return status
+
     def _init_db(self):
         self.conn = sqlite3.connect(self.db_path, check_same_thread=False)
         self.conn.execute('''
@@ -1258,8 +1308,8 @@ class StorageAgent:
                 VALUES (?, ?, ?, ?, ?)
             ''', (path, cache_key, json.dumps(result, default=str), datetime.now().isoformat(), datetime.fromtimestamp(expires_at).isoformat()))
             self.conn.commit()
-        except:
-            pass
+        except Exception as e:
+            logger.error(f"缓存保存失败: {e}")
 
     def clear_cache(self, path: str = None):
         """清除缓存"""
@@ -1268,6 +1318,22 @@ class StorageAgent:
         else:
             self.conn.execute('DELETE FROM scan_cache')
         self.conn.commit()
+
+    @contextmanager
+    def batch_operation(self, batch_size: int = 100):
+        """批量操作的上下文管理器，减少 commit 次数"""
+        batch = []
+        try:
+            yield batch
+            # 批量提交
+            if batch:
+                self.conn.executemany(*batch)
+                self.conn.commit()
+                batch.clear()
+        except Exception as e:
+            logger.error(f"批量操作失败: {e}")
+            self.conn.rollback()
+            raise
 
     def get_incremental_changes(self, root_path: str, since_mtime: float = None) -> dict:
         """获取增量变化（新增/修改/删除的文件）"""
@@ -1350,68 +1416,58 @@ class StorageAgent:
 
         # 默认搜索的文本文件类型
         if file_types is None:
-            file_types = ['.txt', '.py', '.js', '.json', '.xml', '.html', '.css',
-                         '.md', '.yml', '.yaml', '.ini', '.cfg', '.conf', '.log',
-                         '.csv', '.sql', '.sh', '.bat', '.ps1', '.java', '.c', '.cpp', '.h']
+            file_types = frozenset(['.txt', '.py', '.js', '.json', '.xml', '.html', '.css',
+                                    '.md', '.yml', '.yaml', '.ini', '.cfg', '.conf', '.log',
+                                    '.csv', '.sql', '.sh', '.bat', '.ps1', '.java', '.c', '.cpp', '.h'])
+        else:
+            file_types = frozenset(file_types)
 
         # 编译正则提高性能
         try:
             import re
             pattern = re.compile(keyword, re.IGNORECASE)
         except re.error:
-            # 如果正则失败，作为普通字符串搜索
             pattern = re.compile(re.escape(keyword), re.IGNORECASE)
 
-        for dirpath, dirnames, filenames in os.walk(root_path):
-            # 跳过隐藏目录和常见忽略目录
-            dirnames[:] = [d for d in dirnames if not d.startswith('.') and d not in ('__pycache__', 'node_modules', '.git')]
-
-            for filename in filenames:
-                if filename.startswith('.'):
+        # 使用生成器迭代文件，减少内存占用
+        for filepath in self.iter_files(root_path):
+            try:
+                stat = os.stat(filepath)
+                if stat.st_size > max_size_bytes or stat.st_size == 0:
                     continue
 
-                filepath = os.path.join(dirpath, filename)
-                ext = os.path.splitext(filename)[1].lower()
-
+                ext = os.path.splitext(filepath)[1].lower()
                 if ext not in file_types:
                     continue
 
-                try:
-                    stat = os.stat(filepath)
-                    if stat.st_size > max_size_bytes or stat.st_size == 0:
-                        continue
+                total_searched += 1
+                filename = os.path.basename(filepath)
 
-                    total_searched += 1
+                # 读取文件内容（限制大小避免内存问题）
+                with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
+                    content = f.read(max_size_bytes)
 
-                    # 读取文件内容（限制大小避免内存问题）
-                    with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
-                        content = f.read(max_size_bytes)
+                # 搜索每一行
+                for line_num, line in enumerate(content.splitlines(), 1):
+                    if pattern.search(line):
+                        matches.append({
+                            'path': filepath,
+                            'filename': filename,
+                            'line_num': line_num,
+                            'line_content': line.strip()[:200],
+                            'context': line.strip()[:100]
+                        })
 
-                    # 搜索每一行
-                    for line_num, line in enumerate(content.splitlines(), 1):
-                        if pattern.search(line):
-                            # 提取上下文（前50后50字符）
-                            context_start = max(0, len(line) - 50)
-                            context = line[context_start:context_start + 100].strip()
+                        if len(matches) >= max_results:
+                            return {
+                                'matches': matches,
+                                'total_files_searched': total_searched,
+                                'total_matches': len(matches),
+                                'truncated': True
+                            }
 
-                            matches.append({
-                                'path': filepath,
-                                'filename': filename,
-                                'line_num': line_num,
-                                'line_content': line.strip()[:200],
-                                'context': context
-                            })
-
-                            if len(matches) >= max_results:
-                                return {
-                                    'matches': matches,
-                                    'total_files_searched': total_searched,
-                                    'total_matches': len(matches),
-                                    'truncated': True
-                                }
-
-                except (OSError, PermissionError, UnicodeDecodeError):
-                    continue
+            except (OSError, PermissionError, UnicodeDecodeError):
+                continue
 
         return {
             'matches': matches,
@@ -1530,14 +1586,20 @@ class StorageAgent:
         return {}
 
     def _check_path_permission(self, path: str) -> bool:
-        """检查路径权限"""
+        """检查路径权限（包含路径遍历检查）"""
+        # 防止路径遍历攻击
+        try:
+            real_path = os.path.realpath(os.path.abspath(path))
+        except (OSError, ValueError):
+            logger.warning(f"路径遍历检测: {path}")
+            return False
+
         if not _security_config.allowed_paths:
             return True  # 没有配置白名单时允许所有
 
-        abs_path = os.path.abspath(path)
         for allowed in _security_config.allowed_paths:
             allowed_abs = os.path.abspath(allowed)
-            if abs_path.startswith(allowed_abs):
+            if real_path.startswith(allowed_abs):
                 return True
         return False
 
@@ -1617,6 +1679,38 @@ class StorageAgent:
             'by_category': files_by_category,
             'by_extension': files_by_extension
         }
+
+    def iter_files(self, root_path: str, max_depth: int = None) -> Generator[str, None, None]:
+        """生成器迭代文件，避免一次性加载所有文件到内存
+
+        Args:
+            root_path: 根路径
+            max_depth: 最大递归深度，None 表示无限制
+
+        Yields:
+            file_path 字符串
+        """
+        def _walk(dir_path: str, depth: int = 0):
+            if max_depth is not None and depth > max_depth:
+                return
+
+            try:
+                with os.scandir(dir_path) as entries:
+                    for entry in entries:
+                        if entry.name.startswith('.'):
+                            continue
+
+                        try:
+                            if entry.is_dir(follow_symlinks=False):
+                                yield from _walk(entry.path, depth + 1)
+                            elif entry.is_file(follow_symlinks=False):
+                                yield entry.path
+                        except (OSError, PermissionError):
+                            continue
+            except (OSError, PermissionError):
+                pass
+
+        yield from _walk(root_path)
 
     def _collect_subdirs(self, root_path: str, max_dirs: int = 100) -> List[str]:
         """收集顶层子目录用于并行扫描"""
@@ -1830,37 +1924,35 @@ class StorageAgent:
         }
 
     def find_duplicates(self, root_path: str, min_size_kb: int = 1) -> List[DuplicateGroup]:
-        """查找重复文件"""
+        """查找重复文件（优化：快速哈希 + 精确哈希）"""
         if not self._check_path_permission(root_path):
             raise PermissionError(f"路径 {root_path} 不在允许范围内")
 
         self.audit_logger.info("find_duplicates", root_path)
+        logger.info(f"开始查找重复文件: {root_path}")
 
         min_size = min_size_kb * 1024
         hash_groups: Dict[str, List[str]] = {}
         size_groups: Dict[int, List[str]] = {}
 
-        for dirpath, dirnames, filenames in os.walk(root_path):
-            dirnames[:] = [d for d in dirnames if not d.startswith('.')]
-
-            for filename in filenames:
-                if filename.startswith('.'):
+        # 第一遍：按大小分组
+        for filepath in self.iter_files(root_path):
+            file_path = filepath[0] if isinstance(filepath, tuple) else filepath
+            try:
+                size = os.path.getsize(file_path)
+                if size < min_size:
                     continue
 
-                filepath = os.path.join(dirpath, filename)
-                try:
-                    size = os.path.getsize(filepath)
-                    if size < min_size:
-                        continue
+                if size not in size_groups:
+                    size_groups[size] = []
+                size_groups[size].append(file_path)
 
-                    if size not in size_groups:
-                        size_groups[size] = []
-                    size_groups[size].append(filepath)
+            except (OSError, PermissionError):
+                continue
 
-                except (OSError, PermissionError):
-                    continue
+        logger.info(f"按大小分组完成，找到 {len(size_groups)} 个不同大小")
 
-        # 对同大小文件计算哈希
+        # 对同大小文件计算快速哈希（前1MB + 后1MB + 大小）
         for size, files in size_groups.items():
             if len(files) < 2:
                 continue
@@ -1868,36 +1960,77 @@ class StorageAgent:
             hash_map: Dict[str, List[str]] = {}
             for filepath in files:
                 try:
-                    with open(filepath, 'rb') as f:
-                        file_hash = hashlib.md5(f.read(1024 * 1024)).hexdigest()
+                    file_hash = self._quick_hash(filepath, size)
                     if file_hash not in hash_map:
                         hash_map[file_hash] = []
                     hash_map[file_hash].append(filepath)
-                except:
+                except (OSError, PermissionError):
                     continue
 
             for h, dup_files in hash_map.items():
                 if len(dup_files) > 1:
-                    if h not in hash_groups:
-                        hash_groups[h] = dup_files
-                    else:
-                        hash_groups[h].extend(dup_files)
+                    # 精确哈希验证
+                    verified = self._verify_duplicates(dup_files)
+                    for vh, vfiles in verified.items():
+                        if len(vfiles) > 1:
+                            if vh not in hash_groups:
+                                hash_groups[vh] = vfiles
+                            else:
+                                hash_groups[vh].extend(vfiles)
 
         results = []
         for h, files in hash_groups.items():
             if len(files) > 1:
-                file_size = os.path.getsize(files[0])
-                wasted = file_size * (len(files) - 1)
-                results.append(DuplicateGroup(
-                    hash=h,
-                    size=file_size,
-                    size_display=FileInfo.format_size(file_size),
-                    count=len(files),
-                    files=files,
-                    wasted_space=wasted
-                ))
+                try:
+                    file_size = os.path.getsize(files[0])
+                    wasted = file_size * (len(files) - 1)
+                    results.append(DuplicateGroup(
+                        hash=h,
+                        size=file_size,
+                        size_display=FileInfo.format_size(file_size),
+                        count=len(files),
+                        files=files,
+                        wasted_space=wasted
+                    ))
+                except OSError:
+                    continue
 
+        logger.info(f"找到 {len(results)} 组重复文件")
         return sorted(results, key=lambda x: x.wasted_space, reverse=True)
+
+    def _quick_hash(self, filepath: str, size: int, chunk_size: int = 1024 * 1024) -> str:
+        """快速哈希：只用前后各1MB数据 + 文件大小（大大减少IO）"""
+        hasher = hashlib.md5()
+        hasher.update(str(size).encode())  # 包含大小
+
+        try:
+            with open(filepath, 'rb') as f:
+                # 读前1MB
+                hasher.update(f.read(chunk_size))
+                # 如果文件大于2MB，跳到末尾读最后1MB
+                if size > chunk_size * 2:
+                    f.seek(-chunk_size, 2)
+                    hasher.update(f.read(chunk_size))
+        except (OSError, PermissionError):
+            pass
+
+        return hasher.hexdigest()
+
+    def _verify_duplicates(self, files: List[str]) -> Dict[str, List[str]]:
+        """精确哈希验证：完整读取文件计算MD5"""
+        hash_map: Dict[str, List[str]] = {}
+
+        for filepath in files:
+            try:
+                with open(filepath, 'rb') as f:
+                    file_hash = hashlib.md5(f.read()).hexdigest()
+                if file_hash not in hash_map:
+                    hash_map[file_hash] = []
+                hash_map[file_hash].append(filepath)
+            except (OSError, PermissionError):
+                continue
+
+        return hash_map
 
     def get_suggestions(self, root_path: str) -> List[dict]:
         """获取优化建议"""
