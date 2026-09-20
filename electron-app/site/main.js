@@ -53,7 +53,8 @@
             'analysis': '存储分析',
             'cleanup': '智能清理',
             'reports': '报告',
-            'settings': '设置'
+            'settings': '设置',
+            'monitor': '文件监控'
         };
         document.getElementById('page-title').textContent = titles[page] || '概览';
     }
@@ -102,6 +103,11 @@
             navigateTo('tasks');
             showNotification('新建任务功能开发中...');
         });
+
+        // Monitor actions
+        document.getElementById('btn-start-monitor')?.addEventListener('click', startMonitoring);
+        document.getElementById('btn-stop-monitor')?.addEventListener('click', stopMonitoring);
+        document.getElementById('btn-refresh-changes')?.addEventListener('click', refreshMonitorChanges);
     }
 
     function navigateTo(page) {
@@ -725,5 +731,100 @@
         if (!isoString) return '';
         const date = new Date(isoString);
         return date.toLocaleDateString('zh-CN');
+    }
+
+    // ===== File Monitoring =====
+    let currentMonitorId = null;
+    let monitorInterval = null;
+
+    async function startMonitoring() {
+        if (!currentPath) {
+            showNotification('请先选择要监控的文件夹');
+            return;
+        }
+
+        try {
+            const response = await window.electronAPI?.invoke('storage_monitor_start', { path: currentPath, recursive: true });
+            if (response && response.monitor_id) {
+                currentMonitorId = response.monitor_id;
+                document.getElementById('monitor-status').textContent = '监控中';
+                document.getElementById('monitor-status').style.color = 'var(--success)';
+                document.getElementById('monitor-path').textContent = currentPath;
+                document.getElementById('monitor-empty').style.display = 'none';
+                document.getElementById('monitor-events').style.display = 'block';
+
+                // Poll for changes
+                if (monitorInterval) clearInterval(monitorInterval);
+                monitorInterval = setInterval(refreshMonitorChanges, 2000);
+                showNotification('监控已启动');
+            } else {
+                showNotification('启动监控失败: ' + (response?.error || '未知错误'));
+            }
+        } catch (err) {
+            showNotification('启动监控失败: ' + err.message);
+        }
+    }
+
+    async function stopMonitoring() {
+        if (!currentMonitorId) return;
+
+        try {
+            await window.electronAPI?.invoke('storage_monitor_stop', { monitor_id: currentMonitorId });
+        } catch (err) {
+            console.error('Stop monitoring error:', err);
+        }
+
+        currentMonitorId = null;
+        if (monitorInterval) {
+            clearInterval(monitorInterval);
+            monitorInterval = null;
+        }
+
+        document.getElementById('monitor-status').textContent = '已停止';
+        document.getElementById('monitor-status').style.color = 'var(--text-muted)';
+        document.getElementById('monitor-added').textContent = '0';
+        document.getElementById('monitor-modified').textContent = '0';
+        document.getElementById('monitor-deleted').textContent = '0';
+        showNotification('监控已停止');
+    }
+
+    async function refreshMonitorChanges() {
+        if (!currentMonitorId) return;
+
+        try {
+            const response = await window.electronAPI?.invoke('storage_monitor_changes', { monitor_id: currentMonitorId });
+            if (response && response.changes) {
+                const { added = [], modified = [], deleted = [] } = response.changes;
+
+                document.getElementById('monitor-added').textContent = added.length;
+                document.getElementById('monitor-modified').textContent = modified.length;
+                document.getElementById('monitor-deleted').textContent = deleted.length;
+
+                // Update the changes list
+                const listEl = document.getElementById('changes-list');
+                const allChanges = [
+                    ...added.map(f => ({ type: 'added', file: f })),
+                    ...modified.map(f => ({ type: 'modified', file: f })),
+                    ...deleted.map(f => ({ type: 'deleted', file: f }))
+                ].slice(-50); // Show last 50 changes
+
+                listEl.innerHTML = allChanges.reverse().map(change => {
+                    const icon = change.type === 'added' ? '🆕' : change.type === 'modified' ? '✏️' : '🗑️';
+                    const typeLabel = change.type === 'added' ? '新增' : change.type === 'modified' ? '修改' : '删除';
+                    const fileName = change.file.split(/[/\\]/).pop();
+                    return `
+                        <div class="file-item">
+                            <div class="file-icon">${icon}</div>
+                            <div class="file-info">
+                                <div class="file-name">${fileName}</div>
+                                <div class="file-meta">${typeLabel} - ${change.file}</div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        } catch (err) {
+            console.error('Refresh monitor changes error:', err);
+        }
     }
 })();

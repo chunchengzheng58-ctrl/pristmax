@@ -248,6 +248,54 @@ ipcMain.handle('install-update', () => {
   autoUpdater.quitAndInstall();
 });
 
+// Storage monitoring handlers - forward to MCP server
+let storageAgent = null;
+
+function getStorageAgent() {
+  if (!storageAgent) {
+    try {
+      const { StorageAgent } = require('../src/pristmax/agent/storage_agent');
+      storageAgent = new StorageAgent();
+    } catch (err) {
+      console.error('Failed to load StorageAgent:', err);
+      return null;
+    }
+  }
+  return storageAgent;
+}
+
+ipcMain.handle('storage_monitor_start', async (event, { path, recursive }) => {
+  const agent = getStorageAgent();
+  if (!agent) return { error: 'StorageAgent not available' };
+  try {
+    const monitorId = agent.startMonitoring(path, null, recursive);
+    return { monitor_id: monitorId, status: 'started', path };
+  } catch (err) {
+    return { error: err.message };
+  }
+});
+
+ipcMain.handle('storage_monitor_stop', async (event, { monitor_id }) => {
+  const agent = getStorageAgent();
+  if (!agent) return { error: 'StorageAgent not available' };
+  return agent.stopMonitoring(monitor_id);
+});
+
+ipcMain.handle('storage_monitor_changes', async (event, { monitor_id }) => {
+  const agent = getStorageAgent();
+  if (!agent) return { error: 'StorageAgent not available' };
+  return {
+    monitor_id,
+    changes: agent.get_monitoring_changes(monitor_id)
+  };
+});
+
+ipcMain.handle('storage_incremental_scan', async (event, { path, since_mtime }) => {
+  const agent = getStorageAgent();
+  if (!agent) return { error: 'StorageAgent not available' };
+  return agent.get_incremental_changes(path, since_mtime);
+});
+
 // App lifecycle
 app.whenReady().then(() => {
   console.log('App ready, creating window...');

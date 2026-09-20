@@ -114,6 +114,12 @@ class StorageAgentMCPServer:
             # 进度查询
             "storage_progress": self._handle_progress,
             "storage_progress_list": self._handle_progress_list,
+
+            # 文件监控
+            "storage_monitor_start": self._handle_monitor_start,
+            "storage_monitor_stop": self._handle_monitor_stop,
+            "storage_monitor_changes": self._handle_monitor_changes,
+            "storage_incremental_scan": self._handle_incremental_scan,
         }
 
     def get_tools_list(self) -> list:
@@ -332,6 +338,52 @@ class StorageAgentMCPServer:
                 "inputSchema": {
                     "type": "object",
                     "properties": {}
+                }
+            },
+            # ===== 文件监控 =====
+            {
+                "name": "storage_monitor_start",
+                "description": "启动文件监控",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "path": {"type": "string", "description": "要监控的目录路径"},
+                        "recursive": {"type": "boolean", "description": "是否递归监控子目录", "default": True}
+                    },
+                    "required": ["path"]
+                }
+            },
+            {
+                "name": "storage_monitor_stop",
+                "description": "停止文件监控",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "monitor_id": {"type": "string", "description": "监控会话ID"}
+                    }
+                }
+            },
+            {
+                "name": "storage_monitor_changes",
+                "description": "获取监控期间的文件变化",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "monitor_id": {"type": "string", "description": "监控会话ID"}
+                    },
+                    "required": ["monitor_id"]
+                }
+            },
+            {
+                "name": "storage_incremental_scan",
+                "description": "增量扫描，检测新增/修改/删除的文件",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "path": {"type": "string", "description": "目录路径"},
+                        "since_mtime": {"type": "number", "description": "起始时间戳（Unix时间戳）"}
+                    },
+                    "required": ["path"]
                 }
             }
         ]
@@ -668,6 +720,40 @@ class StorageAgentMCPServer:
         from src.pristmax.agent.storage_agent import ScanProgressTracker
         ScanProgressTracker.cleanup_old()
         return {"tasks": ScanProgressTracker.list_all()}
+
+    # ===== 文件监控处理 =====
+
+    def _handle_monitor_start(self, params: dict) -> dict:
+        """Handle storage_monitor_start"""
+        path = params.get("path", "")
+        recursive = params.get("recursive", True)
+        monitor_id = self.agent.start_monitoring(path, recursive=recursive)
+        if monitor_id:
+            return {
+                "monitor_id": monitor_id,
+                "status": "started",
+                "path": path
+            }
+        return {"error": "Failed to start monitoring. Please install watchdog: pip install watchdog", "status": "error"}
+
+    def _handle_monitor_stop(self, params: dict) -> dict:
+        """Handle storage_monitor_stop"""
+        monitor_id = params.get("monitor_id")
+        return self.agent.stop_monitoring(monitor_id)
+
+    def _handle_monitor_changes(self, params: dict) -> dict:
+        """Handle storage_monitor_changes"""
+        monitor_id = params.get("monitor_id", "")
+        return {
+            "monitor_id": monitor_id,
+            "changes": self.agent.get_monitoring_changes(monitor_id)
+        }
+
+    def _handle_incremental_scan(self, params: dict) -> dict:
+        """Handle storage_incremental_scan"""
+        path = params.get("path", "")
+        since_mtime = params.get("since_mtime")
+        return self.agent.get_incremental_changes(path, since_mtime)
 
     # ===== MCP 协议处理 =====
 

@@ -671,6 +671,170 @@ class StorageAgent:
             self.conn.execute('DELETE FROM scan_cache')
         self.conn.commit()
 
+    def get_incremental_changes(self, root_path: str, since_mtime: float = None) -> dict:
+        """获取增量变化（新增/修改/删除的文件）"""
+        if not self._check_path_permission(root_path):
+            return {}
+
+        if since_mtime is None:
+            since_mtime = time.time() - 86400  # 默认获取最近24小时
+
+        added = []
+        modified = []
+        deleted = []
+
+        # 获取缓存的扫描结果
+        cached = self._get_cached_result(root_path)
+        cached_files = {}
+        if cached and 'file_list' in cached:
+            for f in cached.get('file_list', []):
+                cached_files[f['path']] = f
+
+        # 扫描当前状态
+        current_files = {}
+        current_mtime = {}
+
+        for dirpath, dirnames, filenames in os.walk(root_path):
+            dirnames[:] = [d for d in dirnames if not d.startswith('.')]
+            for filename in filenames:
+                if filename.startswith('.'):
+                    continue
+                filepath = os.path.join(dirpath, filename)
+                try:
+                    stat = os.stat(filepath)
+                    if stat.st_mtime >= since_mtime:
+                        if filepath in cached_files:
+                            modified.append(filepath)
+                        else:
+                            added.append(filepath)
+                    current_files[filepath] = stat.st_size
+                    current_mtime[filepath] = stat.st_mtime
+                except (OSError, PermissionError):
+                    pass
+
+        # 找出删除的文件
+        for cached_path in cached_files:
+            if cached_path not in current_files:
+                deleted.append(cached_path)
+
+        return {
+            'added': added,
+            'modified': modified,
+            'deleted': deleted,
+            'added_count': len(added),
+            'modified_count': len(modified),
+            'deleted_count': len(deleted)
+        }
+
+    def start_monitoring(self, root_path: str, callback: Callable = None, recursive: bool = True) -> str:
+        """启动文件监控
+
+        Args:
+            root_path: 要监控的根目录
+            callback: 变化回调函数，接收 (event_type, file_path) 参数
+            recursive: 是否递归监控子目录
+
+        Returns:
+            monitor_id: 监控会话ID
+        """
+        try:
+            from watchdog.observers import Observer
+            from watchdog.events import FileSystemEventHandler, FileSystemEvent
+        except ImportError:
+            return ""
+
+        class ChangeHandler(FileSystemEventHandler):
+            def __init__(self, monitor_id: str, cb: Callable):
+                self.monitor_id = monitor_id
+                self.callback = cb
+                self.changes = {'added': [], 'modified': [], 'deleted': []}
+                self._lock = threading.Lock()
+
+            def on_any_event(self, event: FileSystemEvent):
+                if event.is_directory:
+                    return
+                with self._lock:
+                    if event.event_type == 'created':
+                        self.changes['added'].append(event.src_path)
+                    elif event.event_type == 'modified':
+                        self.changes['modified'].append(event.src_path)
+                    elif event.event_type == 'deleted':
+                        self.changes['deleted'].append(event.src_path)
+
+                    # 更新全局进度跟踪器
+                    ScanProgressTracker.update(self.monitor_id,
+                        last_event=event.event_type,
+                        last_file=event.src_path,
+                        changes_count={
+                            'added': len(self.changes['added']),
+                            'modified': len(self.changes['modified']),
+                            'deleted': len(self.changes['deleted'])
+                        }
+                    )
+
+                    if self.callback:
+                        self.callback(event.event_type, event.src_path)
+
+        monitor_id = f"monitor_{int(time.time() * 1000)}"
+        handler = ChangeHandler(monitor_id, callback)
+        observer = Observer()
+        observer.schedule(handler, root_path, recursive=recursive)
+        observer.start()
+
+        # 保存监控会话
+        with threading.Lock():
+            if not hasattr(self, '_monitors'):
+                self._monitors = {}
+            self._monitors[monitor_id] = {
+                'observer': observer,
+                'handler': handler,
+                'root_path': root_path,
+                'start_time': time.time()
+            }
+
+        ScanProgressTracker.add(monitor_id, {
+            'type': 'monitoring',
+            'root_path': root_path,
+            'status': 'running',
+            'start_time': time.time(),
+            'changes_count': {'added': 0, 'modified': 0, 'deleted': 0}
+        })
+
+        return monitor_id
+
+    def stop_monitoring(self, monitor_id: str = None) -> dict:
+        """停止文件监控"""
+        if monitor_id:
+            with threading.Lock():
+                if hasattr(self, '_monitors') and monitor_id in self._monitors:
+                    monitor = self._monitors.pop(monitor_id)
+                    monitor['observer'].stop()
+                    monitor['observer'].join(timeout=2)
+                    ScanProgressTracker.update(monitor_id, status='stopped', end_time=time.time())
+                    return {'monitor_id': monitor_id, 'status': 'stopped'}
+            return {'monitor_id': monitor_id, 'status': 'not_found'}
+
+        # 停止所有监控
+        stopped = []
+        with threading.Lock():
+            if hasattr(self, '_monitors'):
+                for mid, monitor in self._monitors.items():
+                    monitor['observer'].stop()
+                    monitor['observer'].join(timeout=2)
+                    ScanProgressTracker.update(mid, status='stopped', end_time=time.time())
+                    stopped.append(mid)
+                self._monitors.clear()
+        return {'stopped_monitors': stopped}
+
+    def get_monitoring_changes(self, monitor_id: str) -> dict:
+        """获取监控期间的变化"""
+        with threading.Lock():
+            if hasattr(self, '_monitors') and monitor_id in self._monitors:
+                handler = self._monitors[monitor_id]['handler']
+                with handler._lock:
+                    return dict(handler.changes)
+        return {}
+
     def _check_path_permission(self, path: str) -> bool:
         """检查路径权限"""
         if not _security_config.allowed_paths:
