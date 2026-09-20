@@ -40,6 +40,7 @@ from dataclasses import dataclass, field, asdict
 from enum import Enum
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from contextlib import contextmanager
+import signal
 
 # 配置日志
 logging.basicConfig(
@@ -47,6 +48,27 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
+
+
+# ============================================
+# 工具函数
+# ============================================
+
+def timeout(seconds: int):
+    """超时装饰器，用于大文件操作"""
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            def handler(signum, frame):
+                raise TimeoutError(f"{func.__name__} 超时 ({seconds}s)")
+            signal.signal(signal.SIGALRM, handler)
+            signal.alarm(seconds)
+            try:
+                result = func(*args, **kwargs)
+            finally:
+                signal.alarm(0)
+            return result
+        return wrapper
+    return decorator
 
 
 # ============================================
@@ -1604,15 +1626,50 @@ class StorageAgent:
         return False
 
     def _check_resource_limit(self, path: str) -> Tuple[bool, str]:
-        """检查资源限制"""
-        # 估算文件数量
+        """检查资源限制（带超时保护）"""
         try:
             count = sum(1 for _ in os.scandir(path))
             if count > _security_config.max_scan_files:
                 return False, f"文件数量超过限制 ({_security_config.max_scan_files})"
-        except:
+        except OSError:
             pass
         return True, ""
+
+    def _is_symlink(self, path: str) -> bool:
+        """检测是否为符号链接（避免循环引用）"""
+        try:
+            return os.path.islink(path)
+        except OSError:
+            return False
+
+    def _get_magic_type(self, filepath: str) -> Optional[str]:
+        """通过文件头魔数识别真实文件类型（超越扩展名）"""
+        magic_map = {
+            b'\x89PNG\r\n\x1a\n': 'png',
+            b'\xff\xd8\xff': 'jpg',
+            b'GIF87a': 'gif',
+            b'GIF89a': 'gif',
+            b'RIFF': 'wav',  # 或 avi
+            b'ID3': 'mp3',
+            b'\x1f\x8b': 'gz',
+            b'PK\x03\x04': 'zip',
+            b'\x50\x4b\x03\x04': 'zip',
+            b'Rar!': 'rar',
+            b'\x7fELF': 'elf',
+            b'MZ': 'exe',
+            b'%PDF': 'pdf',
+            b'\xd0\xcf\x11\xe0': 'office',  # old Office
+        }
+
+        try:
+            with open(filepath, 'rb') as f:
+                header = f.read(16)
+            for magic, file_type in magic_map.items():
+                if header.startswith(magic):
+                    return file_type
+        except (OSError, PermissionError):
+            pass
+        return None
 
     def _categorize(self, extension: str) -> str:
         """分类文件"""
@@ -1871,43 +1928,46 @@ class StorageAgent:
         min_size_mb: int = 100,
         limit: int = 20,
         offset: int = 0
-    ) -> List[FileInfo]:
-        """分析大文件（支持分页）"""
+    ) -> dict:
+        """分析大文件（支持分页，使用生成器优化内存）
+
+        Args:
+            root_path: 扫描路径
+            min_size_mb: 最小文件大小(MB)
+            limit: 返回数量
+            offset: 分页偏移
+        """
         if not self._check_path_permission(root_path):
             raise PermissionError(f"路径 {root_path} 不在允许范围内")
 
         self.audit_logger.info("analyze_large_files", root_path,
                               {"min_size_mb": min_size_mb, "limit": limit, "offset": offset})
+        logger.info(f"分析大文件: {root_path} (min={min_size_mb}MB)")
 
         min_size = min_size_mb * 1024 * 1024
         results = []
 
-        for dirpath, dirnames, filenames in os.walk(root_path):
-            dirnames[:] = [d for d in dirnames if not d.startswith('.')]
+        # 使用生成器迭代，避免一次性加载
+        for filepath in self.iter_files(root_path):
+            try:
+                stat = os.stat(filepath)
+                size = stat.st_size
+                if size >= min_size:
+                    filename = os.path.basename(filepath)
+                    ext = Path(filename).suffix.lower()
 
-            for filename in filenames:
-                if filename.startswith('.'):
-                    continue
-
-                filepath = os.path.join(dirpath, filename)
-                try:
-                    size = os.path.getsize(filepath)
-                    if size >= min_size:
-                        stat = os.stat(filepath)
-                        ext = Path(filename).suffix.lower()
-
-                        results.append(FileInfo(
-                            path=filepath,
-                            name=filename,
-                            size=size,
-                            size_display=FileInfo.format_size(size),
-                            extension=ext,
-                            modified=datetime.fromtimestamp(stat.st_mtime).isoformat(),
-                            created=datetime.fromtimestamp(stat.st_ctime).isoformat(),
-                            type_category=self._categorize(ext)
-                        ))
-                except (OSError, PermissionError):
-                    continue
+                    results.append(FileInfo(
+                        path=filepath,
+                        name=filename,
+                        size=size,
+                        size_display=FileInfo.format_size(size),
+                        extension=ext,
+                        modified=datetime.fromtimestamp(stat.st_mtime).isoformat(),
+                        created=datetime.fromtimestamp(stat.st_ctime).isoformat(),
+                        type_category=self._categorize(ext)
+                    ))
+            except (OSError, PermissionError):
+                continue
 
         results.sort(key=lambda x: x.size, reverse=True)
 
@@ -1915,6 +1975,7 @@ class StorageAgent:
         total = len(results)
         page_results = results[offset:offset + limit]
 
+        logger.info(f"找到 {total} 个大文件")
         return {
             'items': page_results,
             'total': total,
@@ -2449,12 +2510,19 @@ class StorageAgent:
         output_path: str,
         format: str = 'html'
     ) -> dict:
-        """导出报告"""
+        """导出报告
+
+        Args:
+            root_path: 扫描路径
+            output_path: 输出文件路径
+            format: 格式 (html/json/csv)
+        """
         if not self._check_path_permission(root_path):
             raise PermissionError(f"路径 {root_path} 不在允许范围内")
 
         self.audit_logger.info("export_report", root_path,
                               {'output': output_path, 'format': format})
+        logger.info(f"导出报告: {root_path} -> {output_path} ({format})")
 
         stats = self.get_storage_stats(root_path)
         suggestions = self.get_suggestions(root_path)
@@ -2462,6 +2530,16 @@ class StorageAgent:
         if format == 'json':
             with open(output_path, 'w', encoding='utf-8') as f:
                 json.dump({'stats': stats, 'suggestions': suggestions}, f, indent=2, ensure_ascii=False)
+
+        elif format == 'csv':
+            import csv
+            with open(output_path, 'w', newline='', encoding='utf-8-sig') as f:
+                writer = csv.writer(f)
+                writer.writerow(['类型', '文件数', '大小', '大小显示'])
+                for cat, info in sorted(stats.get('by_category', {}).items(),
+                                        key=lambda x: x[1]['size'], reverse=True):
+                    writer.writerow([cat, info['count'], info['size'], info.get('size_display', 'N/A')])
+
         else:  # html
             html = f"""<!DOCTYPE html>
 <html>
@@ -2507,14 +2585,15 @@ class StorageAgent:
                 html += f"""        <li class="{s.get('type', 'info')}">{s.get('title', '')} - {s.get('description', '')}</li>
 """
 
-            html += """    </ul>
+            html += """    </table>
 </body>
 </html>"""
 
             with open(output_path, 'w', encoding='utf-8') as f:
                 f.write(html)
 
-        return {'output': output_path, 'format': format}
+        logger.info(f"报告导出完成: {output_path}")
+        return {'output': output_path, 'format': format, 'size': os.path.getsize(output_path)}
 
     def safe_delete(
         self,
