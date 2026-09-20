@@ -137,6 +137,11 @@ class StorageAgentMCPServer:
             "storage_sync_list": self._handle_sync_list,
             "storage_sync_to_cloud": self._handle_sync_to_cloud,
             "storage_sync_from_cloud": self._handle_sync_from_cloud,
+            # 系统管理
+            "storage_health": self._handle_health,
+            "storage_cache_stats": self._handle_cache_stats,
+            "storage_history": self._handle_history,
+            "storage_clear_expired": self._handle_clear_expired,
         }
 
     def get_tools_list(self) -> list:
@@ -556,6 +561,41 @@ class StorageAgentMCPServer:
                     "properties": {
                         "provider": {"type": "string", "enum": ["s3", "oss"], "description": "云提供商", "default": "s3"}
                     }
+                }
+            },
+            # ===== 系统管理 =====
+            {
+                "name": "storage_health",
+                "description": "健康检查，返回系统状态",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {}
+                }
+            },
+            {
+                "name": "storage_cache_stats",
+                "description": "获取缓存统计信息",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {}
+                }
+            },
+            {
+                "name": "storage_history",
+                "description": "获取扫描历史记录",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "limit": {"type": "integer", "description": "返回数量", "default": 20}
+                    }
+                }
+            },
+            {
+                "name": "storage_clear_expired",
+                "description": "清理过期缓存",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {}
                 }
             }
         ]
@@ -1039,6 +1079,24 @@ class StorageAgentMCPServer:
         provider = params.get("provider", "s3")
         manager = DesktopSyncManager()
         return manager.restore_from_cloud(provider=provider)
+
+    def _handle_health(self, params: dict) -> dict:
+        """Handle storage_health"""
+        return self.agent.health_check()
+
+    def _handle_cache_stats(self, params: dict) -> dict:
+        """Handle storage_cache_stats"""
+        return self.agent.get_cache_stats()
+
+    def _handle_history(self, params: dict) -> dict:
+        """Handle storage_history"""
+        limit = params.get("limit", 20)
+        return {"history": self.agent.get_scan_history(limit)}
+
+    def _handle_clear_expired(self, params: dict) -> dict:
+        """Handle storage_clear_expired"""
+        deleted = self.agent.clear_expired_cache()
+        return {"deleted": deleted}
 
     # ===== MCP 协议处理 =====
 

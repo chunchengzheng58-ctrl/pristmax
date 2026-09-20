@@ -1247,6 +1247,74 @@ class StorageAgent:
 
         return status
 
+    def get_scan_history(self, limit: int = 20) -> List[dict]:
+        """获取扫描历史记录
+
+        Args:
+            limit: 返回数量限制
+
+        Returns:
+            扫描历史列表
+        """
+        try:
+            cursor = self.conn.execute('''
+                SELECT path, scanned_at, expires_at
+                FROM scan_cache
+                ORDER BY scanned_at DESC
+                LIMIT ?
+            ''', (limit,))
+            rows = cursor.fetchall()
+            return [
+                {'path': r[0], 'scanned_at': r[1], 'expires_at': r[2]}
+                for r in rows
+            ]
+        except Exception as e:
+            logger.error(f"获取扫描历史失败: {e}")
+            return []
+
+    def get_cache_stats(self) -> dict:
+        """获取缓存统计信息
+
+        Returns:
+            缓存统计
+        """
+        try:
+            cursor = self.conn.execute('''
+                SELECT
+                    COUNT(*) as total,
+                    SUM(LENGTH(result_json)) as total_size
+                FROM scan_cache
+            ''')
+            row = cursor.fetchone()
+            return {
+                'total_entries': row[0] or 0,
+                'total_size_bytes': row[1] or 0,
+                'total_size_display': FileInfo.format_size(row[1] or 0)
+            }
+        except Exception as e:
+            logger.error(f"获取缓存统计失败: {e}")
+            return {'total_entries': 0, 'total_size_bytes': 0, 'total_size_display': '0 B'}
+
+    def clear_expired_cache(self) -> int:
+        """清理过期缓存
+
+        Returns:
+            清理的条目数量
+        """
+        try:
+            cursor = self.conn.execute('''
+                DELETE FROM scan_cache
+                WHERE expires_at IS NOT NULL
+                AND datetime(expires_at) < datetime('now')
+            ''')
+            self.conn.commit()
+            deleted = cursor.rowcount
+            logger.info(f"清理了 {deleted} 条过期缓存")
+            return deleted
+        except Exception as e:
+            logger.error(f"清理过期缓存失败: {e}")
+            return 0
+
     def _init_db(self):
         self.conn = sqlite3.connect(self.db_path, check_same_thread=False)
         self.conn.execute('''
@@ -1671,19 +1739,23 @@ class StorageAgent:
             pass
         return None
 
+    # 文件类型缓存（frozenset 加速查找）
+    _CATEGORY_MAP = {
+        'video': frozenset(['.mp4', '.avi', '.mkv', '.mov', '.wmv', '.flv', '.webm', '.m4v', '.rmvb', '.3gp']),
+        'audio': frozenset(['.mp3', '.wav', '.flac', '.aac', '.ogg', '.wma', '.m4a', '.ape', '.dts']),
+        'image': frozenset(['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.svg', '.webp', '.ico', '.tiff', '.raw', '.psd']),
+        'document': frozenset(['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.txt', '.rtf', '.odt', '.pages', '.numbers', '.key']),
+        'code': frozenset(['.py', '.js', '.ts', '.java', '.c', '.cpp', '.h', '.cs', '.go', '.rs', '.php', '.rb', '.swift', '.kt', '.vue', '.jsx', '.tsx']),
+        'archive': frozenset(['.zip', '.rar', '.7z', '.tar', '.gz', '.bz2', '.xz', '.iso', '.cab', '.tgz']),
+        'database': frozenset(['.db', '.sqlite', '.sqlite3', '.mdb', '.accdb', '.dbf', '.myd']),
+        'font': frozenset(['.ttf', '.otf', '.woff', '.woff2', '.eot']),
+        'sheet': frozenset(['.csv', '.tsv', '.xlsb']),
+    }
+
     def _categorize(self, extension: str) -> str:
-        """分类文件"""
+        """分类文件（使用 frozenset 加速）"""
         ext = extension.lower()
-        categories = {
-            'video': ['.mp4', '.avi', '.mkv', '.mov', '.wmv', '.flv', '.webm', '.m4v'],
-            'audio': ['.mp3', '.wav', '.flac', '.aac', '.ogg', '.wma', '.m4a'],
-            'image': ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.svg', '.webp', '.ico', '.tiff'],
-            'document': ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.txt', '.rtf', '.odt'],
-            'code': ['.py', '.js', '.java', '.c', '.cpp', '.h', '.cs', '.go', '.rs', '.php', '.rb', '.swift', '.kt'],
-            'archive': ['.zip', '.rar', '.7z', '.tar', '.gz', '.bz2', '.xz', '.iso'],
-            'database': ['.db', '.sqlite', '.sqlite3', '.mdb', '.accdb']
-        }
-        for cat, exts in categories.items():
+        for cat, exts in self._CATEGORY_MAP.items():
             if ext in exts:
                 return cat
         return 'other'
@@ -2160,14 +2232,15 @@ class StorageAgent:
             })
 
         # 超大文件
-        large_files = self.analyze_large_files(root_path, min_size_mb=100, limit=100)
-        large_size = sum(f.size for f in large_files)
+        large_result = self.analyze_large_files(root_path, min_size_mb=100, limit=100)
+        large_items = large_result.get('items', [])
+        large_size = sum(f.size for f in large_items)
         if large_size > 500 * 1024**2:  # > 500MB
             suggestions.append({
                 'type': 'cleanup',
                 'category': 'large',
                 'title': '超大文件',
-                'description': f'{len(large_files)} 个超过 100MB 的文件',
+                'description': f'{large_result.get("total", 0)} 个超过 100MB 的文件',
                 'action': '查看并管理大文件',
                 'size': large_size,
                 'count': len(large_files),
