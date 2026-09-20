@@ -136,7 +136,8 @@ class StorageAgentMCPServer:
                     "properties": {
                         "path": {"type": "string", "description": "目录路径"},
                         "min_size_mb": {"type": "integer", "description": "最小文件大小(MB)", "default": 100},
-                        "limit": {"type": "integer", "description": "返回数量", "default": 20}
+                        "limit": {"type": "integer", "description": "返回数量", "default": 20},
+                        "offset": {"type": "integer", "description": "分页偏移", "default": 0}
                     },
                     "required": ["path"]
                 }
@@ -325,10 +326,19 @@ class StorageAgentMCPServer:
         path = params.get("path", ".")
         min_mb = params.get("min_size_mb", 100)
         limit = params.get("limit", 20)
-        files = self.agent.analyze_large_files(path, min_size_mb=min_mb, limit=limit)
+        offset = params.get("offset", 0)
+        result = self.agent.analyze_large_files(path, min_size_mb=min_mb, limit=limit, offset=offset)
+        if isinstance(result, dict):
+            return {
+                "files": [{"path": f.path, "size": f.size, "size_display": f.size_display} for f in result.get('items', [])],
+                "total": result.get('total', 0),
+                "offset": result.get('offset', 0),
+                "limit": result.get('limit', limit),
+                "has_more": result.get('has_more', False)
+            }
         return {
-            "files": [{"path": f.path, "size": f.size, "size_display": f.size_display} for f in files],
-            "count": len(files)
+            "files": [{"path": f.path, "size": f.size, "size_display": f.size_display} for f in result],
+            "count": len(result)
         }
 
     def _handle_duplicates(self, params: dict) -> dict:

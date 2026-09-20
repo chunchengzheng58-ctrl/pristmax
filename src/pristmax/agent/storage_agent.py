@@ -847,14 +847,15 @@ class StorageAgent:
         self,
         root_path: str,
         min_size_mb: int = 100,
-        limit: int = 20
+        limit: int = 20,
+        offset: int = 0
     ) -> List[FileInfo]:
-        """分析大文件"""
+        """分析大文件（支持分页）"""
         if not self._check_path_permission(root_path):
             raise PermissionError(f"路径 {root_path} 不在允许范围内")
 
         self.audit_logger.info("analyze_large_files", root_path,
-                              {"min_size_mb": min_size_mb, "limit": limit})
+                              {"min_size_mb": min_size_mb, "limit": limit, "offset": offset})
 
         min_size = min_size_mb * 1024 * 1024
         results = []
@@ -887,7 +888,18 @@ class StorageAgent:
                     continue
 
         results.sort(key=lambda x: x.size, reverse=True)
-        return results[:limit]
+
+        # 分页
+        total = len(results)
+        page_results = results[offset:offset + limit]
+
+        return {
+            'items': page_results,
+            'total': total,
+            'offset': offset,
+            'limit': limit,
+            'has_more': offset + limit < total
+        }
 
     def find_duplicates(self, root_path: str, min_size_kb: int = 1) -> List[DuplicateGroup]:
         """查找重复文件"""
