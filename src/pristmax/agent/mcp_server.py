@@ -132,6 +132,11 @@ class StorageAgentMCPServer:
             "storage_cloud_upload": self._handle_cloud_upload,
             "storage_cloud_download": self._handle_cloud_download,
             "storage_cloud_sync": self._handle_cloud_sync,
+            # 桌面同步
+            "storage_sync_save": self._handle_sync_save,
+            "storage_sync_list": self._handle_sync_list,
+            "storage_sync_to_cloud": self._handle_sync_to_cloud,
+            "storage_sync_from_cloud": self._handle_sync_from_cloud,
         }
 
     def get_tools_list(self) -> list:
@@ -510,6 +515,47 @@ class StorageAgentMCPServer:
                         "provider": {"type": "string", "enum": ["s3", "oss"], "description": "云提供商", "default": "s3"}
                     },
                     "required": ["local_path", "cloud_prefix"]
+                }
+            },
+            # ===== 桌面同步 =====
+            {
+                "name": "storage_sync_save",
+                "description": "保存扫描结果到本地同步库",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "path": {"type": "string", "description": "扫描路径"},
+                        "scan_result": {"type": "object", "description": "扫描结果"}
+                    },
+                    "required": ["path", "scan_result"]
+                }
+            },
+            {
+                "name": "storage_sync_list",
+                "description": "列出已同步的路径",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {}
+                }
+            },
+            {
+                "name": "storage_sync_to_cloud",
+                "description": "同步本地记录到云端",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "provider": {"type": "string", "enum": ["s3", "oss"], "description": "云提供商", "default": "s3"}
+                    }
+                }
+            },
+            {
+                "name": "storage_sync_from_cloud",
+                "description": "从云端恢复同步数据",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "provider": {"type": "string", "enum": ["s3", "oss"], "description": "云提供商", "default": "s3"}
+                    }
                 }
             }
         ]
@@ -963,6 +1009,36 @@ class StorageAgentMCPServer:
         provider = params.get("provider", "s3")
         manager = CloudStorageManager()
         return manager.sync_to_cloud(local_path, cloud_prefix, provider)
+
+    # ===== 桌面同步处理 =====
+
+    def _handle_sync_save(self, params: dict) -> dict:
+        """Handle storage_sync_save"""
+        from src.pristmax.agent.storage_agent import DesktopSyncManager
+        path = params.get("path", "")
+        scan_result = params.get("scan_result", {})
+        manager = DesktopSyncManager()
+        return manager.save_scan_result(path, scan_result)
+
+    def _handle_sync_list(self, params: dict) -> dict:
+        """Handle storage_sync_list"""
+        from src.pristmax.agent.storage_agent import DesktopSyncManager
+        manager = DesktopSyncManager()
+        return {"paths": manager.list_synced_paths()}
+
+    def _handle_sync_to_cloud(self, params: dict) -> dict:
+        """Handle storage_sync_to_cloud"""
+        from src.pristmax.agent.storage_agent import DesktopSyncManager
+        provider = params.get("provider", "s3")
+        manager = DesktopSyncManager()
+        return manager.sync_to_cloud(provider=provider)
+
+    def _handle_sync_from_cloud(self, params: dict) -> dict:
+        """Handle storage_sync_from_cloud"""
+        from src.pristmax.agent.storage_agent import DesktopSyncManager
+        provider = params.get("provider", "s3")
+        manager = DesktopSyncManager()
+        return manager.restore_from_cloud(provider=provider)
 
     # ===== MCP 协议处理 =====
 

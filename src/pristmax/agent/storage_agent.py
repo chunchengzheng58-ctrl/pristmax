@@ -525,6 +525,225 @@ class CloudStorageManager:
         return {'configured': False, 'provider': provider}
 
 
+class DesktopSyncManager:
+    """桌面端同步管理器 - 同步扫描结果和设置到云端"""
+    _instance = None
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+            cls._instance._initialized = False
+        return cls._instance
+
+    def __init__(self):
+        if self._initialized:
+            return
+        self._initialized = True
+        self._sync_db = os.path.join(os.path.expanduser('~'), '.pristmax', 'sync.db')
+        self._ensure_db()
+
+    def _ensure_db(self):
+        """确保同步数据库存在"""
+        os.makedirs(os.path.dirname(self._sync_db), exist_ok=True)
+        conn = sqlite3.connect(self._sync_db)
+        conn.execute('''
+            CREATE TABLE IF NOT EXISTS sync_records (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                path TEXT NOT NULL,
+                scan_result TEXT,
+                last_sync INTEGER,
+                sync_version INTEGER DEFAULT 1
+            )
+        ''')
+        conn.execute('''
+            CREATE TABLE IF NOT EXISTS sync_config (
+                key TEXT PRIMARY KEY,
+                value TEXT
+            )
+        ''')
+        conn.commit()
+        conn.close()
+
+    def save_scan_result(self, path: str, scan_result: dict) -> dict:
+        """保存扫描结果到本地同步库"""
+        try:
+            conn = sqlite3.connect(self._sync_db)
+            result_json = json.dumps(scan_result, ensure_ascii=False, default=str)
+            now = int(time.time())
+
+            conn.execute('''
+                INSERT OR REPLACE INTO sync_records (path, scan_result, last_sync, sync_version)
+                VALUES (?, ?, ?,
+                    COALESCE((SELECT sync_version FROM sync_records WHERE path = ?), 0) + 1)
+            ''', (path, result_json, now, path))
+
+            conn.commit()
+            conn.close()
+
+            return {'status': 'saved', 'path': path, 'timestamp': now}
+
+        except Exception as e:
+            return {'status': 'error', 'message': str(e)}
+
+    def get_scan_result(self, path: str) -> dict:
+        """获取本地缓存的扫描结果"""
+        try:
+            conn = sqlite3.connect(self._sync_db)
+            cursor = conn.execute(
+                'SELECT scan_result, last_sync, sync_version FROM sync_records WHERE path = ?',
+                (path,)
+            )
+            row = cursor.fetchone()
+            conn.close()
+
+            if row:
+                return {
+                    'status': 'found',
+                    'result': json.loads(row[0]),
+                    'last_sync': row[1],
+                    'sync_version': row[2]
+                }
+            return {'status': 'not_found', 'path': path}
+
+        except Exception as e:
+            return {'status': 'error', 'message': str(e)}
+
+    def list_synced_paths(self) -> list:
+        """列出所有已同步的路径"""
+        try:
+            conn = sqlite3.connect(self._sync_db)
+            cursor = conn.execute(
+                'SELECT path, last_sync, sync_version FROM sync_records ORDER BY last_sync DESC'
+            )
+            rows = cursor.fetchall()
+            conn.close()
+
+            return [
+                {'path': r[0], 'last_sync': r[1], 'sync_version': r[2]}
+                for r in rows
+            ]
+
+        except Exception as e:
+            return []
+
+    def delete_sync_record(self, path: str) -> dict:
+        """删除同步记录"""
+        try:
+            conn = sqlite3.connect(self._sync_db)
+            conn.execute('DELETE FROM sync_records WHERE path = ?', (path,))
+            conn.commit()
+            conn.close()
+            return {'status': 'deleted', 'path': path}
+        except Exception as e:
+            return {'status': 'error', 'message': str(e)}
+
+    def sync_to_cloud(self, local_path: str = None, cloud_prefix: str = 'pristmax/sync/',
+                      provider: str = 's3') -> dict:
+        """同步本地缓存到云端"""
+        try:
+            cloud_manager = CloudStorageManager()
+            if not cloud_manager._clients.get(provider):
+                return {'status': 'error', 'message': f'{provider} not configured'}
+
+            # 读取本地数据库
+            conn = sqlite3.connect(self._sync_db)
+            cursor = conn.execute('SELECT path, scan_result, last_sync FROM sync_records')
+            records = cursor.fetchall()
+            conn.close()
+
+            synced = 0
+            failed = []
+
+            for path, result_json, last_sync in records:
+                cloud_path = f"{cloud_prefix}{hashlib.md5(path.encode()).hexdigest()}.json"
+
+                # 写入临时文件
+                temp_file = os.path.join(tempfile.gettempdir(), f'sync_{os.getpid()}.json')
+                with open(temp_file, 'w', encoding='utf-8') as f:
+                    f.write(result_json)
+
+                result = cloud_manager.upload_file(temp_file, cloud_path, provider)
+                os.unlink(temp_file)
+
+                if result['status'] == 'uploaded':
+                    synced += 1
+                else:
+                    failed.append({'path': path, 'error': result.get('message')})
+
+            return {
+                'status': 'completed',
+                'synced': synced,
+                'failed': len(failed),
+                'errors': failed[:5]
+            }
+
+        except Exception as e:
+            return {'status': 'error', 'message': str(e)}
+
+    def restore_from_cloud(self, cloud_prefix: str = 'pristmax/sync/',
+                          provider: str = 's3') -> dict:
+        """从云端恢复同步数据"""
+        try:
+            cloud_manager = CloudStorageManager()
+            if not cloud_manager._clients.get(provider):
+                return {'status': 'error', 'message': f'{provider} not configured'}
+
+            # 列出云端文件
+            result = cloud_manager.list_files(cloud_prefix, provider)
+            if result['status'] != 'ok':
+                return result
+
+            restored = 0
+            failed = []
+
+            for file_info in result['files']:
+                cloud_path = file_info['key']
+
+                # 下载到临时文件
+                temp_file = os.path.join(tempfile.gettempdir(), f'restore_{os.getpid()}.json')
+                download_result = cloud_manager.download_file(cloud_path, temp_file, provider)
+
+                if download_result['status'] == 'downloaded':
+                    with open(temp_file, 'r', encoding='utf-8') as f:
+                        data = json.load(f)
+
+                    # 恢复记录
+                    if 'path' in data and 'result' in data:
+                        self.save_scan_result(data['path'], data['result'])
+                        restored += 1
+
+                    os.unlink(temp_file)
+                else:
+                    failed.append({'cloud_path': cloud_path, 'error': download_result.get('message')})
+
+            return {
+                'status': 'completed',
+                'restored': restored,
+                'failed': len(failed),
+                'errors': failed[:5]
+            }
+
+        except Exception as e:
+            return {'status': 'error', 'message': str(e)}
+
+    def get_sync_status(self) -> dict:
+        """获取同步状态"""
+        try:
+            conn = sqlite3.connect(self._sync_db)
+            cursor = conn.execute('SELECT COUNT(*), MAX(last_sync) FROM sync_records')
+            row = cursor.fetchone()
+            conn.close()
+
+            return {
+                'total_records': row[0] if row else 0,
+                'last_sync': row[1] if row and row[1] else None,
+                'db_path': self._sync_db
+            }
+
+        except Exception as e:
+            return {'status': 'error', 'message': str(e)}
+
+
 class SecurityConfig:
     """安全配置"""
     def __init__(self):
