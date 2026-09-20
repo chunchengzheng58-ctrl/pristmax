@@ -1,11 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Production Requirements
-
-Core dependencies for production deployment.
-"""
-
-# Core
 flask>=3.0.0
 flask-cors>=4.0.0
 pyyaml>=6.0
