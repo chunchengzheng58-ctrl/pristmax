@@ -301,6 +301,230 @@ class ScheduledTaskManager:
         return None
 
 
+class CloudStorageManager:
+    """云存储管理器（支持 S3/OSS/MinIO）"""
+    _instance = None
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+            cls._instance._initialized = False
+        return cls._instance
+
+    def __init__(self):
+        if self._initialized:
+            return
+        self._initialized = True
+        self._clients = {}
+        self._configs = {
+            's3': {
+                'bucket': None,
+                'region': 'us-east-1'
+            },
+            'oss': {
+                'bucket': None,
+                'endpoint': None
+            }
+        }
+
+    def configure_s3(self, access_key: str, secret_key: str, bucket: str, region: str = 'us-east-1', endpoint: str = None):
+        """配置 S3 兼容存储（AWS S3 / MinIO / 腾讯COS）"""
+        try:
+            import boto3
+            from botocore.config import Config
+
+            config = Config(region_name=region)
+            client_config = {
+                'aws_access_key_id': access_key,
+                'aws_secret_access_key': secret_key,
+                'region_name': region,
+                'config': config
+            }
+
+            if endpoint:
+                client_config['endpoint_url'] = endpoint
+
+            client = boto3.client('s3', **client_config)
+
+            # 验证连接
+            client.head_bucket(Bucket=bucket)
+
+            self._clients['s3'] = {
+                'client': client,
+                'bucket': bucket,
+                'type': 's3'
+            }
+            self._configs['s3'] = {
+                'bucket': bucket,
+                'region': region,
+                'endpoint': endpoint
+            }
+            return {'status': 'configured', 'type': 's3', 'bucket': bucket}
+
+        except Exception as e:
+            return {'status': 'error', 'message': str(e)}
+
+    def configure_oss(self, access_key: str, secret_key: str, bucket: str, endpoint: str):
+        """配置阿里云 OSS"""
+        try:
+            import oss2
+
+            auth = oss2.Auth(access_key, secret_key)
+            client = oss2.Bucket(auth, endpoint, bucket)
+
+            # 验证连接
+            client.get_bucket_info()
+
+            self._clients['oss'] = {
+                'client': client,
+                'bucket': bucket,
+                'type': 'oss'
+            }
+            return {'status': 'configured', 'type': 'oss', 'bucket': bucket}
+
+        except Exception as e:
+            return {'status': 'error', 'message': str(e)}
+
+    def upload_file(self, local_path: str, cloud_path: str, provider: str = 's3') -> dict:
+        """上传文件到云存储"""
+        if provider not in self._clients:
+            return {'status': 'error', 'message': f'{provider} not configured'}
+
+        try:
+            client_info = self._clients[provider]
+            client = client_info['client']
+            bucket = client_info['bucket']
+
+            if provider == 's3':
+                client.upload_file(Bucket=bucket, Key=cloud_path, Filename=local_path)
+            elif provider == 'oss':
+                client.put_object_from_file(cloud_path, local_path)
+
+            return {'status': 'uploaded', 'cloud_path': cloud_path, 'provider': provider}
+
+        except Exception as e:
+            return {'status': 'error', 'message': str(e)}
+
+    def download_file(self, cloud_path: str, local_path: str, provider: str = 's3') -> dict:
+        """从云存储下载文件"""
+        if provider not in self._clients:
+            return {'status': 'error', 'message': f'{provider} not configured'}
+
+        try:
+            client_info = self._clients[provider]
+            client = client_info['client']
+            bucket = client_info['bucket']
+
+            if provider == 's3':
+                client.download_file(Bucket=bucket, Key=cloud_path, Filename=local_path)
+            elif provider == 'oss':
+                client.get_object_to_file(cloud_path, local_path)
+
+            return {'status': 'downloaded', 'local_path': local_path, 'provider': provider}
+
+        except Exception as e:
+            return {'status': 'error', 'message': str(e)}
+
+    def list_files(self, prefix: str = '', provider: str = 's3') -> dict:
+        """列出云存储中的文件"""
+        if provider not in self._clients:
+            return {'status': 'error', 'message': f'{provider} not configured'}
+
+        try:
+            client_info = self._clients[provider]
+            client = client_info['client']
+            bucket = client_info['bucket']
+            files = []
+
+            if provider == 's3':
+                paginator = client.get_paginator('list_objects_v2')
+                for page in paginator.paginate(Bucket=bucket, Prefix=prefix):
+                    for obj in page.get('Contents', []):
+                        files.append({
+                            'key': obj['Key'],
+                            'size': obj['Size'],
+                            'modified': obj['LastModified'].isoformat() if obj.get('LastModified') else None
+                        })
+            elif provider == 'oss':
+                for obj in oss2.ObjectIterator(client, prefix=prefix):
+                    files.append({
+                        'key': obj.key,
+                        'size': obj.size,
+                        'modified': obj.last_modified.isoformat() if hasattr(obj, 'last_modified') else None
+                    })
+
+            return {'status': 'ok', 'files': files, 'count': len(files), 'provider': provider}
+
+        except Exception as e:
+            return {'status': 'error', 'message': str(e)}
+
+    def delete_file(self, cloud_path: str, provider: str = 's3') -> dict:
+        """删除云存储中的文件"""
+        if provider not in self._clients:
+            return {'status': 'error', 'message': f'{provider} not configured'}
+
+        try:
+            client_info = self._clients[provider]
+            client = client_info['client']
+            bucket = client_info['bucket']
+
+            if provider == 's3':
+                client.delete_object(Bucket=bucket, Key=cloud_path)
+            elif provider == 'oss':
+                client.delete_object(cloud_path)
+
+            return {'status': 'deleted', 'cloud_path': cloud_path, 'provider': provider}
+
+        except Exception as e:
+            return {'status': 'error', 'message': str(e)}
+
+    def sync_to_cloud(self, local_path: str, cloud_prefix: str, provider: str = 's3', exclude_patterns: List[str] = None) -> dict:
+        """同步本地目录到云存储"""
+        if provider not in self._clients:
+            return {'status': 'error', 'message': f'{provider} not configured'}
+
+        if exclude_patterns is None:
+            exclude_patterns = ['.git', '__pycache__', '*.pyc', '.DS_Store']
+
+        uploaded = []
+        failed = []
+
+        for root, dirs, files in os.walk(local_path):
+            # 过滤目录
+            dirs[:] = [d for d in dirs if not any(p in d for p in exclude_patterns)]
+
+            for filename in files:
+                if any(p in filename for p in exclude_patterns):
+                    continue
+
+                local_file = os.path.join(root, filename)
+                relative_path = os.path.relpath(local_file, local_path)
+                cloud_path = os.path.join(cloud_prefix, relative_path).replace(os.sep, '/')
+
+                result = self.upload_file(local_file, cloud_path, provider)
+                if result['status'] == 'uploaded':
+                    uploaded.append(cloud_path)
+                else:
+                    failed.append({'file': local_file, 'error': result.get('message')})
+
+        return {
+            'status': 'completed',
+            'uploaded': len(uploaded),
+            'failed': len(failed),
+            'errors': failed[:10]  # 只返回前10个错误
+        }
+
+    def get_status(self, provider: str = 's3') -> dict:
+        """获取云存储状态"""
+        if provider in self._clients:
+            return {
+                'configured': True,
+                'provider': provider,
+                'bucket': self._configs.get(provider, {}).get('bucket')
+            }
+        return {'configured': False, 'provider': provider}
+
+
 class SecurityConfig:
     """安全配置"""
     def __init__(self):

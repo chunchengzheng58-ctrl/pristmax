@@ -126,6 +126,12 @@ class StorageAgentMCPServer:
             "storage_schedule_add": self._handle_schedule_add,
             "storage_schedule_remove": self._handle_schedule_remove,
             "storage_schedule_list": self._handle_schedule_list,
+            # 云存储
+            "storage_cloud_config": self._handle_cloud_config,
+            "storage_cloud_status": self._handle_cloud_status,
+            "storage_cloud_upload": self._handle_cloud_upload,
+            "storage_cloud_download": self._handle_cloud_download,
+            "storage_cloud_sync": self._handle_cloud_sync,
         }
 
     def get_tools_list(self) -> list:
@@ -438,6 +444,72 @@ class StorageAgentMCPServer:
                 "inputSchema": {
                     "type": "object",
                     "properties": {}
+                }
+            },
+            # ===== 云存储 =====
+            {
+                "name": "storage_cloud_config",
+                "description": "配置云存储（S3/OSS/MinIO）",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "provider": {"type": "string", "enum": ["s3", "oss"], "description": "云提供商"},
+                        "access_key": {"type": "string", "description": "访问密钥"},
+                        "secret_key": {"type": "string", "description": "秘密密钥"},
+                        "bucket": {"type": "string", "description": "存储桶名称"},
+                        "region": {"type": "string", "description": "区域（如 s3）或 endpoint（如 oss）"},
+                        "endpoint": {"type": "string", "description": "自定义端点（可选）"}
+                    },
+                    "required": ["provider", "access_key", "secret_key", "bucket"]
+                }
+            },
+            {
+                "name": "storage_cloud_status",
+                "description": "获取云存储状态",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "provider": {"type": "string", "enum": ["s3", "oss"], "description": "云提供商", "default": "s3"}
+                    }
+                }
+            },
+            {
+                "name": "storage_cloud_upload",
+                "description": "上传文件到云存储",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "local_path": {"type": "string", "description": "本地文件路径"},
+                        "cloud_path": {"type": "string", "description": "云存储路径"},
+                        "provider": {"type": "string", "enum": ["s3", "oss"], "description": "云提供商", "default": "s3"}
+                    },
+                    "required": ["local_path", "cloud_path"]
+                }
+            },
+            {
+                "name": "storage_cloud_download",
+                "description": "从云存储下载文件",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "cloud_path": {"type": "string", "description": "云存储路径"},
+                        "local_path": {"type": "string", "description": "本地保存路径"},
+                        "provider": {"type": "string", "enum": ["s3", "oss"], "description": "云提供商", "default": "s3"}
+                    },
+                    "required": ["cloud_path", "local_path"]
+                }
+            },
+            {
+                "name": "storage_cloud_sync",
+                "description": "同步本地目录到云存储",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "local_path": {"type": "string", "description": "本地目录路径"},
+                        "cloud_prefix": {"type": "string", "description": "云存储前缀路径"},
+                        "provider": {"type": "string", "enum": ["s3", "oss"], "description": "云提供商", "default": "s3"}
+                    },
+                    "required": ["local_path", "cloud_prefix"]
                 }
             }
         ]
@@ -839,6 +911,58 @@ class StorageAgentMCPServer:
         from src.pristmax.agent.storage_agent import ScheduledTaskManager
         manager = ScheduledTaskManager()
         return {"tasks": manager.list_tasks()}
+
+    # ===== 云存储处理 =====
+
+    def _handle_cloud_config(self, params: dict) -> dict:
+        """Handle storage_cloud_config"""
+        from src.pristmax.agent.storage_agent import CloudStorageManager
+        provider = params.get("provider", "s3")
+        access_key = params.get("access_key", "")
+        secret_key = params.get("secret_key", "")
+        bucket = params.get("bucket", "")
+        region = params.get("region", "us-east-1")
+        endpoint = params.get("endpoint")
+
+        manager = CloudStorageManager()
+        if provider == "oss":
+            return manager.configure_oss(access_key, secret_key, bucket, region)  # region is endpoint for OSS
+        else:
+            return manager.configure_s3(access_key, secret_key, bucket, region, endpoint)
+
+    def _handle_cloud_status(self, params: dict) -> dict:
+        """Handle storage_cloud_status"""
+        from src.pristmax.agent.storage_agent import CloudStorageManager
+        provider = params.get("provider", "s3")
+        manager = CloudStorageManager()
+        return manager.get_status(provider)
+
+    def _handle_cloud_upload(self, params: dict) -> dict:
+        """Handle storage_cloud_upload"""
+        from src.pristmax.agent.storage_agent import CloudStorageManager
+        local_path = params.get("local_path", "")
+        cloud_path = params.get("cloud_path", "")
+        provider = params.get("provider", "s3")
+        manager = CloudStorageManager()
+        return manager.upload_file(local_path, cloud_path, provider)
+
+    def _handle_cloud_download(self, params: dict) -> dict:
+        """Handle storage_cloud_download"""
+        from src.pristmax.agent.storage_agent import CloudStorageManager
+        cloud_path = params.get("cloud_path", "")
+        local_path = params.get("local_path", "")
+        provider = params.get("provider", "s3")
+        manager = CloudStorageManager()
+        return manager.download_file(cloud_path, local_path, provider)
+
+    def _handle_cloud_sync(self, params: dict) -> dict:
+        """Handle storage_cloud_sync"""
+        from src.pristmax.agent.storage_agent import CloudStorageManager
+        local_path = params.get("local_path", "")
+        cloud_prefix = params.get("cloud_prefix", "")
+        provider = params.get("provider", "s3")
+        manager = CloudStorageManager()
+        return manager.sync_to_cloud(local_path, cloud_prefix, provider)
 
     # ===== MCP 协议处理 =====
 
