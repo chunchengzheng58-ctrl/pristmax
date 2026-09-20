@@ -257,7 +257,9 @@ class StorageAgentMCPServer:
                         "readonly": {"type": "boolean", "description": "只读模式"},
                         "require_approval": {"type": "boolean", "description": "是否需要审批"},
                         "max_files": {"type": "integer", "description": "最大扫描文件数"},
-                        "max_size_gb": {"type": "integer", "description": "最大扫描大小(GB)"}
+                        "max_size_gb": {"type": "integer", "description": "最大扫描大小(GB)"},
+                        "parallel_enabled": {"type": "boolean", "description": "启用并行扫描"},
+                        "parallel_threads": {"type": "integer", "description": "并行线程数"}
                     }
                 }
             },
@@ -503,6 +505,8 @@ class StorageAgentMCPServer:
         require_approval = params.get("require_approval")
         max_files = params.get("max_files")
         max_size_gb = params.get("max_size_gb")
+        parallel_enabled = params.get("parallel_enabled")
+        parallel_threads = params.get("parallel_threads")
 
         if allowed_paths is not None:
             _security_config.allowed_paths = allowed_paths
@@ -514,6 +518,10 @@ class StorageAgentMCPServer:
             _security_config.max_scan_files = max_files
         if max_size_gb is not None:
             _security_config.max_scan_size_gb = max_size_gb
+        if parallel_enabled is not None:
+            _security_config.parallel_enabled = parallel_enabled
+        if parallel_threads is not None:
+            _security_config.parallel_threads = parallel_threads
 
         return {
             "success": True,
@@ -522,7 +530,9 @@ class StorageAgentMCPServer:
                 "readonly_mode": _security_config.readonly_mode,
                 "require_approval": _security_config.require_approval,
                 "max_scan_files": _security_config.max_scan_files,
-                "max_scan_size_gb": _security_config.max_scan_size_gb
+                "max_scan_size_gb": _security_config.max_scan_size_gb,
+                "parallel_enabled": _security_config.parallel_enabled,
+                "parallel_threads": _security_config.parallel_threads
             }
         }
 
@@ -534,6 +544,9 @@ class StorageAgentMCPServer:
                 "readonly_mode": _security_config.readonly_mode,
                 "require_approval": _security_config.require_approval,
                 "max_scan_files": _security_config.max_scan_files,
+                "max_scan_size_gb": _security_config.max_scan_size_gb,
+                "parallel_enabled": _security_config.parallel_enabled,
+                "parallel_threads": _security_config.parallel_threads,
                 "max_scan_size_gb": _security_config.max_scan_size_gb,
                 "max_operation_time": _security_config.max_operation_time,
                 "max_file_size_mb": _security_config.max_file_size_mb,

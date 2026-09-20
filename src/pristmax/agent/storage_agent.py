@@ -25,11 +25,13 @@ import json
 import sqlite3
 import time
 import re
+import threading
 from datetime import datetime
 from pathlib import Path
 from typing import List, Dict, Optional, Tuple, Callable
 from dataclasses import dataclass, asdict
 from enum import Enum
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 
 # ============================================
@@ -108,6 +110,11 @@ class SecurityConfig:
         self.max_file_size_mb: int = 102400       # 单文件最大100GB
         self.max_batch_size: int = 1000           # 批量操作最大数量
 
+        # 并行扫描配置
+        self.parallel_enabled: bool = True        # 启用并行扫描
+        self.parallel_threads: int = 4           # 并行线程数
+        self.parallel_dirs_per_thread: int = 50   # 每个线程处理的子目录数
+
         # API 速率限制
         self.api_rate_limit: int = 100            # 每分钟最多100次
         self.api_calls: List[float] = []          # API调用记录
@@ -127,6 +134,8 @@ class SecurityConfig:
             self.allowed_paths = os.environ['STORAGE_ALLOWED_PATHS'].split(',')
         self.readonly_mode = os.environ.get('STORAGE_READONLY', 'true').lower() == 'true'
         self.require_approval = os.environ.get('STORAGE_REQUIRE_APPROVAL', 'true').lower() == 'true'
+        if os.environ.get('STORAGE_PARALLEL_THREADS'):
+            self.parallel_threads = int(os.environ['STORAGE_PARALLEL_THREADS'])
 
     def check_rate_limit(self) -> Tuple[bool, str]:
         """检查API速率限制"""
@@ -158,6 +167,9 @@ class SecurityConfig:
             'max_operation_time': self.max_operation_time,
             'max_file_size_mb': self.max_file_size_mb,
             'max_batch_size': self.max_batch_size,
+            'parallel_enabled': self.parallel_enabled,
+            'parallel_threads': self.parallel_threads,
+            'parallel_dirs_per_thread': self.parallel_dirs_per_thread,
             'api_rate_limit': self.api_rate_limit,
             'high_risk_confirm': self.high_risk_confirm,
             'operation_timeout': self.operation_timeout
@@ -572,13 +584,75 @@ class StorageAgent:
                 return cat
         return 'other'
 
+    def _scan_directory(self, dir_path: str) -> dict:
+        """扫描单个目录，返回统计结果"""
+        files_by_category: Dict[str, Dict] = {}
+        files_by_extension: Dict[str, Dict] = {}
+        total_files = 0
+        total_size = 0
+        dir_size = 0
+
+        try:
+            for entry in os.scandir(dir_path):
+                if entry.name.startswith('.'):
+                    continue
+
+                if entry.is_file(follow_symlinks=False):
+                    try:
+                        stat = entry.stat(follow_symlinks=False)
+                        size = stat.st_size
+                        total_files += 1
+                        total_size += size
+                        dir_size += size
+
+                        ext = Path(entry.name).suffix.lower()
+                        category = self._categorize(ext)
+
+                        # 按分类统计
+                        if category not in files_by_category:
+                            files_by_category[category] = {'count': 0, 'size': 0}
+                        files_by_category[category]['count'] += 1
+                        files_by_category[category]['size'] += size
+
+                        # 按扩展名统计
+                        if ext not in files_by_extension:
+                            files_by_extension[ext] = {'count': 0, 'size': 0}
+                        files_by_extension[ext]['count'] += 1
+                        files_by_extension[ext]['size'] += size
+
+                    except (OSError, PermissionError):
+                        continue
+        except (OSError, PermissionError):
+            pass
+
+        return {
+            'dir_size': dir_size,
+            'total_files': total_files,
+            'total_size': total_size,
+            'by_category': files_by_category,
+            'by_extension': files_by_extension
+        }
+
+    def _collect_subdirs(self, root_path: str, max_dirs: int = 100) -> List[str]:
+        """收集顶层子目录用于并行扫描"""
+        subdirs = []
+        try:
+            for entry in os.scandir(root_path):
+                if entry.is_dir(follow_symlinks=False) and not entry.name.startswith('.'):
+                    subdirs.append(entry.path)
+                    if len(subdirs) >= max_dirs:
+                        break
+        except (OSError, PermissionError):
+            pass
+        return subdirs
+
     def get_storage_stats(
         self,
         root_path: str,
         incremental: bool = True,
         progress: Callable = None
     ) -> dict:
-        """获取存储统计"""
+        """获取存储统计（并行扫描优化）"""
         # 权限检查
         if not self._check_path_permission(root_path):
             raise PermissionError(f"路径 {root_path} 不在允许范围内")
@@ -591,76 +665,90 @@ class StorageAgent:
             self.audit_logger.warning("resource_limit_exceeded", root_path, {"error": msg})
             raise ValueError(msg)
 
-        files_by_category: Dict[str, Dict] = {}
-        files_by_extension: Dict[str, Dict] = {}
-        total_files = 0
-        total_size = 0
-        largest_dirs: List[Dict] = []
-        dir_sizes: Dict[str, int] = {}
-        scanned = 0
+        # 合并结果的锁
+        lock = threading.Lock()
+        result = {
+            'total_files': 0,
+            'total_size': 0,
+            'by_category': {},
+            'by_extension': {},
+            'dir_sizes': {},
+            'scanned': 0
+        }
 
-        for dirpath, dirnames, filenames in os.walk(root_path):
-            # 跳过隐藏目录
-            dirnames[:] = [d for d in dirnames if not d.startswith('.')]
+        def merge_result(scan_result: dict):
+            """合并扫描结果"""
+            with lock:
+                result['total_files'] += scan_result['total_files']
+                result['total_size'] += scan_result['total_size']
+                result['scanned'] += scan_result['total_files']
 
-            dir_size = 0
+                for cat, info in scan_result['by_category'].items():
+                    if cat not in result['by_category']:
+                        result['by_category'][cat] = {'count': 0, 'size': 0}
+                    result['by_category'][cat]['count'] += info['count']
+                    result['by_category'][cat]['size'] += info['size']
 
-            for filename in filenames:
-                if filename.startswith('.'):
-                    continue
+                for ext, info in scan_result['by_extension'].items():
+                    if ext not in result['by_extension']:
+                        result['by_extension'][ext] = {'count': 0, 'size': 0}
+                    result['by_extension'][ext]['count'] += info['count']
+                    result['by_extension'][ext]['size'] += info['size']
 
-                filepath = os.path.join(dirpath, filename)
-                try:
-                    stat = os.path.getsize(filepath)
-                    total_files += 1
-                    total_size += stat
-                    dir_size += stat
+        def scan_dir(dir_path: str):
+            """扫描目录并合并结果"""
+            scan_result = self._scan_directory(dir_path)
+            merge_result(scan_result)
 
-                    ext = Path(filename).suffix.lower()
-                    category = self._categorize(ext)
+            # 递归处理子目录
+            subdirs = self._collect_subdirs(dir_path, max_dirs=_security_config.parallel_dirs_per_thread)
+            for subdir in subdirs:
+                sub_result = self._scan_directory(subdir)
+                merge_result(sub_result)
 
-                    # 按分类统计
-                    if category not in files_by_category:
-                        files_by_category[category] = {'count': 0, 'size': 0}
-                    files_by_category[category]['count'] += 1
-                    files_by_category[category]['size'] += stat
+            return dir_path
 
-                    # 按扩展名统计
-                    if ext not in files_by_extension:
-                        files_by_extension[ext] = {'count': 0, 'size': 0}
-                    files_by_extension[ext]['count'] += 1
-                    files_by_extension[ext]['size'] += stat
+        # 先扫描根目录
+        root_result = self._scan_directory(root_path)
+        merge_result(root_result)
 
-                    scanned += 1
-                    if progress and scanned % 1000 == 0:
-                        progress(scanned, 0, "扫描中...")
+        # 并行扫描子目录
+        subdirs = self._collect_subdirs(root_path, max_dirs=_security_config.parallel_dirs_per_thread)
 
-                except (OSError, PermissionError):
-                    continue
-
-            # 记录目录大小
-            if dirpath != root_path:
-                dir_sizes[dirpath] = dir_size
+        if subdirs and _security_config.parallel_enabled:
+            threads = min(_security_config.parallel_threads, len(subdirs))
+            with ThreadPoolExecutor(max_workers=threads) as executor:
+                futures = {executor.submit(scan_dir, d): d for d in subdirs}
+                for future in as_completed(futures):
+                    try:
+                        future.result()
+                        if progress and result['scanned'] % 1000 < _security_config.parallel_threads:
+                            progress(result['scanned'], 0, f"扫描中... {result['scanned']} 文件")
+                    except Exception:
+                        pass
+        else:
+            for subdir in subdirs:
+                scan_dir(subdir)
 
         # 按大小排序目录
         largest_dirs = sorted(
             [{'path': p, 'size': s, 'size_display': FileInfo.format_size(s)}
-             for p, s in dir_sizes.items()],
+             for p, s in result['dir_sizes'].items()],
             key=lambda x: x['size'],
             reverse=True
         )[:10]
 
         return {
-            'total_files': total_files,
-            'total_size': total_size,
-            'total_size_display': FileInfo.format_size(total_size),
+            'total_files': result['total_files'],
+            'total_size': result['total_size'],
+            'total_size_display': FileInfo.format_size(result['total_size']),
             'by_category': {
                 k: {**v, 'size_display': FileInfo.format_size(v['size'])}
-                for k, v in files_by_category.items()
+                for k, v in result['by_category'].items()
             },
             'by_extension': {
                 k: {**v, 'size_display': FileInfo.format_size(v['size'])}
-                for k, v in files_by_extension.items()
+                for k, v in result['by_extension'].items()
             },
             'largest_dirs': largest_dirs,
             'scan_type': 'incremental' if incremental else 'full'
