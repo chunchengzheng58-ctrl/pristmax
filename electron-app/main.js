@@ -296,6 +296,16 @@ ipcMain.handle('storage_incremental_scan', async (event, { path, since_mtime }) 
   return agent.get_incremental_changes(path, since_mtime);
 });
 
+ipcMain.handle('storage_search_content', async (event, { path, keyword, file_types, max_results }) => {
+  const agent = getStorageAgent();
+  if (!agent) return { error: 'StorageAgent not available' };
+  try {
+    return agent.search_file_content(path, keyword, file_types, max_results);
+  } catch (err) {
+    return { error: err.message, matches: [] };
+  }
+});
+
 // App lifecycle
 app.whenReady().then(() => {
   console.log('App ready, creating window...');

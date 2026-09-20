@@ -54,7 +54,8 @@
             'cleanup': '智能清理',
             'reports': '报告',
             'settings': '设置',
-            'monitor': '文件监控'
+            'monitor': '文件监控',
+            'search': '内容搜索'
         };
         document.getElementById('page-title').textContent = titles[page] || '概览';
     }
@@ -108,6 +109,12 @@
         document.getElementById('btn-start-monitor')?.addEventListener('click', startMonitoring);
         document.getElementById('btn-stop-monitor')?.addEventListener('click', stopMonitoring);
         document.getElementById('btn-refresh-changes')?.addEventListener('click', refreshMonitorChanges);
+
+        // Search actions
+        document.getElementById('btn-do-search')?.addEventListener('click', performSearch);
+        document.getElementById('search-input')?.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') performSearch();
+        });
     }
 
     function navigateTo(page) {
@@ -826,5 +833,75 @@
         } catch (err) {
             console.error('Refresh monitor changes error:', err);
         }
+    }
+
+    // ===== Content Search =====
+    async function performSearch() {
+        if (!currentPath) {
+            showNotification('请先选择要搜索的文件夹');
+            return;
+        }
+
+        const keyword = document.getElementById('search-input')?.value?.trim();
+        if (!keyword || keyword.length < 2) {
+            showNotification('请输入至少2个字符的关键字');
+            return;
+        }
+
+        const typeSelect = document.getElementById('search-types');
+        const selectedTypes = Array.from(typeSelect.selectedOptions).map(o => o.value);
+        const fileTypes = selectedTypes.length > 0 ? selectedTypes : ['.txt', '.py', '.js', '.json', '.md'];
+
+        document.getElementById('search-stats').textContent = '搜索中...';
+        document.getElementById('search-results').innerHTML = '<div class="empty-state"><p>正在搜索...</p></div>';
+
+        try {
+            const response = await window.electronAPI?.invoke('storage_search_content', {
+                path: currentPath,
+                keyword: keyword,
+                file_types: fileTypes,
+                max_results: 200
+            });
+
+            if (response && response.matches) {
+                const { matches = [], total_files_searched = 0, total_matches = 0, truncated = false } = response;
+
+                document.getElementById('search-stats').textContent =
+                    `搜索 ${total_files_searched} 个文件，找到 ${total_matches} 个匹配${truncated ? '（已截断）' : ''}`;
+
+                if (matches.length === 0) {
+                    document.getElementById('search-results').innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">🔍</div>
+                            <h3>未找到结果</h3>
+                            <p>尝试使用不同的关键字</p>
+                        </div>
+                    `;
+                } else {
+                    document.getElementById('search-results').innerHTML = matches.map(m => `
+                        <div class="file-item" style="flex-direction:column;align-items:flex-start;">
+                            <div style="display:flex;align-items:center;gap:8px;width:100%;">
+                                <span style="font-size:11px;padding:2px 6px;background:var(--primary);color:white;border-radius:3px;">${m.line_num}</span>
+                                <span style="font-weight:500;font-size:12px;">${m.filename || m.path.split(/[/\\]/).pop()}</span>
+                            </div>
+                            <div style="font-size:11px;color:var(--text-muted);margin-top:4px;word-break:break-all;">${escapeHtml(m.line_content)}</div>
+                            <div style="font-size:10px;color:var(--text-muted);margin-top:4px;">${m.path}</div>
+                        </div>
+                    `).join('');
+                }
+            } else {
+                document.getElementById('search-stats').textContent = '搜索失败';
+                document.getElementById('search-results').innerHTML = `<div class="empty-state"><p>搜索失败: ${response?.error || '未知错误'}</p></div>`;
+            }
+        } catch (err) {
+            document.getElementById('search-stats').textContent = '搜索出错';
+            document.getElementById('search-results').innerHTML = `<div class="empty-state"><p>搜索出错: ${err.message}</p></div>`;
+        }
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
     }
 })();

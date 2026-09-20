@@ -726,6 +726,102 @@ class StorageAgent:
             'deleted_count': len(deleted)
         }
 
+    def search_file_content(self, root_path: str, keyword: str, file_types: List[str] = None,
+                           max_results: int = 100, max_file_size_mb: int = 10) -> dict:
+        """搜索文件内容
+
+        Args:
+            root_path: 搜索根目录
+            keyword: 搜索关键字
+            file_types: 要搜索的文件类型扩展名列表，如 ['.txt', '.py', '.js']
+            max_results: 最大返回结果数
+            max_file_size_mb: 单个文件最大大小(MB)，超过则跳过
+
+        Returns:
+            搜索结果 {matches: [{path, line_num, line_content, context}, ...], total_files_searched, total_matches}
+        """
+        if not self._check_path_permission(root_path):
+            return {'error': 'Permission denied', 'matches': []}
+
+        if not keyword or len(keyword) < 2:
+            return {'error': 'Keyword too short (min 2 chars)', 'matches': []}
+
+        matches = []
+        total_searched = 0
+        max_size_bytes = max_file_size_mb * 1024 * 1024
+
+        # 默认搜索的文本文件类型
+        if file_types is None:
+            file_types = ['.txt', '.py', '.js', '.json', '.xml', '.html', '.css',
+                         '.md', '.yml', '.yaml', '.ini', '.cfg', '.conf', '.log',
+                         '.csv', '.sql', '.sh', '.bat', '.ps1', '.java', '.c', '.cpp', '.h']
+
+        # 编译正则提高性能
+        try:
+            import re
+            pattern = re.compile(keyword, re.IGNORECASE)
+        except re.error:
+            # 如果正则失败，作为普通字符串搜索
+            pattern = re.compile(re.escape(keyword), re.IGNORECASE)
+
+        for dirpath, dirnames, filenames in os.walk(root_path):
+            # 跳过隐藏目录和常见忽略目录
+            dirnames[:] = [d for d in dirnames if not d.startswith('.') and d not in ('__pycache__', 'node_modules', '.git')]
+
+            for filename in filenames:
+                if filename.startswith('.'):
+                    continue
+
+                filepath = os.path.join(dirpath, filename)
+                ext = os.path.splitext(filename)[1].lower()
+
+                if ext not in file_types:
+                    continue
+
+                try:
+                    stat = os.stat(filepath)
+                    if stat.st_size > max_size_bytes or stat.st_size == 0:
+                        continue
+
+                    total_searched += 1
+
+                    # 读取文件内容（限制大小避免内存问题）
+                    with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
+                        content = f.read(max_size_bytes)
+
+                    # 搜索每一行
+                    for line_num, line in enumerate(content.splitlines(), 1):
+                        if pattern.search(line):
+                            # 提取上下文（前50后50字符）
+                            context_start = max(0, len(line) - 50)
+                            context = line[context_start:context_start + 100].strip()
+
+                            matches.append({
+                                'path': filepath,
+                                'filename': filename,
+                                'line_num': line_num,
+                                'line_content': line.strip()[:200],
+                                'context': context
+                            })
+
+                            if len(matches) >= max_results:
+                                return {
+                                    'matches': matches,
+                                    'total_files_searched': total_searched,
+                                    'total_matches': len(matches),
+                                    'truncated': True
+                                }
+
+                except (OSError, PermissionError, UnicodeDecodeError):
+                    continue
+
+        return {
+            'matches': matches,
+            'total_files_searched': total_searched,
+            'total_matches': len(matches),
+            'truncated': False
+        }
+
     def start_monitoring(self, root_path: str, callback: Callable = None, recursive: bool = True) -> str:
         """启动文件监控
 

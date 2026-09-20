@@ -120,6 +120,8 @@ class StorageAgentMCPServer:
             "storage_monitor_stop": self._handle_monitor_stop,
             "storage_monitor_changes": self._handle_monitor_changes,
             "storage_incremental_scan": self._handle_incremental_scan,
+            # 内容搜索
+            "storage_search_content": self._handle_search_content,
         }
 
     def get_tools_list(self) -> list:
@@ -384,6 +386,20 @@ class StorageAgentMCPServer:
                         "since_mtime": {"type": "number", "description": "起始时间戳（Unix时间戳）"}
                     },
                     "required": ["path"]
+                }
+            },
+            {
+                "name": "storage_search_content",
+                "description": "搜索文件内容（支持正则表达式）",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "path": {"type": "string", "description": "搜索根目录"},
+                        "keyword": {"type": "string", "description": "搜索关键字或正则表达式"},
+                        "file_types": {"type": "array", "items": {"type": "string"}, "description": "要搜索的文件类型扩展名", "default": [".txt", ".py", ".js", ".json"]},
+                        "max_results": {"type": "integer", "description": "最大结果数", "default": 100}
+                    },
+                    "required": ["path", "keyword"]
                 }
             }
         ]
@@ -754,6 +770,14 @@ class StorageAgentMCPServer:
         path = params.get("path", "")
         since_mtime = params.get("since_mtime")
         return self.agent.get_incremental_changes(path, since_mtime)
+
+    def _handle_search_content(self, params: dict) -> dict:
+        """Handle storage_search_content"""
+        path = params.get("path", "")
+        keyword = params.get("keyword", "")
+        file_types = params.get("file_types")
+        max_results = params.get("max_results", 100)
+        return self.agent.search_file_content(path, keyword, file_types, max_results)
 
     # ===== MCP 协议处理 =====
 

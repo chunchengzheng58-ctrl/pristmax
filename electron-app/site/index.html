@@ -612,6 +612,11 @@
                     <circle cx="12" cy="12" r="3"/>
                 </svg>
             </div>
+            <div class="sidebar-icon" data-page="search" title="搜索">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+                </svg>
+            </div>
         </aside>
 
         <!-- Main Content -->
@@ -827,6 +832,36 @@
                                 </div>
                                 <div class="file-list" id="changes-list"></div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Search Page -->
+                <div class="page-content" id="page-search">
+                    <div class="panel" style="flex:1;">
+                        <div class="panel-header">
+                            <span class="panel-title">内容搜索</span>
+                        </div>
+                        <div class="panel-body">
+                            <div style="display:flex;gap:8px;margin-bottom:16px;">
+                                <input type="text" id="search-input" placeholder="输入搜索关键字..." style="flex:1;padding:8px 12px;border:1px solid var(--border);border-radius:6px;font-size:13px;">
+                                <select id="search-types" multiple style="width:180px;padding:8px;border:1px solid var(--border);border-radius:6px;font-size:12px;">
+                                    <option value=".txt">.txt 文本</option>
+                                    <option value=".py">.py Python</option>
+                                    <option value=".js">.js JavaScript</option>
+                                    <option value=".json">.json JSON</option>
+                                    <option value=".md">.md Markdown</option>
+                                    <option value=".html">.html HTML</option>
+                                    <option value=".css">.css CSS</option>
+                                    <option value=".xml">.xml XML</option>
+                                    <option value=".sql">.sql SQL</option>
+                                </select>
+                                <button class="top-bar-btn primary" id="btn-do-search">搜索</button>
+                            </div>
+                            <div style="margin-bottom:12px;font-size:12px;color:var(--text-muted);">
+                                <span id="search-stats">输入关键字开始搜索</span>
+                            </div>
+                            <div id="search-results" class="file-list"></div>
                         </div>
                     </div>
                 </div>
