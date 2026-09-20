@@ -27,6 +27,10 @@
         {
           "target": "nsis",
           "arch": ["x64"]
+        },
+        {
+          "target": "portable",
+          "arch": ["x64"]
         }
       ],
       "icon": "build/icon.ico",
@@ -51,7 +55,11 @@
       "icon": "build/icon.png",
       "category": "Utility"
     },
-    "publish": null
+    "publish": {
+      "provider": "github",
+      "owner": "chunchengzheng58-ctrl",
+      "repo": "pristmax"
+    }
   },
   "keywords": [
     "storage",
@@ -59,6 +67,9 @@
   ],
   "author": "Pristmax",
   "license": "Apache-2.0",
+  "dependencies": {
+    "electron-updater": "^6.3.9"
+  },
   "devDependencies": {
     "electron": "^33.2.1",
     "electron-builder": "25.1.8"

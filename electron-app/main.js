@@ -1,8 +1,86 @@
 const { app, BrowserWindow, Menu, shell, ipcMain, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
+const { autoUpdater } = require('electron-updater');
 
 let mainWindow;
+
+// Auto-updater configuration
+autoUpdater.autoDownload = false;
+autoUpdater.autoInstallOnAppQuit = true;
+
+function setupAutoUpdater() {
+  autoUpdater.on('checking-for-update', () => {
+    console.log('检查更新中...');
+    sendToRenderer('update-status', { status: 'checking' });
+  });
+
+  autoUpdater.on('update-available', (info) => {
+    console.log('发现新版本:', info.version);
+    sendToRenderer('update-status', {
+      status: 'available',
+      version: info.version,
+      releaseDate: info.releaseDate,
+      releaseNotes: info.releaseNotes
+    });
+    dialog.showMessageBox(mainWindow, {
+      type: 'info',
+      title: '发现新版本',
+      message: `发现新版本 v${info.version}`,
+      detail: `发布时间: ${info.releaseDate}\n\n是否立即下载更新？`,
+      buttons: ['下载', '稍后']
+    }).then(result => {
+      if (result.response === 0) {
+        autoUpdater.downloadUpdate();
+      }
+    });
+  });
+
+  autoUpdater.on('update-not-available', () => {
+    console.log('已是最新版本');
+    sendToRenderer('update-status', { status: 'up-to-date' });
+  });
+
+  autoUpdater.on('download-progress', (progress) => {
+    sendToRenderer('update-status', {
+      status: 'downloading',
+      percent: Math.round(progress.percent)
+    });
+  });
+
+  autoUpdater.on('update-downloaded', () => {
+    console.log('下载完成');
+    sendToRenderer('update-status', { status: 'downloaded' });
+    dialog.showMessageBox(mainWindow, {
+      type: 'info',
+      title: '下载完成',
+      message: '更新已下载完成',
+      detail: '将在重启应用时安装。是否立即重启？',
+      buttons: ['立即重启', '稍后']
+    }).then(result => {
+      if (result.response === 0) {
+        autoUpdater.quitAndInstall();
+      }
+    });
+  });
+
+  autoUpdater.on('error', (error) => {
+    console.error('更新错误:', error);
+    sendToRenderer('update-status', { status: 'error', message: error.message });
+  });
+}
+
+function sendToRenderer(channel, data) {
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    mainWindow.webContents.send(channel, data);
+  }
+}
+
+function checkForUpdates() {
+  autoUpdater.checkForUpdates().catch(err => {
+    console.error('检查更新失败:', err);
+  });
+}
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -77,7 +155,11 @@ function createWindow() {
       label: 'Help',
       submenu: [
         {
-          label: 'About Pristmax',
+          label: '检查更新',
+          click: () => checkForUpdates()
+        },
+        {
+          label: '关于 Pristmax',
           click: () => {
             dialog.showMessageBox(mainWindow, {
               type: 'info',
@@ -171,10 +253,30 @@ ipcMain.handle('get-file-info', async (event, filePath) => {
   }
 });
 
+// Update handlers
+ipcMain.handle('check-update', () => {
+  checkForUpdates();
+});
+
+ipcMain.handle('get-app-version', () => {
+  return app.getVersion();
+});
+
+ipcMain.handle('download-update', () => {
+  autoUpdater.downloadUpdate();
+});
+
+ipcMain.handle('install-update', () => {
+  autoUpdater.quitAndInstall();
+});
+
 // App lifecycle
 app.whenReady().then(() => {
   console.log('App ready, creating window...');
   createWindow();
+  setupAutoUpdater();
+  // 启动时检查更新
+  setTimeout(() => checkForUpdates(), 3000);
 });
 
 app.on('activate', () => {

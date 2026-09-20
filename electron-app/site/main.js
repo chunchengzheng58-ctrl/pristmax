@@ -12,6 +12,7 @@
         initSidebar();
         initActions();
         initPathSelector();
+        initUpdateCheck();
         loadDemoData();
     });
 
@@ -391,6 +392,60 @@
                 }, 300);
             }, 3000);
         }
+    }
+
+    // Auto Update
+    function initUpdateCheck() {
+        // 显示当前版本
+        window.electronAPI?.getAppVersion().then(version => {
+            const versionEl = document.getElementById('update-status');
+            if (versionEl) versionEl.textContent = '📌 v' + version;
+        });
+
+        // 监听更新状态
+        window.electronAPI?.onUpdateStatus(data => {
+            const versionEl = document.getElementById('update-status');
+            if (!versionEl) return;
+
+            switch (data.status) {
+                case 'checking':
+                    versionEl.textContent = '🔄 检查更新...';
+                    break;
+                case 'available':
+                    versionEl.textContent = '🆕 v' + data.version + ' 可用';
+                    versionEl.style.opacity = '1';
+                    showNotification('发现新版本 v' + data.version + '！点击右下角版本号下载更新。');
+                    break;
+                case 'downloading':
+                    versionEl.textContent = '📥 下载中 ' + data.percent + '%';
+                    break;
+                case 'downloaded':
+                    versionEl.textContent = '✅ 下载完成';
+                    versionEl.style.opacity = '1';
+                    break;
+                case 'up-to-date':
+                    versionEl.textContent = '✅ 已是最新';
+                    setTimeout(() => {
+                        window.electronAPI?.getAppVersion().then(v => {
+                            if (versionEl) versionEl.textContent = '📌 v' + v;
+                        });
+                    }, 2000);
+                    break;
+                case 'error':
+                    versionEl.textContent = '⚠️ 更新失败';
+                    setTimeout(() => {
+                        window.electronAPI?.getAppVersion().then(v => {
+                            if (versionEl) versionEl.textContent = '📌 v' + v;
+                        });
+                    }, 3000);
+                    break;
+            }
+        });
+
+        // 点击版本号检查更新
+        document.getElementById('update-status')?.addEventListener('click', () => {
+            window.electronAPI?.checkUpdate();
+        });
     }
 
     // Update status

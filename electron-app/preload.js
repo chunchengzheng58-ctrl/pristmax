@@ -13,6 +13,19 @@ contextBridge.exposeInMainWorld('electronAPI', {
     readDirectory: (path) => ipcRenderer.invoke('read-directory', path),
     getFileInfo: (path) => ipcRenderer.invoke('get-file-info', path),
 
+    // App info
+    getAppVersion: () => ipcRenderer.invoke('get-app-version'),
+
+    // Auto update
+    checkUpdate: () => ipcRenderer.invoke('check-update'),
+    downloadUpdate: () => ipcRenderer.invoke('download-update'),
+    installUpdate: () => ipcRenderer.invoke('install-update'),
+
+    // Update events
+    onUpdateStatus: (callback) => {
+        ipcRenderer.on('update-status', (event, data) => callback(data));
+    },
+
     // Events
     onDirectorySelected: (callback) => {
         ipcRenderer.on('open-directory', (event, path) => callback(path));
