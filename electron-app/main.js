@@ -23,17 +23,6 @@ function setupAutoUpdater() {
       releaseDate: info.releaseDate,
       releaseNotes: info.releaseNotes
     });
-    dialog.showMessageBox(mainWindow, {
-      type: 'info',
-      title: '发现新版本',
-      message: `发现新版本 v${info.version}`,
-      detail: `发布时间: ${info.releaseDate}\n\n是否立即下载更新？`,
-      buttons: ['下载', '稍后']
-    }).then(result => {
-      if (result.response === 0) {
-        autoUpdater.downloadUpdate();
-      }
-    });
   });
 
   autoUpdater.on('update-not-available', () => {
@@ -51,17 +40,6 @@ function setupAutoUpdater() {
   autoUpdater.on('update-downloaded', () => {
     console.log('下载完成');
     sendToRenderer('update-status', { status: 'downloaded' });
-    dialog.showMessageBox(mainWindow, {
-      type: 'info',
-      title: '下载完成',
-      message: '更新已下载完成',
-      detail: '将在重启应用时安装。是否立即重启？',
-      buttons: ['立即重启', '稍后']
-    }).then(result => {
-      if (result.response === 0) {
-        autoUpdater.quitAndInstall();
-      }
-    });
   });
 
   autoUpdater.on('error', (error) => {

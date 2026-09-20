@@ -405,26 +405,48 @@
         // 监听更新状态
         window.electronAPI?.onUpdateStatus(data => {
             const versionEl = document.getElementById('update-status');
-            if (!versionEl) return;
+            const banner = document.getElementById('update-banner');
+            const downloadBtn = document.getElementById('update-download-btn');
+            const laterBtn = document.getElementById('update-later-btn');
+            const installBtn = document.getElementById('update-install-btn');
+            const versionText = document.getElementById('update-version');
+            const descText = document.getElementById('update-desc');
+
+            if (!versionEl || !banner) return;
 
             switch (data.status) {
                 case 'checking':
                     versionEl.textContent = '🔄 检查更新...';
+                    banner.classList.remove('show');
                     break;
                 case 'available':
                     versionEl.textContent = '🆕 v' + data.version + ' 可用';
-                    versionEl.style.opacity = '1';
-                    showNotification('发现新版本 v' + data.version + '！点击右下角版本号下载更新。');
+                    versionText.textContent = 'v' + data.version;
+                    descText.textContent = '点击下载更新';
+                    downloadBtn.style.display = 'inline-block';
+                    laterBtn.style.display = 'inline-block';
+                    installBtn.style.display = 'none';
+                    banner.classList.add('show');
                     break;
                 case 'downloading':
                     versionEl.textContent = '📥 下载中 ' + data.percent + '%';
+                    descText.textContent = '下载进度: ' + data.percent + '%';
+                    downloadBtn.style.display = 'none';
+                    laterBtn.style.display = 'none';
+                    banner.classList.add('show');
                     break;
                 case 'downloaded':
-                    versionEl.textContent = '✅ 下载完成';
-                    versionEl.style.opacity = '1';
+                    versionEl.textContent = '✅ 可安装';
+                    descText.textContent = '点击安装更新并重启';
+                    downloadBtn.style.display = 'none';
+                    laterBtn.style.display = 'none';
+                    installBtn.style.display = 'inline-block';
+                    banner.classList.add('show');
+                    showNotification('更新已下载，点击立即安装！');
                     break;
                 case 'up-to-date':
                     versionEl.textContent = '✅ 已是最新';
+                    banner.classList.remove('show');
                     setTimeout(() => {
                         window.electronAPI?.getAppVersion().then(v => {
                             if (versionEl) versionEl.textContent = '📌 v' + v;
@@ -433,6 +455,7 @@
                     break;
                 case 'error':
                     versionEl.textContent = '⚠️ 更新失败';
+                    banner.classList.remove('show');
                     setTimeout(() => {
                         window.electronAPI?.getAppVersion().then(v => {
                             if (versionEl) versionEl.textContent = '📌 v' + v;
@@ -440,6 +463,23 @@
                     }, 3000);
                     break;
             }
+        });
+
+        // 绑定更新按钮事件
+        document.getElementById('update-download-btn')?.addEventListener('click', () => {
+            window.electronAPI?.downloadUpdate();
+        });
+
+        document.getElementById('update-install-btn')?.addEventListener('click', () => {
+            window.electronAPI?.installUpdate();
+        });
+
+        document.getElementById('update-later-btn')?.addEventListener('click', () => {
+            document.getElementById('update-banner')?.classList.remove('show');
+        });
+
+        document.getElementById('update-close-btn')?.addEventListener('click', () => {
+            document.getElementById('update-banner')?.classList.remove('show');
         });
 
         // 点击版本号检查更新

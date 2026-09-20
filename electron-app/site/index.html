@@ -339,6 +339,60 @@
 
         .notification.show { display: block; opacity: 1; }
 
+        /* Update Banner */
+        .update-banner {
+            position: fixed;
+            top: 32px;
+            left: 56px;
+            right: 0;
+            background: linear-gradient(135deg, #113577, #1a4a8a);
+            color: white;
+            padding: 10px 16px;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            font-size: 12px;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .update-banner.show { display: flex; }
+
+        .update-banner-icon { font-size: 18px; }
+
+        .update-banner-text { flex: 1; }
+
+        .update-banner-text strong { font-size: 13px; }
+
+        .update-banner-btn {
+            padding: 5px 12px;
+            border: 1px solid rgba(255,255,255,0.5);
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border-radius: 4px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .update-banner-btn:hover { background: rgba(255,255,255,0.25); }
+
+        .update-banner-close {
+            width: 20px;
+            height: 20px;
+            border: none;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .update-banner-close:hover { background: rgba(255,255,255,0.2); }
+
         /* Status Bar */
         .status-bar {
             height: 24px;
@@ -580,6 +634,19 @@
 
     <!-- Notification -->
     <div class="notification" id="notification"></div>
+
+    <!-- Update Banner -->
+    <div class="update-banner" id="update-banner">
+        <div class="update-banner-icon">🚀</div>
+        <div class="update-banner-text">
+            发现新版本 <strong id="update-version">v1.4.0</strong>
+            <div id="update-desc" style="font-size:10px;opacity:0.8;margin-top:2px;">点击下载更新</div>
+        </div>
+        <button class="update-banner-btn" id="update-download-btn">下载更新</button>
+        <button class="update-banner-btn" id="update-later-btn" style="display:none;">稍后</button>
+        <button class="update-banner-btn" id="update-install-btn" style="display:none;">安装更新</button>
+        <button class="update-banner-close" id="update-close-btn">×</button>
+    </div>
 
     <!-- Status Bar -->
     <div class="status-bar">
