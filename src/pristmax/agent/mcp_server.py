@@ -110,6 +110,10 @@ class StorageAgentMCPServer:
             # 缓存管理
             "storage_cache_clear": self._handle_cache_clear,
             "storage_cache_status": self._handle_cache_status,
+
+            # 进度查询
+            "storage_progress": self._handle_progress,
+            "storage_progress_list": self._handle_progress_list,
         }
 
     def get_tools_list(self) -> list:
@@ -305,6 +309,26 @@ class StorageAgentMCPServer:
             {
                 "name": "storage_cache_status",
                 "description": "查看缓存状态",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {}
+                }
+            },
+
+            # ===== 进度查询 =====
+            {
+                "name": "storage_progress",
+                "description": "查询扫描进度",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "scan_id": {"type": "string", "description": "扫描任务ID"}
+                    }
+                }
+            },
+            {
+                "name": "storage_progress_list",
+                "description": "列出所有扫描任务",
                 "inputSchema": {
                     "type": "object",
                     "properties": {}
@@ -627,6 +651,23 @@ class StorageAgentMCPServer:
             }
         except Exception as e:
             return {"error": str(e)}
+
+    def _handle_progress(self, params: dict) -> dict:
+        """Handle progress query"""
+        from src.pristmax.agent.storage_agent import ScanProgressTracker
+        scan_id = params.get("scan_id")
+        if not scan_id:
+            return {"error": "scan_id is required"}
+        progress = ScanProgressTracker.get(scan_id)
+        if not progress:
+            return {"error": f"Scan {scan_id} not found", "scan_id": scan_id}
+        return {"scan_id": scan_id, **progress}
+
+    def _handle_progress_list(self, params: dict) -> dict:
+        """Handle progress list"""
+        from src.pristmax.agent.storage_agent import ScanProgressTracker
+        ScanProgressTracker.cleanup_old()
+        return {"tasks": ScanProgressTracker.list_all()}
 
     # ===== MCP 协议处理 =====
 

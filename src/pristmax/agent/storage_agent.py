@@ -94,6 +94,58 @@ class ProgressTracker:
         }
 
 
+class ScanProgressTracker:
+    """扫描进度跟踪器（全局）"""
+    _progress: Dict[str, dict] = {}
+    _lock = threading.Lock()
+
+    @classmethod
+    def add(cls, scan_id: str, data: dict):
+        with cls._lock:
+            cls._progress[scan_id] = data
+
+    @classmethod
+    def update(cls, scan_id: str, **kwargs):
+        with cls._lock:
+            if scan_id in cls._progress:
+                cls._progress[scan_id].update(kwargs)
+
+    @classmethod
+    def get(cls, scan_id: str) -> Optional[dict]:
+        with cls._lock:
+            return cls._progress.get(scan_id)
+
+    @classmethod
+    def list_all(cls) -> Dict[str, dict]:
+        with cls._lock:
+            return dict(cls._progress)
+
+    @classmethod
+    def remove(cls, scan_id: str):
+        with cls._lock:
+            cls._progress.pop(scan_id, None)
+
+    @classmethod
+    def cleanup_old(cls, max_age_seconds: int = 3600):
+        """清理超过指定时间的旧记录"""
+        with cls._lock:
+            now = time.time()
+            expired = [k for k, v in cls._progress.items()
+                      if now - v.get('start_time', 0) > max_age_seconds]
+            for k in expired:
+                cls._progress.pop(k, None)
+        return time.time() - self.start_time
+
+    def to_dict(self) -> dict:
+        return {
+            'current': self.current,
+            'total': self.total,
+            'percent': self.progress_percent,
+            'elapsed_seconds': self.elapsed_seconds,
+            'errors': self.errors
+        }
+
+
 class SecurityConfig:
     """安全配置"""
     def __init__(self):
@@ -759,6 +811,19 @@ class StorageAgent:
             'scanned': 0
         }
 
+        # 生成扫描任务ID并记录进度
+        import uuid
+        scan_id = str(uuid.uuid4())[:8]
+        ScanProgressTracker.add(scan_id, {
+            'path': root_path,
+            'status': 'running',
+            'scanned': 0,
+            'total_files': 0,
+            'total_size': 0,
+            'message': '扫描中...',
+            'start_time': time.time()
+        })
+
         def merge_result(scan_result: dict):
             """合并扫描结果"""
             with lock:
@@ -805,6 +870,7 @@ class StorageAgent:
                 for future in as_completed(futures):
                     try:
                         future.result()
+                        ScanProgressTracker.update(scan_id, scanned=result['scanned'])
                         if progress and result['scanned'] % 1000 < _security_config.parallel_threads:
                             progress(result['scanned'], 0, f"扫描中... {result['scanned']} 文件")
                     except Exception:
@@ -821,7 +887,11 @@ class StorageAgent:
             reverse=True
         )[:10]
 
+        # 标记完成
+        ScanProgressTracker.update(scan_id, status='completed', scanned=result['total_files'])
+
         final_result = {
+            'scan_id': scan_id,
             'total_files': result['total_files'],
             'total_size': result['total_size'],
             'total_size_display': FileInfo.format_size(result['total_size']),
