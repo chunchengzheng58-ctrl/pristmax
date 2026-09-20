@@ -89,6 +89,7 @@ class StorageAgentMCPServer:
             "storage_duplicates": self._handle_duplicates,
             "storage_suggestions": self._handle_suggestions,
             "storage_analyze": self._handle_analyze,
+            "storage_cleanup_summary": self._handle_cleanup_summary,
             "storage_chat": self._handle_chat,
 
             # 预览操作（dry-run，无需审批）
@@ -162,6 +163,17 @@ class StorageAgentMCPServer:
             {
                 "name": "storage_analyze",
                 "description": "综合存储分析（只读操作，无需审批）",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "path": {"type": "string", "description": "目录路径"}
+                    },
+                    "required": ["path"]
+                }
+            },
+            {
+                "name": "storage_cleanup_summary",
+                "description": "获取智能清理摘要（用于饼图展示）",
                 "inputSchema": {
                     "type": "object",
                     "properties": {
@@ -321,7 +333,14 @@ class StorageAgentMCPServer:
         path = params.get("path", ".")
         stats = self.agent.get_storage_stats(path, incremental=True)
         suggestions = self.agent.get_suggestions(path)
-        return {"stats": stats, "suggestions": suggestions}
+        cleanup_summary = self.agent.get_cleanup_summary(path)
+        return {"stats": stats, "suggestions": suggestions, "cleanup": cleanup_summary}
+
+    def _handle_cleanup_summary(self, params: dict) -> dict:
+        """Handle storage_cleanup_summary tool call"""
+        path = params.get("path", ".")
+        summary = self.agent.get_cleanup_summary(path)
+        return summary
 
     def _handle_chat(self, params: dict) -> dict:
         """Handle storage_chat tool call"""
@@ -340,12 +359,40 @@ class StorageAgentMCPServer:
 
         if cleanup_type == "duplicates":
             result = self.agent.cleanup_duplicates(path, dry_run=True, auto_approve=True)
-        else:
+        elif cleanup_type == "large":
             result = self.agent.cleanup_large_files(path, min_size_mb=min_size_mb, dry_run=True, auto_approve=True)
+        elif cleanup_type == "temp":
+            temp_files = self.agent._find_temp_files(path)
+            result = {
+                'type': 'temp',
+                'files': temp_files['files'],
+                'count': temp_files['count'],
+                'size': temp_files['size'],
+                'dry_run': True,
+                'warning': '这是预览模式，实际删除需要审批'
+            }
+        elif cleanup_type == "old":
+            old_files = self.agent._find_old_files(path, days=365)
+            result = {
+                'type': 'old',
+                'files': old_files['files'],
+                'count': old_files['count'],
+                'size': old_files['size'],
+                'dry_run': True,
+                'warning': '这是预览模式，实际删除需要审批'
+            }
+        elif cleanup_type == "empty":
+            empty_folders = self.agent._find_empty_folders(path)
+            result = {
+                'type': 'empty',
+                'folders': empty_folders['folders'],
+                'count': empty_folders['count'],
+                'dry_run': True,
+                'warning': '这是预览模式，实际删除需要审批'
+            }
+        else:
+            result = {'error': f'Unknown cleanup type: {cleanup_type}'}
 
-        # 确保是预览模式
-        result['dry_run'] = True
-        result['warning'] = '这是预览模式，实际删除需要审批'
         return result
 
     # ===== 审批流程处理 =====

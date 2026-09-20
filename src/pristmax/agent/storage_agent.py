@@ -802,7 +802,9 @@ class StorageAgent:
                     'category': cat,
                     'title': f'{cat.upper()} 类型占用过大',
                     'description': f'{cat} 类型文件共 {info["count"]} 个，占用 {info["size_display"]}',
-                    'action': f'建议使用专业压缩工具处理，或迁移到云存储'
+                    'action': f'建议使用专业压缩工具处理，或迁移到云存储',
+                    'size': info['size'],
+                    'action_type': 'category'
                 })
 
         # 检查大目录
@@ -812,10 +814,181 @@ class StorageAgent:
                     'type': 'tip',
                     'title': f'目录过大: {d["path"][:50]}...',
                     'description': f'占用 {d["size_display"]}',
-                    'action': '建议归档或清理'
+                    'action': '建议归档或清理',
+                    'size': d['size'],
+                    'action_type': 'directory'
                 })
 
+        # 重复文件
+        duplicates = self.find_duplicates(root_path)
+        duplicate_size = sum(d.wasted_space for d in duplicates)
+        if duplicate_size > 10 * 1024**2:  # > 10MB
+            suggestions.append({
+                'type': 'cleanup',
+                'category': 'duplicates',
+                'title': '重复文件',
+                'description': f'{len(duplicates)} 组重复文件，可节省空间',
+                'action': '查看并清理重复文件',
+                'size': duplicate_size,
+                'count': len(duplicates),
+                'action_type': 'duplicates'
+            })
+
+        # 临时文件
+        temp_files = self._find_temp_files(root_path)
+        if temp_files['count'] > 0:
+            suggestions.append({
+                'type': 'cleanup',
+                'category': 'temp',
+                'title': '临时文件',
+                'description': f'{temp_files["count"]} 个临时/备份文件',
+                'action': '清理临时文件',
+                'size': temp_files['size'],
+                'count': temp_files['count'],
+                'action_type': 'temp'
+            })
+
+        # 超大文件
+        large_files = self.analyze_large_files(root_path, min_size_mb=100, limit=100)
+        large_size = sum(f.size for f in large_files)
+        if large_size > 500 * 1024**2:  # > 500MB
+            suggestions.append({
+                'type': 'cleanup',
+                'category': 'large',
+                'title': '超大文件',
+                'description': f'{len(large_files)} 个超过 100MB 的文件',
+                'action': '查看并管理大文件',
+                'size': large_size,
+                'count': len(large_files),
+                'action_type': 'large'
+            })
+
+        # 空文件夹
+        empty_folders = self._find_empty_folders(root_path)
+        if empty_folders['count'] > 0:
+            suggestions.append({
+                'type': 'cleanup',
+                'category': 'empty',
+                'title': '空文件夹',
+                'description': f'{empty_folders["count"]} 个空文件夹可删除',
+                'action': '删除空文件夹',
+                'size': 0,
+                'count': empty_folders['count'],
+                'action_type': 'empty'
+            })
+
+        # 一年前文件
+        old_files = self._find_old_files(root_path, days=365)
+        if old_files['count'] > 0:
+            suggestions.append({
+                'type': 'cleanup',
+                'category': 'old',
+                'title': '一年前文件',
+                'description': f'{old_files["count"]} 个超过一年未修改的文件',
+                'action': '查看旧文件',
+                'size': old_files['size'],
+                'count': old_files['count'],
+                'action_type': 'old'
+            })
+
         return suggestions
+
+    def _find_temp_files(self, root_path: str) -> dict:
+        """查找临时文件"""
+        temp_patterns = ['.tmp', '.temp', '.bak', '.old', '~', '.cache']
+        temp_files = []
+        temp_size = 0
+
+        for dirpath, dirnames, filenames in os.walk(root_path):
+            dirnames[:] = [d for d in dirnames if not d.startswith('.')]
+            for filename in filenames:
+                if any(filename.endswith(p) or p in filename for p in temp_patterns):
+                    filepath = os.path.join(dirpath, filename)
+                    try:
+                        size = os.path.getsize(filepath)
+                        temp_files.append(filepath)
+                        temp_size += size
+                    except:
+                        pass
+
+        return {'count': len(temp_files), 'size': temp_size, 'files': temp_files}
+
+    def _find_empty_folders(self, root_path: str) -> dict:
+        """查找空文件夹"""
+        empty = []
+
+        for dirpath, dirnames, filenames in os.walk(root_path):
+            # 检查目录是否为空（不含子目录和非隐藏文件）
+            if not dirnames and not filenames:
+                empty.append(dirpath)
+
+        return {'count': len(empty), 'folders': empty}
+
+    def _find_old_files(self, root_path: str, days: int = 365) -> dict:
+        """查找超过指定天数的旧文件"""
+        import time
+        cutoff_time = time.time() - (days * 24 * 3600)
+        old_files = []
+        old_size = 0
+
+        for dirpath, dirnames, filenames in os.walk(root_path):
+            dirnames[:] = [d for d in dirnames if not d.startswith('.')]
+            for filename in filenames:
+                if filename.startswith('.'):
+                    continue
+                filepath = os.path.join(dirpath, filename)
+                try:
+                    mtime = os.path.getmtime(filepath)
+                    if mtime < cutoff_time:
+                        size = os.path.getsize(filepath)
+                        old_files.append(filepath)
+                        old_size += size
+                except:
+                    pass
+
+        return {'count': len(old_files), 'size': old_size, 'files': old_files}
+
+    def get_cleanup_summary(self, root_path: str) -> dict:
+        """获取清理摘要（用于饼图展示）"""
+        if not self._check_path_permission(root_path):
+            return {}
+
+        self.audit_logger.info("get_cleanup_summary", root_path)
+
+        suggestions = self.get_suggestions(root_path)
+        cleanup_items = [s for s in suggestions if s.get('action_type') in [
+            'duplicates', 'temp', 'large', 'empty', 'old'
+        ]]
+
+        total_cleanable = sum(s.get('size', 0) for s in cleanup_items)
+
+        return {
+            'total_cleanable': total_cleanable,
+            'total_cleanable_display': FileInfo.format_size(total_cleanable),
+            'items': [
+                {
+                    'icon': self._get_cleanup_icon(s['action_type']),
+                    'name': s['title'],
+                    'description': s['description'],
+                    'size': s.get('size', 0),
+                    'size_display': FileInfo.format_size(s.get('size', 0)),
+                    'count': s.get('count', 0),
+                    'type': s['action_type']
+                }
+                for s in cleanup_items
+            ]
+        }
+
+    def _get_cleanup_icon(self, action_type: str) -> str:
+        """获取清理类型图标"""
+        icons = {
+            'duplicates': '📦',
+            'temp': '🗑️',
+            'large': '🎬',
+            'empty': '📁',
+            'old': '📅'
+        }
+        return icons.get(action_type, '📄')
 
     def chat(self, root_path: str, question: str) -> str:
         """自然语言对话"""
@@ -1266,13 +1439,35 @@ def get_mcp_tools():
             }
         },
         {
+            'name': 'storage_cleanup_summary',
+            'description': '获取智能清理摘要（用于饼图展示）',
+            'inputSchema': {
+                'type': 'object',
+                'properties': {
+                    'path': {'type': 'string', 'description': '目录路径'}
+                },
+                'required': ['path']
+            }
+        },
+        {
+            'name': 'storage_analyze',
+            'description': '综合分析目录（返回存储统计+清理建议+分类数据）',
+            'inputSchema': {
+                'type': 'object',
+                'properties': {
+                    'path': {'type': 'string', 'description': '目录路径'}
+                },
+                'required': ['path']
+            }
+        },
+        {
             'name': 'storage_cleanup_preview',
             'description': '预览清理操作（不实际删除，仅预览）',
             'inputSchema': {
                 'type': 'object',
                 'properties': {
                     'path': {'type': 'string', 'description': '目录路径'},
-                    'type': {'type': 'string', 'enum': ['duplicates', 'large'], 'description': '清理类型'},
+                    'type': {'type': 'string', 'enum': ['duplicates', 'large', 'temp', 'old', 'empty'], 'description': '清理类型'},
                     'min_size_mb': {'type': 'integer', 'description': '大文件最小大小(MB)', 'default': 100}
                 },
                 'required': ['path', 'type']
