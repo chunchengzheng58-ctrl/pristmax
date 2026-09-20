@@ -204,8 +204,8 @@
                     <h3>Storage Agent CLI</h3>
                     <p class="agent-card-desc">智能存储管家 · 本地扫描分析</p>
                     <div class="agent-cli-box">
-                        <code>$ pip install pristmax</code>
-                        <button class="agent-copy-btn" data-copy="pip install pristmax" aria-label="复制命令">复制</button>
+                        <code>$ git clone https://github.com/chunchengzheng58-ctrl/pristmax && cd pristmax && pip install -r requirements.txt && python -m src.pristmax.agent.cli --help</code>
+                        <button class="agent-copy-btn" aria-label="复制命令" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.replace(/\s+/g,' ').trim()); this.textContent='已复制'; setTimeout(()=>this.textContent='复制',2000)">复制</button>
                     </div>
                 </div>
             </div>

@@ -41,8 +41,10 @@
 
     <h2 id="install">02 / 安装与开发环境启动</h2>
     <p>已有本项目源码时，可在隔离的测试环境中运行以下命令。先准备 Python、依赖与 FFmpeg；视频处理需要单独检查 FFmpeg 是否可用。</p>
-    <pre><code>python -m pip install -r src/pristmax/requirements.txt
-python main.py --host 127.0.0.1 --port 5001</code></pre>
+    <pre><code>git clone https://github.com/chunchengzheng58-ctrl/pristmax
+cd pristmax
+pip install -r requirements.txt
+python -m src.pristmax.agent.cli --help</code></pre>
     <p>启动后访问 <code>http://127.0.0.1:5001</code>。首次按界面完成账号配置。当前部分统计与模块仍使用演示数据，不能作为真实节省率证明。</p>
 
     <h2 id="pilot">03 / 试点验收</h2>
