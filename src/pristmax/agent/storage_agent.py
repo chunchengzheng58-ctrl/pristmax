@@ -2243,7 +2243,7 @@ class StorageAgent:
                 'description': f'{large_result.get("total", 0)} 个超过 100MB 的文件',
                 'action': '查看并管理大文件',
                 'size': large_size,
-                'count': len(large_files),
+                'count': len(large_items),
                 'action_type': 'large'
             })
 
@@ -2529,7 +2529,8 @@ class StorageAgent:
         self.audit_logger.info("cleanup_large_files", root_path,
                               {'min_size_mb': min_size_mb, 'dry_run': dry_run})
 
-        large_files = self.analyze_large_files(root_path, min_size_mb=min_size_mb, limit=1000)
+        large_result = self.analyze_large_files(root_path, min_size_mb=min_size_mb, limit=1000)
+        large_files = large_result.get('items', [])
         files_to_delete = [f.path for f in large_files]
 
         # 批量大小限制

@@ -89,15 +89,16 @@ def cmd_large_files(agent: StorageAgent, args):
     print(f"\n📦 查找大于 {min_mb}MB 的文件...")
     print("-" * 50)
 
-    files = agent.analyze_large_files(path, min_size_mb=min_mb, limit=limit)
+    result = agent.analyze_large_files(path, min_size_mb=min_mb, limit=limit)
+    files = result.get('items', [])
 
     if not files:
         print("   未找到符合条件的文件")
         return 0
 
-    print(f"\n✅ 找到 {len(files)} 个大文件:")
+    print(f"\n✅ 找到 {result.get('total', 0)} 个大文件:")
     total_wasted = sum(f.size for f in files)
-    for i, f in enumerate(files[:limit], 1):
+    for i, f in enumerate(files, 1):
         print(f"   #{i:2d}  {f.size_display:>8s}  {f.path}")
 
     print(f"\n   大文件总占用: {format_bytes(total_wasted)}")
