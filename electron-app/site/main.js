@@ -50,6 +50,8 @@
             'duplicates': '重复文件',
             'large': '大文件',
             'tasks': '任务',
+            'analysis': '存储分析',
+            'cleanup': '智能清理',
             'reports': '报告',
             'settings': '设置'
         };
@@ -69,6 +71,10 @@
             showDuplicatesPage();
         } else if (page === 'large' && scanResults) {
             showLargeFilesPage();
+        } else if (page === 'analysis' && scanResults) {
+            drawSizeChart();
+        } else if (page === 'cleanup' && scanResults) {
+            showCleanupSuggestions();
         }
     }
 
@@ -109,9 +115,12 @@
 
     // Load demo data for display
     function loadDemoData() {
+        const now = Date.now();
+        const oneYear = 365 * 24 * 60 * 60 * 1000;
+
         scanResults = {
             totalFiles: 12847,
-            totalSize: 128.5 * 1024 * 1024 * 1024, // bytes
+            totalSize: 128.5 * 1024 * 1024 * 1024,
             duplicates: 5,
             duplicateSize: 4.2 * 1024 * 1024 * 1024,
             largeFiles: [
@@ -124,7 +133,7 @@
             byCategory: {
                 video: 45 * 1024**3,
                 image: 25 * 1024**3,
-                document: 12 * 1024**3,
+                doc: 12 * 1024**3,
                 code: 8 * 1024**3,
                 other: 38.5 * 1024**3
             },
@@ -134,7 +143,15 @@
                 { name: 'report.docx', count: 5, size: 50 * 1024**2, wasted: 40 * 1024**2 },
                 { name: 'data_export.xlsx', count: 4, size: 30 * 1024**2, wasted: 22 * 1024**2 },
                 { name: 'image_assets.png', count: 6, size: 180 * 1024**2, wasted: 150 * 1024**2 }
-            ]
+            ],
+            allFiles: [
+                { name: 'report_final.docx', size: 5 * 1024**2, modified: new Date(now - 400 * 24 * 3600000).toISOString() },
+                { name: 'temp_backup.tmp', size: 50 * 1024**2, modified: new Date(now - 30 * 24 * 3600000).toISOString() },
+                { name: 'old_photo.jpg', size: 3 * 1024**2, modified: new Date(now - 2 * oneYear).toISOString() },
+                { name: 'notes.bak', size: 100 * 1024, modified: new Date(now - 60 * 24 * 3600000).toISOString() },
+                { name: 'video_draft.mp4', size: 200 * 1024**2, modified: new Date(now - 100 * 24 * 3600000).toISOString() }
+            ],
+            emptyFolders: 12
         };
 
         updateMetricsDisplay();
@@ -493,6 +510,192 @@
         const status = document.getElementById('status-text');
         if (status) status.textContent = text;
     }
+
+    // Draw Size Distribution Chart
+    function drawSizeChart() {
+        const canvas = document.getElementById('size-chart');
+        if (!canvas || !scanResults) return;
+
+        const ctx = canvas.getContext('2d');
+        const centerX = 90, centerY = 90, radius = 70;
+
+        // Clear canvas
+        ctx.clearRect(0, 0, 180, 180);
+
+        const categories = [
+            { name: '视频', key: 'video', color: '#e74c3c' },
+            { name: '图片', key: 'image', color: '#f39c12' },
+            { name: '文档', key: 'doc', color: '#3498db' },
+            { name: '代码', key: 'code', color: '#2ecc71' },
+            { name: '其他', key: 'other', color: '#9b59b6' }
+        ];
+
+        const data = categories.map(c => scanResults.byCategory[c.key] || 0);
+        const total = data.reduce((a, b) => a + b, 0);
+
+        // Update center text
+        document.getElementById('chart-total-size').textContent = formatSize(total);
+
+        // Draw pie
+        let startAngle = -Math.PI / 2;
+        data.forEach((val, i) => {
+            if (val === 0) return;
+            const sliceAngle = (val / total) * 2 * Math.PI;
+            ctx.fillStyle = categories[i].color;
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.arc(centerX, centerY, radius, startAngle, startAngle + sliceAngle);
+            ctx.closePath();
+            ctx.fill();
+            startAngle += sliceAngle;
+        });
+
+        // Update legend
+        const legendEl = document.getElementById('size-legend');
+        legendEl.innerHTML = categories.map((c, i) => {
+            const val = data[i];
+            const pct = total > 0 ? ((val / total) * 100).toFixed(1) : 0;
+            return `
+                <div class="legend-item">
+                    <div class="legend-dot" style="background:${c.color}"></div>
+                    <span class="legend-label">${c.name}</span>
+                    <span class="legend-value">${formatSize(val)}</span>
+                    <span class="legend-pct">${pct}%</span>
+                </div>
+            `;
+        }).join('');
+    }
+
+    // Show Cleanup Suggestions
+    function showCleanupSuggestions() {
+        if (!scanResults) return;
+
+        const suggestions = analyzeCleanupSuggestions();
+        const totalSavings = suggestions.reduce((sum, s) => sum + s.size, 0);
+
+        document.getElementById('cleanup-total').textContent = formatSize(totalSavings);
+
+        const listEl = document.getElementById('cleanup-list');
+        listEl.innerHTML = suggestions.map((s, i) => `
+            <div class="cleanup-item">
+                <div class="cleanup-icon">${s.icon}</div>
+                <div class="cleanup-info">
+                    <div class="cleanup-name">${s.name}</div>
+                    <div class="cleanup-desc">${s.desc}</div>
+                </div>
+                <div class="cleanup-size">${formatSize(s.size)}</div>
+                <div class="cleanup-actions">
+                    <button class="cleanup-btn view" onclick="viewCleanupDetails(${i})">查看</button>
+                    <button class="cleanup-btn clean" onclick="cleanFiles(${i})">清理</button>
+                </div>
+            </div>
+        `).join('');
+
+        // Store suggestions globally for button handlers
+        window.cleanupSuggestions = suggestions;
+    }
+
+    // Analyze cleanup suggestions
+    function analyzeCleanupSuggestions() {
+        const suggestions = [];
+
+        if (!scanResults) return suggestions;
+
+        // 1. 重复文件
+        if (scanResults.duplicateSize > 0) {
+            suggestions.push({
+                icon: '📦',
+                name: '重复文件',
+                desc: `${scanResults.duplicates} 个重复文件，可节省空间`,
+                size: scanResults.duplicateSize,
+                type: 'duplicates'
+            });
+        }
+
+        // 2. 大文件
+        const largeFilesSize = scanResults.largeFiles?.reduce((sum, f) => sum + f.size, 0) || 0;
+        if (largeFilesSize > 500 * 1024 * 1024) {
+            suggestions.push({
+                icon: '🎬',
+                name: '超大文件',
+                desc: `${scanResults.largeFiles?.length || 0} 个超过 100MB 的文件`,
+                size: largeFilesSize,
+                type: 'large'
+            });
+        }
+
+        // 3. 临时文件
+        const tempPatterns = ['.tmp', '.temp', '.bak', '.old', '~'];
+        let tempSize = 0;
+        let tempCount = 0;
+        if (scanResults.allFiles) {
+            scanResults.allFiles.forEach(f => {
+                if (tempPatterns.some(p => f.name.includes(p))) {
+                    tempSize += f.size;
+                    tempCount++;
+                }
+            });
+        }
+        if (tempSize > 0) {
+            suggestions.push({
+                icon: '🗑️',
+                name: '临时文件',
+                desc: `${tempCount} 个临时/备份文件`,
+                size: tempSize,
+                type: 'temp'
+            });
+        }
+
+        // 4. 空文件夹
+        let emptyFolders = 0;
+        if (scanResults.emptyFolders) {
+            emptyFolders = scanResults.emptyFolders;
+        }
+        if (emptyFolders > 0) {
+            suggestions.push({
+                icon: '📁',
+                name: '空文件夹',
+                desc: `${emptyFolders} 个空文件夹可删除`,
+                size: 0,
+                type: 'empty'
+            });
+        }
+
+        // 5. 旧文件（超过1年未修改）
+        const oneYearAgo = Date.now() - 365 * 24 * 60 * 60 * 1000;
+        let oldSize = 0, oldCount = 0;
+        if (scanResults.allFiles) {
+            scanResults.allFiles.forEach(f => {
+                if (!f.isDirectory && f.modified && new Date(f.modified).getTime() < oneYearAgo) {
+                    oldSize += f.size;
+                    oldCount++;
+                }
+            });
+        }
+        if (oldSize > 100 * 1024 * 1024) {
+            suggestions.push({
+                icon: '📅',
+                name: '一年前文件',
+                desc: `${oldCount} 个超过一年未修改的文件`,
+                size: oldSize,
+                type: 'old'
+            });
+        }
+
+        return suggestions;
+    }
+
+    // View cleanup details (placeholder)
+    window.viewCleanupDetails = function(index) {
+        const s = window.cleanupSuggestions[index];
+        showNotification(`查看 ${s.name}: ${s.desc}`);
+    };
+
+    // Clean files (placeholder)
+    window.cleanFiles = function(index) {
+        const s = window.cleanupSuggestions[index];
+        showNotification(`清理 ${s.name}: ${formatSize(s.size)} 已清理`);
+    };
 
     // Utility functions
     function getFileIcon(filename) {

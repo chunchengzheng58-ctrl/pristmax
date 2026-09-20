@@ -411,6 +411,122 @@
         /* Page visibility */
         .page-content { display: none; flex-direction: column; gap: 16px; flex: 1; }
         .page-content.active { display: flex; }
+
+        /* Chart Container */
+        .chart-container {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+            padding: 16px 0;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            width: 180px;
+            height: 180px;
+        }
+
+        .chart-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .chart-center-value { font-size: 20px; font-weight: 700; }
+        .chart-center-label { font-size: 10px; color: var(--text-muted); }
+
+        .chart-legend {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .legend-label { flex: 1; color: var(--text-muted); }
+        .legend-value { font-weight: 600; }
+        .legend-pct { color: var(--text-muted); font-size: 11px; width: 40px; text-align: right; }
+
+        /* Cleanup Card */
+        .cleanup-section { margin-bottom: 16px; }
+
+        .cleanup-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 6px;
+            background: var(--bg);
+            margin-bottom: 8px;
+        }
+
+        .cleanup-icon { font-size: 20px; }
+
+        .cleanup-info { flex: 1; }
+        .cleanup-name { font-size: 13px; font-weight: 500; }
+        .cleanup-desc { font-size: 11px; color: var(--text-muted); }
+        .cleanup-size { font-size: 13px; font-weight: 600; color: var(--danger); }
+
+        .cleanup-actions { display: flex; gap: 8px; }
+
+        .cleanup-btn {
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 11px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.15s;
+        }
+
+        .cleanup-btn.clean { background: var(--danger); color: white; }
+        .cleanup-btn.clean:hover { opacity: 0.85; }
+        .cleanup-btn.view { background: var(--bg); border: 1px solid var(--border); color: var(--text); }
+
+        .cleanup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .cleanup-total {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .cleanup-total strong { color: var(--danger); font-size: 16px; }
+
+        /* Scan animation */
+        .scanning .storage-fill { animation: pulse 1s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        /* Progress bar */
+        .progress-bar {
+            height: 4px;
+            background: var(--bg);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            transition: width 0.3s;
+        }
     </style>
 </head>
 <body>
@@ -465,6 +581,16 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <polyline points="9,11 12,14 22,4"/>
                     <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+                </svg>
+            </div>
+            <div class="sidebar-icon" data-page="analysis" title="分析">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 21H3V3"/><path d="M21 9l-6 6-3-3-6 6"/>
+                </svg>
+            </div>
+            <div class="sidebar-icon" data-page="cleanup" title="清理">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="3,6 5,6 21,6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
                 </svg>
             </div>
             <div class="sidebar-icon" data-page="reports" title="报告">
@@ -604,13 +730,38 @@
                 <!-- Reports Page -->
                 <div class="page-content" id="page-reports">
                     <div class="panel" style="flex:1;">
-                        <div class="panel-header"><span class="panel-title">分析报告</span></div>
+                        <div class="panel-header"><span class="panel-title">存储分析</span></div>
                         <div class="panel-body">
-                            <div class="empty-state">
-                                <div class="empty-state-icon">📊</div>
-                                <h3>暂无报告</h3>
-                                <p>完成扫描后自动生成报告</p>
+                            <div class="chart-container">
+                                <div class="chart-wrapper">
+                                    <canvas id="size-chart" width="180" height="180"></canvas>
+                                    <div class="chart-center">
+                                        <div class="chart-center-value" id="chart-total-size">0 GB</div>
+                                        <div class="chart-center-label">总大小</div>
+                                    </div>
+                                </div>
+                                <div class="chart-legend" id="size-legend"></div>
                             </div>
+                            <div class="progress-bar" style="margin-top:16px;">
+                                <div class="progress-fill" id="scan-progress" style="width:0%"></div>
+                            </div>
+                            <p style="font-size:11px;color:var(--text-muted);margin-top:8px;text-align:center" id="scan-status">点击扫描开始分析</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cleanup Page -->
+                <div class="page-content" id="page-cleanup">
+                    <div class="panel" style="flex:1;">
+                        <div class="panel-header">
+                            <span class="panel-title">智能清理</span>
+                        </div>
+                        <div class="panel-body">
+                            <div class="cleanup-header">
+                                <span class="cleanup-total">可清理空间: <strong id="cleanup-total">0 GB</strong></span>
+                                <button class="top-bar-btn primary" id="btn-clean-all" style="padding:4px 12px;font-size:11px">一键清理</button>
+                            </div>
+                            <div id="cleanup-list"></div>
                         </div>
                     </div>
                 </div>
