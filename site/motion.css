@@ -92,54 +92,6 @@ html {
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}::selection{background:oklch(0.70 0.10 245);color:#000}.paper-wing{will-change:auto;transform:none!important}}
 
 /* === Contributor marquee (Semantix-inspired) === */
-@keyframes marquee-slide {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-@keyframes marquee-slide-reverse {
-  from { transform: translateX(-50%); }
-  to { transform: translateX(0); }
-}
-.contributor-track {
-  overflow: hidden;
-  -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
-  mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
-}
-.contributor-row {
-  display: flex;
-  width: max-content;
-  animation: marquee-slide 38s linear infinite;
-  will-change: transform;
-}
-.contributor-row--reverse {
-  animation-name: marquee-slide-reverse;
-}
-.contributor-track:is(:hover, :focus-within) .contributor-row {
-  animation-play-state: paused;
-}
-
-/* Local animation overlays share the painting's exact framing on all screens. */
-.living-painting{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:hidden}
-.landscape-mist{opacity:.24;animation-duration:14s}
-.landscape-mist-near{opacity:.16;animation-duration:20s}
-footer.in-view .art-paused .landscape-mist{animation-play-state:paused}
-.art-reduced .living-painting{display:none}
-.landscape-toggle{display:block;margin:8px 0 18px auto;padding:9px 12px;background:transparent;color:#d4e7f6;border:1px solid #7895ad;font:10px Consolas,monospace;cursor:pointer}
-.landscape-toggle[hidden]{display:none}
-.landscape-toggle:focus-visible{outline:2px solid #e5be6b;outline-offset:4px}
-.landscape-toggle:disabled{cursor:default;opacity:.7}
-@media(prefers-reduced-motion:reduce){.living-painting{display:none}}
-@media (prefers-reduced-motion: reduce) {
-  .contributor-row { animation: none; transform: none; }
-}
-
-html{scroll-behavior:smooth;scrollbar-gutter:stable;-webkit-font-smoothing:antialiased;-moz-font-smoothing:antialiased}
-::selection{background:oklch(0.55 0.12 245);color:#fff}
-::-moz-selection{background:oklch(0.55 0.12 245);color:#fff}
-::-webkit-scrollbar{width:6px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:oklch(0.55 0.08 245);border-radius:3px}
-::-webkit-scrollbar-thumb:hover{background:oklch(0.60 0.10 245)}
 /* Contributors section */
 .contributors-section {
   margin-top: 40px;
@@ -199,7 +151,7 @@ html{scroll-behavior:smooth;scrollbar-gutter:stable;-webkit-font-smoothing:antia
 .contributors-row {
   display: flex;
   width: max-content;
-  animation: contributors-slide 30s linear infinite;
+  animation: contributors-slide 38s linear infinite;
   will-change: transform;
   gap: 24px;
 }
@@ -235,6 +187,12 @@ html{scroll-behavior:smooth;scrollbar-gutter:stable;-webkit-font-smoothing:antia
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid #e0e0e0;
+  filter: saturate(0.75);
+  transition: filter 0.3s, transform 0.3s;
+}
+.contributor-item:hover img {
+  filter: saturate(1);
+  transform: scale(1.05);
 }
 .contributor-item span {
   font: 11px/1 Consolas, monospace;
@@ -244,6 +202,29 @@ html{scroll-behavior:smooth;scrollbar-gutter:stable;-webkit-font-smoothing:antia
 @media (prefers-reduced-motion: reduce) {
   .contributors-row { animation: none; transform: none; }
 }
+
+/* Local animation overlays share the painting's exact framing on all screens. */
+.living-painting{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:hidden}
+.landscape-mist{opacity:.24;animation-duration:14s}
+.landscape-mist-near{opacity:.16;animation-duration:20s}
+footer.in-view .art-paused .landscape-mist{animation-play-state:paused}
+.art-reduced .living-painting{display:none}
+.landscape-toggle{display:block;margin:8px 0 18px auto;padding:9px 12px;background:transparent;color:#d4e7f6;border:1px solid #7895ad;font:10px Consolas,monospace;cursor:pointer}
+.landscape-toggle[hidden]{display:none}
+.landscape-toggle:focus-visible{outline:2px solid #e5be6b;outline-offset:4px}
+.landscape-toggle:disabled{cursor:default;opacity:.7}
+@media(prefers-reduced-motion:reduce){.living-painting{display:none}}
+@media (prefers-reduced-motion: reduce) {
+  .contributor-row { animation: none; transform: none; }
+}
+
+html{scroll-behavior:smooth;scrollbar-gutter:stable;-webkit-font-smoothing:antialiased;-moz-font-smoothing:antialiased}
+::selection{background:oklch(0.55 0.12 245);color:#fff}
+::-moz-selection{background:oklch(0.55 0.12 245);color:#fff}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:oklch(0.55 0.08 245);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:oklch(0.60 0.10 245)}
 
 /* === Community section === */
 .section-community {
