@@ -521,6 +521,10 @@ class StorageAgent:
         self.approval_manager = ApprovalManager(db_path)
         self.audit_logger = AuditLogger(db_path)
 
+        # 缓存配置
+        self.cache_ttl_seconds = 3600  # 缓存1小时
+        self.cache_enabled = True
+
     def _init_db(self):
         self.conn = sqlite3.connect(self.db_path, check_same_thread=False)
         self.conn.execute('''
@@ -542,6 +546,77 @@ class StorageAgent:
         self.conn.execute('''
             CREATE INDEX IF NOT EXISTS idx_hash ON file_cache(hash)
         ''')
+        # 扫描结果缓存表
+        self.conn.execute('''
+            CREATE TABLE IF NOT EXISTS scan_cache (
+                path TEXT PRIMARY KEY,
+                cache_key TEXT,
+                result_json TEXT,
+                scanned_at TEXT,
+                expires_at TEXT
+            )
+        ''')
+        self.conn.commit()
+
+    def _get_cache_key(self, path: str) -> str:
+        """生成缓存键（基于路径和修改时间）"""
+        try:
+            stat = os.stat(path)
+            mtime = int(stat.st_mtime)
+            # 包含根目录修改时间和子目录数
+            subdirs = sum(1 for _ in os.scandir(path) if _.is_dir())
+            return f"{path}:{mtime}:{subdirs}"
+        except:
+            return path
+
+    def _get_cached_result(self, path: str) -> Optional[dict]:
+        """获取缓存的扫描结果"""
+        if not self.cache_enabled:
+            return None
+
+        try:
+            cursor = self.conn.execute(
+                'SELECT result_json, expires_at FROM scan_cache WHERE path = ?',
+                (path,)
+            )
+            row = cursor.fetchone()
+            if row:
+                result_json, expires_at = row
+                # 检查是否过期
+                if expires_at:
+                    expires_time = datetime.fromisoformat(expires_at)
+                    if datetime.now() < expires_time:
+                        return json.loads(result_json)
+                    else:
+                        # 缓存过期，删除
+                        self.conn.execute('DELETE FROM scan_cache WHERE path = ?', (path,))
+                        self.conn.commit()
+        except:
+            pass
+        return None
+
+    def _save_cached_result(self, path: str, result: dict):
+        """保存扫描结果到缓存"""
+        if not self.cache_enabled:
+            return
+
+        try:
+            cache_key = self._get_cache_key(path)
+            expires_at = datetime.now().timestamp() + self.cache_ttl_seconds
+            self.conn.execute('''
+                INSERT OR REPLACE INTO scan_cache (path, cache_key, result_json, scanned_at, expires_at)
+                VALUES (?, ?, ?, ?, ?)
+            ''', (path, cache_key, json.dumps(result, default=str), datetime.now().isoformat(), datetime.fromtimestamp(expires_at).isoformat()))
+            self.conn.commit()
+        except:
+            pass
+
+    def clear_cache(self, path: str = None):
+        """清除缓存"""
+        if path:
+            self.conn.execute('DELETE FROM scan_cache WHERE path = ?', (path,))
+        else:
+            self.conn.execute('DELETE FROM scan_cache')
         self.conn.commit()
 
     def _check_path_permission(self, path: str) -> bool:
@@ -650,14 +725,22 @@ class StorageAgent:
         self,
         root_path: str,
         incremental: bool = True,
-        progress: Callable = None
+        progress: Callable = None,
+        use_cache: bool = True
     ) -> dict:
-        """获取存储统计（并行扫描优化）"""
+        """获取存储统计（并行扫描+缓存优化）"""
         # 权限检查
         if not self._check_path_permission(root_path):
             raise PermissionError(f"路径 {root_path} 不在允许范围内")
 
         self.audit_logger.info("storage_stats", root_path)
+
+        # 尝试从缓存获取
+        if use_cache and incremental:
+            cached = self._get_cached_result(root_path)
+            if cached:
+                self.audit_logger.info("cache_hit", root_path)
+                return {**cached, 'from_cache': True}
 
         # 资源限制检查
         allowed, msg = self._check_resource_limit(root_path)
@@ -738,7 +821,7 @@ class StorageAgent:
             reverse=True
         )[:10]
 
-        return {
+        final_result = {
             'total_files': result['total_files'],
             'total_size': result['total_size'],
             'total_size_display': FileInfo.format_size(result['total_size']),
@@ -753,6 +836,12 @@ class StorageAgent:
             'largest_dirs': largest_dirs,
             'scan_type': 'incremental' if incremental else 'full'
         }
+
+        # 保存到缓存
+        if use_cache:
+            self._save_cached_result(root_path, final_result)
+
+        return final_result
 
     def analyze_large_files(
         self,

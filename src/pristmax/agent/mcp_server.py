@@ -106,6 +106,10 @@ class StorageAgentMCPServer:
 
             # 审计日志
             "storage_audit_log": self._handle_audit_log,
+
+            # 缓存管理
+            "storage_cache_clear": self._handle_cache_clear,
+            "storage_cache_status": self._handle_cache_status,
         }
 
     def get_tools_list(self) -> list:
@@ -283,6 +287,26 @@ class StorageAgentMCPServer:
                         "operation": {"type": "string", "description": "操作类型"},
                         "limit": {"type": "integer", "description": "返回数量", "default": 100}
                     }
+                }
+            },
+
+            # ===== 缓存管理 =====
+            {
+                "name": "storage_cache_clear",
+                "description": "清除扫描缓存",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "path": {"type": "string", "description": "清除指定路径缓存（不填则清除所有）"}
+                    }
+                }
+            },
+            {
+                "name": "storage_cache_status",
+                "description": "查看缓存状态",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {}
                 }
             }
         ]
@@ -565,6 +589,34 @@ class StorageAgentMCPServer:
             "message": "审计日志功能需要持久化存储",
             "hint": "使用 --db 参数启动服务器以保存审计日志"
         }
+
+    # ===== 缓存管理处理 =====
+
+    def _handle_cache_clear(self, params: dict) -> dict:
+        """Handle cache clear"""
+        path = params.get("path")
+        if path:
+            self.agent.clear_cache(path)
+            return {"success": True, "message": f"已清除路径 {path} 的缓存"}
+        else:
+            self.agent.clear_cache()
+            return {"success": True, "message": "已清除所有缓存"}
+
+    def _handle_cache_status(self, params: dict) -> dict:
+        """Handle cache status"""
+        try:
+            cursor = self.agent.conn.execute('SELECT COUNT(*), MAX(expires_at) FROM scan_cache')
+            row = cursor.fetchone()
+            count = row[0] if row else 0
+            max_expires = row[1] if row and row[1] else None
+            return {
+                "cache_enabled": self.agent.cache_enabled,
+                "cache_ttl_seconds": self.agent.cache_ttl_seconds,
+                "cached_paths": count,
+                "oldest_expires": max_expires
+            }
+        except Exception as e:
+            return {"error": str(e)}
 
     # ===== MCP 协议处理 =====
 
