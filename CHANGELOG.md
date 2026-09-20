@@ -4,6 +4,40 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2.0.0] - 2026-09-20
+
+### Added
+
+#### Phase 1: Performance Optimization
+- **Parallel Scanning** - ThreadPoolExecutor parallel directory scanning
+- **SQLite Caching** - TTL-based cache with automatic expiration
+- **Pagination** - Large file results with offset/limit
+
+#### Phase 2: Feature Enhancement
+- **Progress Tracking** - ScanProgressTracker for real-time progress
+- **Incremental Scanning** - watchdog-based file monitoring
+- **Content Search** - Regex search within file contents
+
+#### Phase 3: Integration
+- **Scheduled Tasks** - APScheduler cron-based scheduling
+- **Cloud Storage** - S3/OSS/MinIO integration
+- **Desktop Sync** - Local + cloud scan result sync
+
+### Changed
+- **Code Quality**: Logging system, path traversal protection, symlink detection
+- **Performance**: Generator-based iteration, fast hash, frozenset lookups
+- **Health Check**: System health endpoint
+- **File Type Detection**: Magic bytes (magic numbers)
+
+### Added MCP Tools
+- storage_monitor_start/stop/changes
+- storage_incremental_scan
+- storage_search_content
+- storage_schedule_add/remove/list
+- storage_cloud_config/status/upload/download/sync
+- storage_sync_save/list/to_cloud/from_cloud
+- storage_health, storage_cache_stats, storage_history, storage_clear_expired
+
 ## [1.1.0] - 2026-09-19
 
 ### Added
