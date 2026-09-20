@@ -94,54 +94,77 @@ html {
 /* === Contributor marquee (Semantix-inspired) === */
 /* Contributors section */
 .contributors-section {
-  margin-top: 40px;
+  margin-top: 60px;
   text-align: center;
+  padding: 0 20px;
 }
 .contributors-header {
+  margin-bottom: 28px;
+}
+.contributors-title {
+  font: 28px/1.2 Georgia, serif;
+  font-weight: 600;
+  color: #113577;
+  margin: 0 0 6px;
+  letter-spacing: -0.02em;
+}
+.contributors-subtitle {
+  font: 14px/1 Consolas, monospace;
+  color: #666;
+  margin: 0;
+  letter-spacing: 2px;
+}
+.contributors-cta-group {
   display: flex;
-  align-items: center;
   justify-content: center;
-  gap: 20px;
-  margin-bottom: 12px;
+  gap: 16px;
+  margin-bottom: 20px;
   flex-wrap: wrap;
 }
-.contributors-label {
-  font: 10px/1 Consolas, monospace;
-  letter-spacing: 3px;
-  color: #666;
-  text-transform: uppercase;
-  margin-bottom: 0;
-}
-.contributors-actions {
-  display: flex;
+.contributor-btn {
+  display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
+  padding: 14px 28px;
+  border-radius: 8px;
+  font: 15px/1 system-ui, sans-serif;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.25s ease;
 }
-.contributor-cta {
-  font: 11px/1 system-ui, sans-serif;
-  color: #fff;
+.contributor-btn-primary {
   background: #113577;
-  padding: 6px 14px;
-  border-radius: 16px;
-  text-decoration: none;
-  transition: background 0.2s;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(17,53,119,0.25);
 }
-.contributor-cta:hover {
+.contributor-btn-primary:hover {
   background: #0c2854;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(17,53,119,0.3);
 }
-.contributor-link {
-  font: 11px/1 system-ui, sans-serif;
-  color: #477f9f;
-  text-decoration: none;
-  transition: color 0.2s;
-}
-.contributor-link:hover {
+.contributor-btn-secondary {
+  background: #fff;
   color: #113577;
+  border: 2px solid #113577;
+}
+.contributor-btn-secondary:hover {
+  background: #113577;
+  color: #fff;
+  transform: translateY(-2px);
+}
+.btn-icon {
+  font-size: 18px;
+}
+.btn-text {
+  letter-spacing: 0.5px;
+}
+.btn-arrow {
+  font-size: 16px;
 }
 .contributors-note {
-  font: 10px/1 system-ui, sans-serif;
+  font: 12px/1 system-ui, sans-serif;
   color: #999;
-  margin-bottom: 16px;
+  margin: 0;
 }
 .contributors-track {
   overflow: hidden;
