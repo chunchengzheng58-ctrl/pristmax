@@ -199,30 +199,157 @@ def cmd_export(agent: StorageAgent, args):
         return 1
 
 
-def cmd_chat(agent: StorageAgent, args):
-    """对话命令"""
-    path = args.path or os.getcwd()
+def get_desktop_path() -> str:
+    """获取桌面路径"""
+    if sys.platform == 'win32':
+        return os.path.join(os.path.expanduser('~'), 'Desktop')
+    elif sys.platform == 'darwin':
+        return os.path.join(os.path.expanduser('~'), 'Desktop')
+    else:
+        return os.path.join(os.path.expanduser('~'), 'desktop')
 
-    print(f"\n🤖 Storage Agent 对话模式")
-    print(f"   扫描目录: {path}")
-    print(f"   输入 'quit' 或 'exit' 退出\n")
+def cmd_desktop(agent: StorageAgent, args):
+    """桌面整理命令"""
+    desktop = get_desktop_path()
 
-    while True:
-        try:
-            user_input = input("\n你: ").strip()
-        except (EOFError, KeyboardInterrupt):
-            print("\n\n👋 再见!")
-            return 0
+    print(f"\n🗂️ 桌面整理: {desktop}")
+    print("=" * 50)
 
-        if not user_input:
-            continue
+    # 扫描桌面
+    files = []
+    folders = []
+    shortcuts = []
 
-        if user_input.lower() in ['quit', 'exit', 'q', '退出']:
-            print("👋 再见!")
-            return 0
+    try:
+        items = os.listdir(desktop)
+    except Exception as e:
+        print(f"❌ 无法访问桌面: {e}")
+        return 1
 
-        response = agent.chat(path, user_input)
-        print(f"\nAgent: {response}")
+    for item in items:
+        full_path = os.path.join(desktop, item)
+        if os.path.isfile(full_path):
+            ext = os.path.splitext(item)[1].lower()
+            if ext in ['.lnk', '.url', '.exe']:
+                shortcuts.append({'name': item, 'path': full_path})
+            else:
+                files.append({'name': item, 'path': full_path, 'ext': ext})
+        elif os.path.isdir(full_path):
+            folders.append({'name': item, 'path': full_path})
+
+    print(f"\n📊 桌面概览:")
+    print(f"   文件: {len(files)} 个")
+    print(f"   快捷方式: {len(shortcuts)} 个")
+    print(f"   文件夹: {len(folders)} 个")
+
+    # 智能分类
+    ext_map = {
+        '图片': [],
+        '文档': [],
+        '视频': [],
+        '音频': [],
+        '代码': [],
+        '压缩包': [],
+        '其他': [],
+    }
+
+    # 扩展名映射
+    ext_categories = {
+        '图片': ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp', '.svg', '.ico'],
+        '文档': ['.doc', '.docx', '.pdf', '.txt', '.xls', '.xlsx', '.ppt', '.pptx', '.md'],
+        '视频': ['.mp4', '.avi', '.mkv', '.mov', '.wmv', '.flv', '.webm'],
+        '音频': ['.mp3', '.wav', '.flac', '.aac', '.ogg', '.m4a'],
+        '代码': ['.py', '.js', '.java', '.c', '.cpp', '.h', '.html', '.css', '.json', '.xml'],
+        '压缩包': ['.zip', '.rar', '.7z', '.tar', '.gz'],
+    }
+
+    for f in files:
+        categorized = False
+        for cat, extensions in ext_categories.items():
+            if f['ext'] in extensions:
+                ext_map[cat].append(f)
+                categorized = True
+                break
+        if not categorized:
+            ext_map['其他'].append(f)
+
+    # 显示分类预览
+    print(f"\n📋 分类预览:")
+    for cat, items in ext_map.items():
+        if items:
+            icon = {'图片': '🖼️', '文档': '📄', '视频': '🎬', '音频': '🎵', '代码': '💻', '压缩包': '📦', '其他': '📁'}.get(cat, '📁')
+            print(f"\n   {icon} {cat} ({len(items)} 个):")
+            for item in items[:5]:
+                print(f"      - {item['name']}")
+            if len(items) > 5:
+                print(f"      ... 还有 {len(items) - 5} 个")
+
+    if shortcuts:
+        print(f"\n   📁 快捷方式 ({len(shortcuts)} 个):")
+        for s in shortcuts[:5]:
+            print(f"      - {s['name']}")
+        if len(shortcuts) > 5:
+            print(f"      ... 还有 {len(shortcuts) - 5} 个")
+
+    # 确认执行
+    print(f"\n" + "=" * 50)
+    if args.execute:
+        print("🛠️  执行整理...")
+    else:
+        print("🔍 预览模式 (添加 --execute 执行整理)")
+
+    # 创建分类文件夹
+    created_folders = []
+    for cat, items in ext_map.items():
+        if items:
+            folder_path = os.path.join(desktop, cat)
+
+            if not os.path.exists(folder_path):
+                if args.execute:
+                    os.makedirs(folder_path)
+                created_folders.append(cat)
+                print(f"\n📂 {'创建文件夹' if args.execute else '将创建'}: {cat}/")
+
+            # 移动文件
+            for item in items:
+                new_path = os.path.join(folder_path, item['name'])
+                if args.execute:
+                    try:
+                        os.rename(item['path'], new_path)
+                        print(f"   ✓ 移动: {item['name']} → {cat}/")
+                    except Exception as e:
+                        print(f"   ✗ 失败: {item['name']} - {e}")
+                else:
+                    print(f"   → {item['name']} → {cat}/")
+
+    # 移动快捷方式
+    if shortcuts:
+        shortcut_folder = os.path.join(desktop, '快捷方式')
+        if not os.path.exists(shortcut_folder):
+            if args.execute:
+                os.makedirs(shortcut_folder)
+            created_folders.append('快捷方式')
+            print(f"\n📂 {'创建文件夹' if args.execute else '将创建'}: 快捷方式/")
+
+        for s in shortcuts:
+            new_path = os.path.join(shortcut_folder, s['name'])
+            if args.execute:
+                try:
+                    os.rename(s['path'], new_path)
+                    print(f"   ✓ 移动: {s['name']} → 快捷方式/")
+                except Exception as e:
+                    print(f"   ✗ 失败: {s['name']} - {e}")
+            else:
+                print(f"   → {s['name']} → 快捷方式/")
+
+    if args.execute:
+        print(f"\n✅ 整理完成!")
+        print(f"   已创建 {len(created_folders)} 个文件夹")
+        print(f"   已整理 {len(files) + len(shortcuts)} 个项目")
+    else:
+        print(f"\n💡 添加 --execute 执行此次整理")
+
+    return 0
 
 
 def cmd_suggest(agent: StorageAgent, args):
@@ -409,6 +536,8 @@ def main():
   %(prog)s --chat                     进入对话交互模式
   %(prog)s --monitor --interval 30    监控模式 (30秒检测一次)
   %(prog)s serve --port 5002          启动API服务
+  %(prog)s --desktop                 整理桌面文件
+  %(prog)s --desktop --execute        执行桌面整理
         """
     )
 
@@ -424,6 +553,7 @@ def main():
     parser.add_argument('--chat', action='store_true', help='对话交互模式')
     parser.add_argument('--monitor', action='store_true', help='监控模式')
     parser.add_argument('--serve', action='store_true', help='启动API服务')
+    parser.add_argument('--desktop', action='store_true', help='整理桌面文件')
     parser.add_argument('--min', type=int, default=100, help='最小大小(MB for files, KB for dupes)')
     parser.add_argument('--limit', type=int, default=20, help='返回结果数量限制')
     parser.add_argument('--port', type=int, default=5002, help='API服务端口')
@@ -441,7 +571,7 @@ def main():
     agent = StorageAgent(db_path=db_path)
 
     # 如果没有指定命令，默认分析
-    if not any([args.analyze, args.large_files, args.duplicates, args.stats, args.serve, args.export, args.suggest, args.chat, args.monitor, args.cleanup_duplicates, args.cleanup_large]):
+    if not any([args.analyze, args.large_files, args.duplicates, args.stats, args.serve, args.export, args.suggest, args.chat, args.monitor, args.cleanup_duplicates, args.cleanup_large, args.desktop]):
         args.analyze = True
 
     try:
@@ -467,6 +597,8 @@ def main():
             return cmd_monitor(agent, args)
         elif args.serve:
             return cmd_serve(agent, args)
+        elif args.desktop:
+            return cmd_desktop(agent, args)
     finally:
         agent.close()
 
