@@ -706,12 +706,25 @@ def cmd_monitor(agent: StorageAgent, args):
         return 0
 
 
-def cmd_serve(agent: StorageAgent, args):
+def cmd_serve(agent: StorageAgent, args, open_browser: bool = False):
     """启动API服务"""
     from src.pristmax.agent.api import app
+    import webbrowser
+    import threading
+
     print(f"\n🚀 启动 Storage Agent API 服务...")
     print(f"   端口: {args.port}")
     print(f"   访问: http://localhost:{args.port}/api/agent/stats?path=/data")
+    print(f"   Web UI: http://localhost:{args.port}/")
+
+    # 如果需要，打开浏览器
+    if open_browser:
+        def open_browser_delayed():
+            import time
+            time.sleep(1.5)  # 等待服务启动
+            webbrowser.open(f'http://localhost:{args.port}/')
+        threading.Thread(target=open_browser_delayed, daemon=True).start()
+
     app.run(host='0.0.0.0', port=args.port, debug=False)
     return 0
 
@@ -753,6 +766,7 @@ def main():
     parser.add_argument('--chat', action='store_true', help='对话交互模式')
     parser.add_argument('--monitor', action='store_true', help='监控模式')
     parser.add_argument('--serve', action='store_true', help='启动API服务')
+    parser.add_argument('--gui', action='store_true', help='启动API并打开浏览器')
     parser.add_argument('--desktop', action='store_true', help='整理桌面文件')
     parser.add_argument('--desktop-mode', choices=['type', 'time', 'project'], default='type', help='桌面整理模式: type=按类型, time=按时间, project=按项目')
     parser.add_argument('--undo', action='store_true', help='撤销上次桌面整理')
@@ -773,7 +787,7 @@ def main():
     agent = StorageAgent(db_path=db_path)
 
     # 如果没有指定命令，默认分析
-    if not any([args.analyze, args.large_files, args.duplicates, args.stats, args.serve, args.export, args.suggest, args.chat, args.monitor, args.cleanup_duplicates, args.cleanup_large, args.desktop]):
+    if not any([args.analyze, args.large_files, args.duplicates, args.stats, args.serve, args.gui, args.export, args.suggest, args.chat, args.monitor, args.cleanup_duplicates, args.cleanup_large, args.desktop]):
         args.analyze = True
 
     try:
@@ -797,8 +811,8 @@ def main():
             return cmd_chat(agent, args)
         elif args.monitor:
             return cmd_monitor(agent, args)
-        elif args.serve:
-            return cmd_serve(agent, args)
+        elif args.serve or args.gui:
+            return cmd_serve(agent, args, open_browser=args.gui)
         elif args.undo:
             return cmd_desktop_undo(agent, args)
         elif args.desktop:
