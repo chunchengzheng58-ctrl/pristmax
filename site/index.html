@@ -341,87 +341,14 @@
             </div>
         </section>
 
-        <!-- FAQ -->
+        <!-- FAQ Entry -->
         <section class="section-faq">
-            <div class="section-inner">
+            <div class="section-inner" style="text-align:center;padding:60px 0;">
                 <div class="section-label">QUESTIONS / ANSWERS</div>
                 <h2>Before you begin.</h2>
-                <!-- FAQ Search -->
-                <div class="faq-search-wrap">
-                    <input type="search" class="faq-search" id="faq-search" placeholder="搜索问题..." aria-label="搜索常见问题">
-                </div>
-                <!-- FAQ Categories -->
-                <div class="faq-categories" role="tablist" aria-label="问题分类">
-                    <button class="faq-cat active" role="tab" data-category="all">全部</button>
-                    <button class="faq-cat" role="tab" data-category="savings">节省效果</button>
-                    <button class="faq-cat" role="tab" data-category="tech">技术细节</button>
-                    <button class="faq-cat" role="tab" data-category="privacy">数据隐私</button>
-                    <button class="faq-cat" role="tab" data-category="deploy">部署运维</button>
-                </div>
+                <p style="color:#587185;max-width:500px;margin:20px auto 30px;line-height:1.8;">常见问题、技术细节、数据隐私、部署运维——移至独立页面。</p>
+                <a href="faq.html" class="button" style="display:inline-block;padding:14px 32px;font-size:14px;background:#173d58;color:#fff;text-decoration:none;border-radius:6px;">查看全部问题 →</a>
             </div>
-            <div class="faq-list">
-                <!-- 节省效果 -->
-                <details data-category="savings">
-                    <summary>能保证节省多少存储空间？<b>＋</b></summary>
-                    <p>无法为所有数据提供统一比例。重复文件、文本和日志往往更有优化空间；已压缩媒体与加密数据需要单独测试。请使用真实样本测量净节省，包括索引与元数据开销。</p>
-                </details>
-                <details data-category="savings">
-                    <summary>什么样的数据去重效果最好？<b>＋</b></summary>
-                    <p>备份快照、虚拟机镜像、日志归档、邮件存储等重复度高的数据效果最佳。已压缩文件（H.264、ZIP、JPEG 等）几乎没有冗余可寻，视频素材的重复帧检测需要单独评估。</p>
-                </details>
-                <details data-category="savings">
-                    <summary>视频文件能省多少空间？<b>＋</b></summary>
-                    <p>视频有损降量可显著减小体积，但画质和业务可用性需要逐项目验证。不同于无损归档，视频路径不承诺逐帧还原，请在试点阶段确认是否符合质量预期。</p>
-                </details>
-
-                <!-- 技术细节 -->
-                <details data-category="tech">
-                    <summary>取回的文件和原文件一样吗？<b>＋</b></summary>
-                    <p>无损归档路径应以还原文件的哈希校验确认一致性。视频有损降量是独立策略，不具有同样的保证，请在试点时分别验收。</p>
-                </details>
-                <details data-category="tech">
-                    <summary>支持哪些操作系统和存储类型？<b>＋</b></summary>
-                    <p>Linux 服务器为主要支持目标，支持本地磁盘、NFS、SMB、CIFS 等协议。可管理本地目录或挂载点。macOS 和 Windows 端可在 WSL2 环境下运行。</p>
-                </details>
-                <details data-category="tech">
-                    <summary>数据加密后还能去重吗？<b>＋</b></summary>
-                    <p>加密后的数据无法做内容级去重，因为相同原始内容加密后结果不同。如需在加密状态下管理，可考虑在加密前做去重，或使用支持相同密钥的透明加密方案。</p>
-                </details>
-                <details data-category="tech">
-                    <summary>处理过程会占用多少带宽和内存？<b>＋</b></summary>
-                    <p>去重过程主要为本地计算，不产生外部流量。内存占用与分块大小和并发任务数相关。详细规格请参考 docs.html 中的技术文档。</p>
-                </details>
-
-                <!-- 数据隐私 -->
-                <details data-category="privacy">
-                    <summary>这个网站会保存我们的文件吗？<b>＋</b></summary>
-                    <p>本网站仅提供产品介绍与文档，不接收企业文件。自部署产品的数据存储、备份、保留与删除策略由实际部署配置决定。</p>
-                </details>
-                <details data-category="privacy">
-                    <summary>文件处理是在我们自己环境里进行的吗？<b>＋</b></summary>
-                    <p>是的。产品部署与品牌官网完全分离。文件处理在你自己部署的软件中进行，数据不经过任何第三方服务。</p>
-                </details>
-                <details data-category="privacy">
-                    <summary>如何验证数据完整性和可恢复性？<b>＋</b></summary>
-                    <p>无损路径通过 SHA-256 哈希校验确认还原文件与原始文件一致。每次归档任务生成校验报告，可在控制台查阅。</p>
-                </details>
-
-                <!-- 部署运维 -->
-                <details data-category="deploy">
-                    <summary>如何部署第一个试点环境？<b>＋</b></summary>
-                    <p>建议从 100 GB 以内的代表性样本开始，验证节省率和恢复结果。详细步骤请参考 docs.html 中的部署指南，包含环境准备、权限配置和首验流程。</p>
-                </details>
-                <details data-category="deploy">
-                    <summary>遇到问题可以获得支持吗？<b>＋</b></summary>
-                    <p>当前通过 GitHub Issues 提供社区支持。技术讨论、安全漏洞和功能建议均可在仓库中提交。</p>
-                </details>
-                <details data-category="deploy">
-                    <summary>可以定制开发或集成吗？<b>＋</b></summary>
-                    <p>源码开放，欢迎基于实际需求做定制集成。如需商业合作，可通过仓库联系。</p>
-                </details>
-            </div>
-            <!-- No results message -->
-            <p class="faq-empty" id="faq-empty" hidden>没有找到相关问题，试试其他关键词。</p>
         </section>
 
         <!-- Community -->

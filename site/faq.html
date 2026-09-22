@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="Pristmax 常见问题 — 关于节省效果、技术细节、数据隐私、部署运维的解答。">
+    <meta name="theme-color" content="#f4f9fc">
+    <title>FAQ — Pristmax</title>
+    <link rel="icon" href="assets/pristmax-symbol.svg" type="image/svg+xml">
+    <link rel="canonical" href="https://jiangchenghehe.top/faq.html">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="motion.css">
+    <link rel="stylesheet" href="footer-art.css">
+    <link rel="stylesheet" href="privacy.css">
+</head>
+<body>
+
+<header id="site-header">
+    <a class="brand" href="index.html"><img src="assets/pristmax-symbol.svg" width="34" height="34" alt="">pristmax</a>
+    <div class="header-actions">
+        <a class="button outline github-link" href="https://github.com/chunchengzheng58-ctrl/pristmax" target="_blank" rel="noopener noreferrer" aria-label="在新标签页打开 Pristmax GitHub 仓库">GitHub ↗</a>
+        <a class="button install-button" href="docs.html#install">Install 安装</a>
+    </div>
+</header>
+
+<main id="main-content">
+    <section class="section-faq" style="padding-top: 120px;">
+        <div class="section-inner">
+            <div class="section-label">QUESTIONS / ANSWERS</div>
+            <h2>Before you begin.</h2>
+            <!-- FAQ Search -->
+            <div class="faq-search-wrap">
+                <input type="search" class="faq-search" id="faq-search" placeholder="搜索问题..." aria-label="搜索常见问题">
+            </div>
+            <!-- FAQ Categories -->
+            <div class="faq-categories" role="tablist" aria-label="问题分类">
+                <button class="faq-cat active" role="tab" data-category="all">全部</button>
+                <button class="faq-cat" role="tab" data-category="savings">节省效果</button>
+                <button class="faq-cat" role="tab" data-category="tech">技术细节</button>
+                <button class="faq-cat" role="tab" data-category="privacy">数据隐私</button>
+                <button class="faq-cat" role="tab" data-category="deploy">部署运维</button>
+            </div>
+        </div>
+        <div class="faq-list">
+            <!-- 节省效果 -->
+            <details data-category="savings">
+                <summary>能保证节省多少存储空间？<b>＋</b></summary>
+                <p>无法为所有数据提供统一比例。重复文件、文本和日志往往更有优化空间；已压缩媒体与加密数据需要单独测试。请使用真实样本测量净节省，包括索引与元数据开销。</p>
+            </details>
+            <details data-category="savings">
+                <summary>什么样的数据去重效果最好？<b>＋</b></summary>
+                <p>备份快照、虚拟机镜像、日志归档、邮件存储等重复度高的数据效果最佳。已压缩文件（H.264、ZIP、JPEG 等）几乎没有冗余可寻，视频素材的重复帧检测需要单独评估。</p>
+            </details>
+            <details data-category="savings">
+                <summary>视频文件能省多少空间？<b>＋</b></summary>
+                <p>视频有损降量可显著减小体积，但画质和业务可用性需要逐项目验证。不同于无损归档，视频路径不承诺逐帧还原，请在试点阶段确认是否符合质量预期。</p>
+            </details>
+
+            <!-- 技术细节 -->
+            <details data-category="tech">
+                <summary>取回的文件和原文件一样吗？<b>＋</b></summary>
+                <p>无损归档路径应以还原文件的哈希校验确认一致性。视频有损降量是独立策略，不具有同样的保证，请在试点时分别验收。</p>
+            </details>
+            <details data-category="tech">
+                <summary>支持哪些操作系统和存储类型？<b>＋</b></summary>
+                <p>Linux 服务器为主要支持目标，支持本地磁盘、NFS、SMB、CIFS 等协议。可管理本地目录或挂载点。macOS 和 Windows 端可在 WSL2 环境下运行。</p>
+            </details>
+            <details data-category="tech">
+                <summary>数据加密后还能去重吗？<b>＋</b></summary>
+                <p>加密后的数据无法做内容级去重，因为相同原始内容加密后结果不同。如需在加密状态下管理，可考虑在加密前做去重，或使用支持相同密钥的透明加密方案。</p>
+            </details>
+            <details data-category="tech">
+                <summary>处理过程会占用多少带宽和内存？<b>＋</b></summary>
+                <p>去重过程主要为本地计算，不产生外部流量。内存占用与分块大小和并发任务数相关。详细规格请参考 docs.html 中的技术文档。</p>
+            </details>
+
+            <!-- 数据隐私 -->
+            <details data-category="privacy">
+                <summary>这个网站会保存我们的文件吗？<b>＋</b></summary>
+                <p>本网站仅提供产品介绍与文档，不接收企业文件。自部署产品的数据存储、备份、保留与删除策略由实际部署配置决定。</p>
+            </details>
+            <details data-category="privacy">
+                <summary>文件处理是在我们自己环境里进行的吗？<b>＋</b></summary>
+                <p>是的。产品部署与品牌官网完全分离。文件处理在你自己部署的软件中进行，数据不经过任何第三方服务。</p>
+            </details>
+            <details data-category="privacy">
+                <summary>如何验证数据完整性和可恢复性？<b>＋</b></summary>
+                <p>无损路径通过 SHA-256 哈希校验确认还原文件与原始文件一致。每次归档任务生成校验报告，可在控制台查阅。</p>
+            </details>
+
+            <!-- 部署运维 -->
+            <details data-category="deploy">
+                <summary>如何部署第一个试点环境？<b>＋</b></summary>
+                <p>建议从 100 GB 以内的代表性样本开始，验证节省率和恢复结果。详细步骤请参考 docs.html 中的部署指南，包含环境准备、权限配置和首验流程。</p>
+            </details>
+            <details data-category="deploy">
+                <summary>遇到问题可以获得支持吗？<b>＋</b></summary>
+                <p>当前通过 GitHub Issues 提供社区支持。技术讨论、安全漏洞和功能建议均可在仓库中提交。</p>
+            </details>
+            <details data-category="deploy">
+                <summary>可以定制开发或集成吗？<b>＋</b></summary>
+                <p>源码开放，欢迎基于实际需求做定制集成。如需商业合作，可通过仓库联系。</p>
+            </details>
+        </div>
+        <!-- No results message -->
+        <p class="faq-empty" id="faq-empty" hidden>没有找到相关问题，试试其他关键词。</p>
+    </section>
+</main>
+
+<footer>
+    <div class="footer-top">
+        <a class="brand" href="index.html">
+            <img src="assets/pristmax-symbol-light.svg" alt="" width="28" height="28">pristmax
+        </a>
+        <span class="footer-slogan">Make room for what matters.</span>
+        <a href="#" class="footer-top-link">Back to top ↑</a>
+    </div>
+    <div class="footer-word">PRISTMAX</div>
+    <div class="footer-invitation">
+        <span>LESS STORAGE. MORE CLARITY.</span>
+        <a class="button outline" href="https://github.com/chunchengzheng58-ctrl/pristmax" target="_blank" rel="noopener noreferrer">EXPLORE THE REPOSITORY ↗</a>
+    </div>
+    <div class="footer-landscape" aria-hidden="true">
+        <div class="landscape-panorama">
+            <div class="landscape-panel">
+                <img src="assets/blue-gold-forest.webp" alt="" width="2172" height="724" loading="lazy" decoding="async">
+                <svg class="living-painting" viewBox="0 0 2172 724" preserveAspectRatio="xMidYMid slice" focusable="false">
+                    <defs>
+                        <radialGradient id="lake-fade"><stop offset="0.65" stop-color="white"/><stop offset="1" stop-color="black"/></radialGradient>
+                        <linearGradient id="bamboo-fade"><stop offset="0.67" stop-color="black"/><stop offset="0.84" stop-color="white"/></linearGradient>
+                        <mask id="lake-mask"><ellipse cx="1190" cy="527" rx="380" ry="103" fill="url(#lake-fade)"/></mask>
+                        <mask id="bamboo-mask"><rect width="2172" height="724" fill="url(#bamboo-fade)"/></mask>
+                        <filter id="lake-motion" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="0.012 0.065" numOctaves="1" seed="8" result="noise"/><feDisplacementMap in="SourceGraphic" in2="noise" scale="5" xChannelSelector="R" yChannelSelector="G"/></filter>
+                    </defs>
+                    <g mask="url(#lake-mask)"><image href="assets/blue-gold-forest.webp" width="2172" height="724" filter="url(#lake-motion)"/></g>
+                    <g mask="url(#bamboo-mask)"><image class="living-bamboo" href="assets/blue-gold-forest.webp" width="2172" height="724"/></g>
+                </svg>
+            </div>
+        </div>
+        <div class="landscape-mist landscape-mist-far"></div>
+        <div class="landscape-mist landscape-mist-near"></div>
+    </div>
+    <div class="footer-bottom">
+        <span>© 2026 PRISTMAX</span>
+        <span>ENTERPRISE STORAGE / BUILT FOR CLARITY</span>
+        <a href="docs.html">Documentation ↗</a>
+    </div>
+</footer>
+
+<script src="main.min.js" defer></script>
+<script src="motion.js" defer></script>
+<script src="footer-art.js" defer></script>
+<script src="community.js" defer></script>
+
+<!-- Privacy notice -->
+<div class="privacy-banner" id="privacy-banner" role="dialog" aria-label="隐私提示" aria-live="polite">
+    <p>我们使用 cookies 优化访问体验，分析站点流量。<a href="docs.html#boundary" target="_blank">了解更多 →</a></p>
+    <button class="privacy-accept" type="button" aria-label="接受并关闭">我知道了</button>
+</div>
+<script>
+(function() {
+    var banner = document.getElementById('privacy-banner');
+    if (!banner) return;
+    if (!sessionStorage.getItem('privacy-accepted')) {
+        setTimeout(function() {
+            banner.style.display = 'flex';
+        }, 2000);
+    }
+    var accept = banner.querySelector('.privacy-accept');
+    if (accept) {
+        accept.addEventListener('click', function() {
+            banner.style.display = 'none';
+            sessionStorage.setItem('privacy-accepted', '1');
+        });
+    }
+})();
+</script>
+</body>
+</html>
