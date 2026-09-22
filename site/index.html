@@ -101,9 +101,33 @@
                 <span class="section-note">实际节省取决于数据类型、重复率与所选策略。</span>
             </div>
             <div class="feature-grid">
-                <details class="feature-card"><summary><span class="feature-num">01</span><div>Reduce repetition.<small>分块与去重</small></div><b aria-hidden="true">＋</b></summary><div class="feature-expansion"><p>识别重复内容块，减少重复存储。适合先对备份、归档等重复度较高的数据开展试点。</p><span class="feature-tag">LESS REDUNDANCY / MORE ROOM</span></div></details>
-                <details class="feature-card"><summary><span class="feature-num">02</span><div>Preserve with intent.<small>按需选择保真策略</small></div><b aria-hidden="true">＋</b></summary><div class="feature-expansion"><p>原文件归档采用可验证的还原路径；视频降量单独评估画质与分析准确率。有损处理不承诺逐字节还原。</p><span class="feature-tag">DISTINCT PATHS / EXPLICIT TRADE-OFFS</span></div></details>
-                <details class="feature-card"><summary><span class="feature-num">03</span><div>Stay in control.<small>在企业自己的环境运行</small></div><b aria-hidden="true">＋</b></summary><div class="feature-expansion"><p>产品部署与品牌官网分离。文件处理在你部署的软件中进行，本介绍网站不提供企业文件上传入口。</p><span class="feature-tag">YOUR DATA / YOUR ENVIRONMENT</span></div></details>
+                <details class="feature-card"><summary><span class="feature-num">01</span><div>Reduce repetition.<small>分块与去重</small></div><b aria-hidden="true">＋</b></summary><div class="feature-expansion">
+                    <p>语义分块将文件内容按逻辑边界切分，跨文件识别重复块并建立指纹索引。相同内容只存储一份，修改时只更新差异部分。</p>
+                    <ul>
+                        <li><strong>语义分块</strong> — 识别文档、代码、报告的内容边界，按段落和函数切分</li>
+                        <li><strong>内容去重</strong> — 跨文件比对相同内容块，避免重复存储浪费</li>
+                        <li><strong>增量更新</strong> — 修改文件时只存储差异部分，保留完整历史版本</li>
+                        <li><strong>适用场景</strong> — 备份归档、代码仓库、日志文件、文档库</li>
+                    </ul>
+                    <span class="feature-tag">LESS REDUNDANCY / MORE ROOM</span></div></details>
+                <details class="feature-card"><summary><span class="feature-num">02</span><div>Preserve with intent.<small>按需选择保真策略</small></div><b aria-hidden="true">＋</b></summary><div class="feature-expansion">
+                    <p>不同类型的数据需要不同的处理策略。无损路径逐字节可还原，有损路径在画质与空间间平衡。视频单独评估，图像按场景适配。</p>
+                    <ul>
+                        <li><strong>无损归档</strong> — 合同、设计稿、源代码逐字节可还原，保留完整元数据</li>
+                        <li><strong>视频降量</strong> — 单独评估压缩画质与业务分析准确率，不一刀切</li>
+                        <li><strong>图像适配</strong> — 照片、截图、扫描件按内容类型选择压缩策略</li>
+                        <li><strong>验证机制</strong> — 每条还原路径可验证，数据完整性可审计</li>
+                    </ul>
+                    <span class="feature-tag">DISTINCT PATHS / EXPLICIT TRADE-OFFS</span></div></details>
+                <details class="feature-card"><summary><span class="feature-num">03</span><div>Stay in control.<small>在企业自己的环境运行</small></div><b aria-hidden="true">＋</b></summary><div class="feature-expansion">
+                    <p>产品部署与品牌官网完全分离。文件处理在你自己部署的实例中进行，所有数据留在你的网络内，没有任何文件上传到外部服务器。</p>
+                    <ul>
+                        <li><strong>本地部署</strong> — 软件运行在企业自己的服务器，数据不出网络</li>
+                        <li><strong>隔离架构</strong> — 官网仅展示产品，文件处理全部在本地完成</li>
+                        <li><strong>自主运维</strong> — 企业完全控制基础设施，策略按需配置</li>
+                        <li><strong>数据主权</strong> — 无需向第三方传输文件，合规要求更易满足</li>
+                    </ul>
+                    <span class="feature-tag">YOUR DATA / YOUR ENVIRONMENT</span></div></details>
             </div>
         </section>
 
