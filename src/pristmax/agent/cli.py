@@ -208,9 +208,59 @@ def get_desktop_path() -> str:
     else:
         return os.path.join(os.path.expanduser('~'), 'desktop')
 
+def cmd_desktop_undo(agent: StorageAgent, args):
+    """撤销桌面整理命令"""
+    desktop = get_desktop_path()
+    undo_file = os.path.join(desktop, '.desktop_org_undo.json')
+
+    print(f"\n↩️ 撤销桌面整理: {desktop}")
+    print("=" * 50)
+
+    if not os.path.exists(undo_file):
+        print("❌ 没有找到撤销记录")
+        return 1
+
+    try:
+        import json
+        with open(undo_file, 'r', encoding='utf-8') as f:
+            operations = json.load(f)
+    except Exception as e:
+        print(f"❌ 读取撤销记录失败: {e}")
+        return 1
+
+    print(f"\n📋 找到 {len(operations)} 条操作记录")
+    print("=" * 50)
+
+    if args.execute:
+        print("🛠️  执行撤销...")
+    else:
+        print("🔍 预览模式 (添加 --execute 执行撤销)")
+
+    undone = 0
+    for op in operations:
+        if args.execute:
+            try:
+                if os.path.exists(op['to']):
+                    os.rename(op['to'], op['from'])
+                    print(f"   ✓ 撤销: {os.path.basename(op['to'])} → {os.path.dirname(op['from'])}/")
+                    undone += 1
+            except Exception as e:
+                print(f"   ✗ 失败: {os.path.basename(op['to'])} - {e}")
+        else:
+            print(f"   → {os.path.basename(op['to'])} → {os.path.dirname(op['from'])}/")
+
+    if args.execute:
+        os.remove(undo_file)
+        print(f"\n✅ 撤销完成! 已恢复 {undone} 个文件")
+    else:
+        print(f"\n💡 添加 --execute 执行此次撤销")
+
+    return 0
+
 def cmd_desktop(agent: StorageAgent, args):
     """桌面整理命令"""
     desktop = get_desktop_path()
+    mode = args.desktop_mode or 'type'  # type | time | project
 
     print(f"\n🗂️ 桌面整理: {desktop}")
     print("=" * 50)
@@ -230,10 +280,12 @@ def cmd_desktop(agent: StorageAgent, args):
         full_path = os.path.join(desktop, item)
         if os.path.isfile(full_path):
             ext = os.path.splitext(item)[1].lower()
+            mtime = os.path.getmtime(full_path)
+            mod_time = datetime.fromtimestamp(mtime)
             if ext in ['.lnk', '.url', '.exe']:
-                shortcuts.append({'name': item, 'path': full_path})
+                shortcuts.append({'name': item, 'path': full_path, 'ext': ext, 'time': mod_time})
             else:
-                files.append({'name': item, 'path': full_path, 'ext': ext})
+                files.append({'name': item, 'path': full_path, 'ext': ext, 'time': mod_time})
         elif os.path.isdir(full_path):
             folders.append({'name': item, 'path': full_path})
 
@@ -241,17 +293,6 @@ def cmd_desktop(agent: StorageAgent, args):
     print(f"   文件: {len(files)} 个")
     print(f"   快捷方式: {len(shortcuts)} 个")
     print(f"   文件夹: {len(folders)} 个")
-
-    # 智能分类
-    ext_map = {
-        '图片': [],
-        '文档': [],
-        '视频': [],
-        '音频': [],
-        '代码': [],
-        '压缩包': [],
-        '其他': [],
-    }
 
     # 扩展名映射
     ext_categories = {
@@ -263,27 +304,98 @@ def cmd_desktop(agent: StorageAgent, args):
         '压缩包': ['.zip', '.rar', '.7z', '.tar', '.gz'],
     }
 
-    for f in files:
-        categorized = False
-        for cat, extensions in ext_categories.items():
-            if f['ext'] in extensions:
-                ext_map[cat].append(f)
-                categorized = True
-                break
-        if not categorized:
-            ext_map['其他'].append(f)
+    icon_map = {'图片': '🖼️', '文档': '📄', '视频': '🎬', '音频': '🎵', '代码': '💻', '压缩包': '📦', '其他': '📁'}
 
-    # 显示分类预览
-    print(f"\n📋 分类预览:")
-    for cat, items in ext_map.items():
-        if items:
-            icon = {'图片': '🖼️', '文档': '📄', '视频': '🎬', '音频': '🎵', '代码': '💻', '压缩包': '📦', '其他': '📁'}.get(cat, '📁')
-            print(f"\n   {icon} {cat} ({len(items)} 个):")
-            for item in items[:5]:
-                print(f"      - {item['name']}")
-            if len(items) > 5:
-                print(f"      ... 还有 {len(items) - 5} 个")
+    # 根据模式分类
+    categories = {}
+    operations = []
 
+    if mode == 'type':
+        # 按类型分类
+        categories = {cat: [] for cat in ext_categories}
+        categories['其他'] = []
+
+        for f in files:
+            categorized = False
+            for cat, extensions in ext_categories.items():
+                if f['ext'] in extensions:
+                    categories[cat].append(f)
+                    categorized = True
+                    break
+            if not categorized:
+                categories['其他'].append(f)
+
+        print(f"\n📋 分类预览 (按类型):")
+        for cat, items in categories.items():
+            if items:
+                icon = icon_map.get(cat, '📁')
+                print(f"\n   {icon} {cat} ({len(items)} 个):")
+                for item in items[:5]:
+                    print(f"      - {item['name']}")
+                if len(items) > 5:
+                    print(f"      ... 还有 {len(items) - 5} 个")
+
+    elif mode == 'time':
+        # 按时间分类
+        categories = {}
+
+        for f in files:
+            year = f['time'].strftime('%Y')
+            month = f['time'].strftime('%Y-%m')
+            if year not in categories:
+                categories[year] = {}
+            if month not in categories[year]:
+                categories[year][month] = []
+            categories[year][month].append(f)
+
+        print(f"\n📋 分类预览 (按时间):")
+        for year in sorted(categories.keys(), reverse=True):
+            months = categories[year]
+            total = sum(len(items) for items in months.values())
+            print(f"\n   📅 {year}年 ({total} 个):")
+            for month in sorted(months.keys(), reverse=True):
+                items = months[month]
+                print(f"      📆 {month} ({len(items)} 个)")
+                for item in items[:3]:
+                    print(f"         - {item['name']}")
+                if len(items) > 3:
+                    print(f"         ... 还有 {len(items) - 3} 个")
+
+    elif mode == 'project':
+        # 按项目分类
+        project_keywords = {
+            '项目': ['project', '项目', 'pro', 'app', '应用', '小程序', 'app'],
+            '工作': ['work', '工作', 'job', 'office', '商务'],
+            '学习': ['learn', '学习', 'study', '课程', '笔记', 'note'],
+            '个人': ['personal', '个人', 'private', '生活', '照片'],
+            '资料': ['doc', '文档', '资料', 'file', '文件', 'pdf'],
+        }
+
+        categories = {cat: [] for cat in project_keywords}
+        categories['未分类'] = []
+
+        for f in files:
+            name_lower = f['name'].lower()
+            categorized = False
+            for cat, keywords in project_keywords.items():
+                if any(kw in name_lower for kw in keywords):
+                    categories[cat].append(f)
+                    categorized = True
+                    break
+            if not categorized:
+                categories['未分类'].append(f)
+
+        print(f"\n📋 分类预览 (按项目):")
+        for cat, items in categories.items():
+            if items:
+                icon = icon_map.get(cat, '📁')
+                print(f"\n   {icon} {cat} ({len(items)} 个):")
+                for item in items[:5]:
+                    print(f"      - {item['name']}")
+                if len(items) > 5:
+                    print(f"      ... 还有 {len(items) - 5} 个")
+
+    # 快捷方式单独处理
     if shortcuts:
         print(f"\n   📁 快捷方式 ({len(shortcuts)} 个):")
         for s in shortcuts[:5]:
@@ -293,34 +405,71 @@ def cmd_desktop(agent: StorageAgent, args):
 
     # 确认执行
     print(f"\n" + "=" * 50)
+    print(f"整理模式: {mode}")
     if args.execute:
         print("🛠️  执行整理...")
     else:
         print("🔍 预览模式 (添加 --execute 执行整理)")
 
-    # 创建分类文件夹
+    # 执行整理
     created_folders = []
-    for cat, items in ext_map.items():
-        if items:
-            folder_path = os.path.join(desktop, cat)
 
-            if not os.path.exists(folder_path):
-                if args.execute:
-                    os.makedirs(folder_path)
-                created_folders.append(cat)
-                print(f"\n📂 {'创建文件夹' if args.execute else '将创建'}: {cat}/")
+    if mode == 'type':
+        for cat, items in categories.items():
+            if items:
+                folder_path = os.path.join(desktop, cat)
+                if not os.path.exists(folder_path):
+                    if args.execute:
+                        os.makedirs(folder_path)
+                    created_folders.append(cat)
+                    print(f"\n📂 {'创建文件夹' if args.execute else '将创建'}: {cat}/")
+                for item in items:
+                    new_path = os.path.join(folder_path, item['name'])
+                    operations.append({'from': item['path'], 'to': new_path})
+                    if args.execute:
+                        try:
+                            os.rename(item['path'], new_path)
+                            print(f"   ✓ 移动: {item['name']} → {cat}/")
+                        except Exception as e:
+                            print(f"   ✗ 失败: {item['name']} - {e}")
 
-            # 移动文件
-            for item in items:
-                new_path = os.path.join(folder_path, item['name'])
-                if args.execute:
-                    try:
-                        os.rename(item['path'], new_path)
-                        print(f"   ✓ 移动: {item['name']} → {cat}/")
-                    except Exception as e:
-                        print(f"   ✗ 失败: {item['name']} - {e}")
-                else:
-                    print(f"   → {item['name']} → {cat}/")
+    elif mode == 'time':
+        for year, months in sorted(categories.items(), reverse=True):
+            for month, items in sorted(months.items(), reverse=True):
+                folder_path = os.path.join(desktop, month)
+                if not os.path.exists(folder_path):
+                    if args.execute:
+                        os.makedirs(folder_path)
+                    created_folders.append(month)
+                    print(f"\n📂 {'创建文件夹' if args.execute else '将创建'}: {month}/")
+                for item in items:
+                    new_path = os.path.join(folder_path, item['name'])
+                    operations.append({'from': item['path'], 'to': new_path})
+                    if args.execute:
+                        try:
+                            os.rename(item['path'], new_path)
+                            print(f"   ✓ 移动: {item['name']} → {month}/")
+                        except Exception as e:
+                            print(f"   ✗ 失败: {item['name']} - {e}")
+
+    elif mode == 'project':
+        for cat, items in categories.items():
+            if items:
+                folder_path = os.path.join(desktop, cat)
+                if not os.path.exists(folder_path):
+                    if args.execute:
+                        os.makedirs(folder_path)
+                    created_folders.append(cat)
+                    print(f"\n📂 {'创建文件夹' if args.execute else '将创建'}: {cat}/")
+                for item in items:
+                    new_path = os.path.join(folder_path, item['name'])
+                    operations.append({'from': item['path'], 'to': new_path})
+                    if args.execute:
+                        try:
+                            os.rename(item['path'], new_path)
+                            print(f"   ✓ 移动: {item['name']} → {cat}/")
+                        except Exception as e:
+                            print(f"   ✗ 失败: {item['name']} - {e}")
 
     # 移动快捷方式
     if shortcuts:
@@ -330,22 +479,28 @@ def cmd_desktop(agent: StorageAgent, args):
                 os.makedirs(shortcut_folder)
             created_folders.append('快捷方式')
             print(f"\n📂 {'创建文件夹' if args.execute else '将创建'}: 快捷方式/")
-
         for s in shortcuts:
             new_path = os.path.join(shortcut_folder, s['name'])
+            operations.append({'from': s['path'], 'to': new_path})
             if args.execute:
                 try:
                     os.rename(s['path'], new_path)
                     print(f"   ✓ 移动: {s['name']} → 快捷方式/")
                 except Exception as e:
                     print(f"   ✗ 失败: {s['name']} - {e}")
-            else:
-                print(f"   → {s['name']} → 快捷方式/")
+
+    # 保存操作记录（用于撤销）
+    if args.execute and operations:
+        import json
+        undo_file = os.path.join(desktop, '.desktop_org_undo.json')
+        with open(undo_file, 'w', encoding='utf-8') as f:
+            json.dump(operations, f, ensure_ascii=False, indent=2)
+        print(f"\n💡 整理记录已保存，如需撤销请使用 --undo")
 
     if args.execute:
         print(f"\n✅ 整理完成!")
         print(f"   已创建 {len(created_folders)} 个文件夹")
-        print(f"   已整理 {len(files) + len(shortcuts)} 个项目")
+        print(f"   已整理 {len(operations)} 个项目")
     else:
         print(f"\n💡 添加 --execute 执行此次整理")
 
@@ -554,6 +709,8 @@ def main():
     parser.add_argument('--monitor', action='store_true', help='监控模式')
     parser.add_argument('--serve', action='store_true', help='启动API服务')
     parser.add_argument('--desktop', action='store_true', help='整理桌面文件')
+    parser.add_argument('--desktop-mode', choices=['type', 'time', 'project'], default='type', help='桌面整理模式: type=按类型, time=按时间, project=按项目')
+    parser.add_argument('--undo', action='store_true', help='撤销上次桌面整理')
     parser.add_argument('--min', type=int, default=100, help='最小大小(MB for files, KB for dupes)')
     parser.add_argument('--limit', type=int, default=20, help='返回结果数量限制')
     parser.add_argument('--port', type=int, default=5002, help='API服务端口')
@@ -597,6 +754,8 @@ def main():
             return cmd_monitor(agent, args)
         elif args.serve:
             return cmd_serve(agent, args)
+        elif args.undo:
+            return cmd_desktop_undo(agent, args)
         elif args.desktop:
             return cmd_desktop(agent, args)
     finally:
