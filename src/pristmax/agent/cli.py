@@ -287,7 +287,7 @@ def cmd_desktop(agent: StorageAgent, args):
             else:
                 files.append({'name': item, 'path': full_path, 'ext': ext, 'time': mod_time})
         elif os.path.isdir(full_path):
-            folders.append({'name': item, 'path': full_path})
+            folders.append({'name': item, 'path': full_path, 'time': datetime.now()})
 
     print(f"\n📊 桌面概览:")
     print(f"   文件: {len(files)} 个")
@@ -304,17 +304,33 @@ def cmd_desktop(agent: StorageAgent, args):
         '压缩包': ['.zip', '.rar', '.7z', '.tar', '.gz'],
     }
 
-    icon_map = {'图片': '🖼️', '文档': '📄', '视频': '🎬', '音频': '🎵', '代码': '💻', '压缩包': '📦', '其他': '📁'}
+    # 文件夹分类关键词
+    folder_categories = {
+        '项目': ['project', '项目', 'pro', 'app', '应用', '小程序', '应用', 'app', 'demo', 'sample'],
+        '文档': ['doc', '文档', '资料', 'docs', 'files', '文件'],
+        '工具': ['tool', 'tools', '工具', 'utility', 'util'],
+        '图片': ['photo', '图片', 'photos', 'image', 'images', '截图', '截图', 'pictures'],
+        '视频': ['video', '视频', 'videos', 'movie', 'movies', '影视'],
+        '学习': ['learn', '学习', 'study', '课程', '笔记', 'note', '教程'],
+        '工作': ['work', '工作', 'job', 'office', '商务'],
+        '个人': ['personal', '个人', 'private', '生活'],
+        '归档': ['archive', '归档', 'backup', '备份', 'old', '旧'],
+    }
+
+    icon_map = {'图片': '🖼️', '文档': '📄', '视频': '🎬', '音频': '🎵', '代码': '💻', '压缩包': '📦', '其他': '📁', '项目': '📂', '工具': '🔧', '学习': '📚', '工作': '💼', '个人': '👤', '归档': '📦'}
 
     # 根据模式分类
     categories = {}
     operations = []
 
     if mode == 'type':
-        # 按类型分类
+        # 按类型分类：文件按扩展名，文件夹按关键词
         categories = {cat: [] for cat in ext_categories}
         categories['其他'] = []
+        folder_cats = {cat: [] for cat in folder_categories}
+        folder_cats['其他'] = []
 
+        # 分类文件
         for f in files:
             categorized = False
             for cat, extensions in ext_categories.items():
@@ -325,15 +341,33 @@ def cmd_desktop(agent: StorageAgent, args):
             if not categorized:
                 categories['其他'].append(f)
 
+        # 分类文件夹
+        for folder in folders:
+            name_lower = folder['name'].lower()
+            categorized = False
+            for cat, keywords in folder_categories.items():
+                if any(kw in name_lower for kw in keywords):
+                    folder_cats[cat].append(folder)
+                    categorized = True
+                    break
+            if not categorized:
+                folder_cats['其他'].append(folder)
+
         print(f"\n📋 分类预览 (按类型):")
+        print(f"\n   📄 文件:")
         for cat, items in categories.items():
             if items:
                 icon = icon_map.get(cat, '📁')
-                print(f"\n   {icon} {cat} ({len(items)} 个):")
-                for item in items[:5]:
-                    print(f"      - {item['name']}")
-                if len(items) > 5:
-                    print(f"      ... 还有 {len(items) - 5} 个")
+                print(f"      {icon} {cat} ({len(items)} 个)")
+        print(f"\n   📁 文件夹:")
+        for cat, items in folder_cats.items():
+            if items:
+                icon = icon_map.get(cat, '📁')
+                print(f"      {icon} {cat} ({len(items)} 个)")
+                for item in items[:3]:
+                    print(f"         - {item['name']}")
+                if len(items) > 3:
+                    print(f"         ... 还有 {len(items) - 3} 个")
 
     elif mode == 'time':
         # 按时间分类
@@ -411,83 +445,94 @@ def cmd_desktop(agent: StorageAgent, args):
     else:
         print("🔍 预览模式 (添加 --execute 执行整理)")
 
-    # 执行整理
+    # 整理到统一的大文件夹中，文件夹名称对应分类
     created_folders = []
+    parent_folder = '整理'
+    parent_path = os.path.join(desktop, parent_folder)
+
+    # 创建父文件夹
+    if not os.path.exists(parent_path):
+        if args.execute:
+            os.makedirs(parent_path)
+        print(f"\n📁 {'创建整理文件夹' if args.execute else '将创建'}: {parent_folder}/")
+    created_folders.append(parent_folder)
 
     if mode == 'type':
         for cat, items in categories.items():
             if items:
-                folder_path = os.path.join(desktop, cat)
+                folder_path = os.path.join(parent_path, cat)
                 if not os.path.exists(folder_path):
                     if args.execute:
                         os.makedirs(folder_path)
                     created_folders.append(cat)
-                    print(f"\n📂 {'创建文件夹' if args.execute else '将创建'}: {cat}/")
+                    print(f"\n📂 {'创建文件夹' if args.execute else '将创建'}: {parent_folder}/{cat}/")
                 for item in items:
                     new_path = os.path.join(folder_path, item['name'])
                     operations.append({'from': item['path'], 'to': new_path})
                     if args.execute:
                         try:
                             os.rename(item['path'], new_path)
-                            print(f"   ✓ 移动: {item['name']} → {cat}/")
+                            print(f"   ✓ 移动: {item['name']} → {parent_folder}/{cat}/")
+                        except Exception as e:
+                            print(f"   ✗ 失败: {item['name']} - {e}")
+        # 移动文件夹
+        for cat, items in folder_cats.items():
+            if items:
+                folder_path = os.path.join(parent_path, cat)
+                if not os.path.exists(folder_path):
+                    if args.execute:
+                        os.makedirs(folder_path)
+                    created_folders.append(cat)
+                    print(f"\n📂 {'创建文件夹' if args.execute else '将创建'}: {parent_folder}/{cat}/")
+                for item in items:
+                    new_path = os.path.join(folder_path, item['name'])
+                    operations.append({'from': item['path'], 'to': new_path})
+                    if args.execute:
+                        try:
+                            os.rename(item['path'], new_path)
+                            print(f"   ✓ 移动: {item['name']} → {parent_folder}/{cat}/")
                         except Exception as e:
                             print(f"   ✗ 失败: {item['name']} - {e}")
 
     elif mode == 'time':
         for year, months in sorted(categories.items(), reverse=True):
             for month, items in sorted(months.items(), reverse=True):
-                folder_path = os.path.join(desktop, month)
+                folder_path = os.path.join(parent_path, month)
                 if not os.path.exists(folder_path):
                     if args.execute:
                         os.makedirs(folder_path)
                     created_folders.append(month)
-                    print(f"\n📂 {'创建文件夹' if args.execute else '将创建'}: {month}/")
+                    print(f"\n📂 {'创建文件夹' if args.execute else '将创建'}: {parent_folder}/{month}/")
                 for item in items:
                     new_path = os.path.join(folder_path, item['name'])
                     operations.append({'from': item['path'], 'to': new_path})
                     if args.execute:
                         try:
                             os.rename(item['path'], new_path)
-                            print(f"   ✓ 移动: {item['name']} → {month}/")
+                            print(f"   ✓ 移动: {item['name']} → {parent_folder}/{month}/")
                         except Exception as e:
                             print(f"   ✗ 失败: {item['name']} - {e}")
 
     elif mode == 'project':
         for cat, items in categories.items():
             if items:
-                folder_path = os.path.join(desktop, cat)
+                folder_path = os.path.join(parent_path, cat)
                 if not os.path.exists(folder_path):
                     if args.execute:
                         os.makedirs(folder_path)
                     created_folders.append(cat)
-                    print(f"\n📂 {'创建文件夹' if args.execute else '将创建'}: {cat}/")
+                    print(f"\n📂 {'创建文件夹' if args.execute else '将创建'}: {parent_folder}/{cat}/")
                 for item in items:
                     new_path = os.path.join(folder_path, item['name'])
                     operations.append({'from': item['path'], 'to': new_path})
                     if args.execute:
                         try:
                             os.rename(item['path'], new_path)
-                            print(f"   ✓ 移动: {item['name']} → {cat}/")
+                            print(f"   ✓ 移动: {item['name']} → {parent_folder}/{cat}/")
                         except Exception as e:
                             print(f"   ✗ 失败: {item['name']} - {e}")
 
-    # 移动快捷方式
-    if shortcuts:
-        shortcut_folder = os.path.join(desktop, '快捷方式')
-        if not os.path.exists(shortcut_folder):
-            if args.execute:
-                os.makedirs(shortcut_folder)
-            created_folders.append('快捷方式')
-            print(f"\n📂 {'创建文件夹' if args.execute else '将创建'}: 快捷方式/")
-        for s in shortcuts:
-            new_path = os.path.join(shortcut_folder, s['name'])
-            operations.append({'from': s['path'], 'to': new_path})
-            if args.execute:
-                try:
-                    os.rename(s['path'], new_path)
-                    print(f"   ✓ 移动: {s['name']} → 快捷方式/")
-                except Exception as e:
-                    print(f"   ✗ 失败: {s['name']} - {e}")
+    # 快捷方式保留在桌面，不移动
 
     # 保存操作记录（用于撤销）
     if args.execute and operations:
