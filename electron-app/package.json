@@ -4,9 +4,9 @@
   "description": "Pristmax - Enterprise Storage Optimization Desktop App",
   "main": "main.js",
   "scripts": {
-    "start": "electron .",
-    "build": "electron-builder --win --publish never",
-    "build:signed": "electron-builder --win --publish never -c.win.certificateFile=$CERT_FILE -c.win.certificatePassword=$CERT_PASSWORD"
+    "start": "node init && electron .",
+    "build": "node init && electron-builder --win --publish never",
+    "build:signed": "node init && electron-builder --win --publish never -c.win.certificateFile=$CERT_FILE -c.win.certificatePassword=$CERT_PASSWORD"
   },
   "build": {
     "appId": "com.pristmax.desktop",
@@ -26,7 +26,9 @@
       "target": [
         {
           "target": "nsis",
-          "arch": ["x64"]
+          "arch": [
+            "x64"
+          ]
         }
       ],
       "icon": "build/icon.ico",
@@ -42,12 +44,16 @@
       "shortcutName": "Pristmax"
     },
     "mac": {
-      "target": ["dmg"],
+      "target": [
+        "dmg"
+      ],
       "icon": "build/icon.icns",
       "category": "public.app-category.utilities"
     },
     "linux": {
-      "target": ["AppImage"],
+      "target": [
+        "AppImage"
+      ],
       "icon": "build/icon.png",
       "category": "Utility"
     },

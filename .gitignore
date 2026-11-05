@@ -13,7 +13,6 @@ build/
 
 # IDE
 .idea/
-.vscode/
 *.swp
 *.swo
 
@@ -25,6 +24,7 @@ electron-app/dist/
 *.db
 *.db-journal
 *.sqlite
+temp_auto_push.bat
 data/
 output/
 logs/
@@ -52,3 +52,7 @@ site/protect.js
 # Allow obfuscated versions to be committed
 !main.min.js
 !protect.min.js
+.gitignore
+branch_structure.json
+config.bat
+node_modules

@@ -4,6 +4,8 @@
 
 A CLI tool and MCP server for analyzing storage, finding duplicates, and optimizing disk usage.
 
+> 中文用户请阅读 [Storage Agent 中文文档](README_zh.md)（CLI 参数说明、快速开始、常见问题 FAQ 与 MCP 工具使用示例）。
+
 ## Features
 
 ### Core Features
@@ -56,8 +58,8 @@ python -m src.pristmax.agent.cli --large-files --min 100
 # Find duplicate files (fast hash + verification)
 python -m src.pristmax.agent.cli --duplicates
 
-# Search file content with regex
-python -m src.pristmax.agent.cli --search "password" --path /data
+# Show optimization suggestions
+python -m src.pristmax.agent.cli --suggest --path /data
 
 # Monitor directory changes
 python -m src.pristmax.agent.cli --monitor --path /data
